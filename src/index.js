@@ -6,10 +6,113 @@ import 'codemirror/lib/codemirror.css'
 
 import './style.styl'
 
+// Drive
+const authorizeButton = document.createElement('button')
+authorizeButton.style.position = 'absolute'
+authorizeButton.style.top = '0'
+authorizeButton.style.left = '0'
+authorizeButton.style.zIndex = 1
+authorizeButton.innerText = 'authorize-button'
 
-const $textarea = document.createElement('textarea')
-$textarea.innerHTML = `
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur ver. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam maiores aperiam pariatur explicabo odio dicta culpa perspiciatis aliquid nihil sapiente labore asperiores, exercitationem possimus esse blanditiis, quas repellendus non voluptate!
+document.body.appendChild(authorizeButton)
+
+const signoutButton = document.createElement('button')
+signoutButton.style.position = 'absolute'
+signoutButton.style.top = '20px'
+signoutButton.style.left = '0'
+signoutButton.style.zIndex = 1
+signoutButton.innerText = 'signout-button'
+
+document.body.appendChild(signoutButton)
+
+const CLIENT_ID = '410247995746-9pfn735ilt6m7giqmmjiq93jr1bca5vr.apps.googleusercontent.com'
+const API_KEY = 'AIzaSyDDXgOOeN_6c5P7aJ3PqGUKRLD3Pbocdto'
+const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"]
+const SCOPES = [
+    'https://www.googleapis.com/auth/drive.appdata',
+    'https://www.googleapis.com/auth/drive.file'
+].join(' ')
+
+const initClient = () =>
+{
+    gapi.client.init({
+        apiKey: API_KEY,
+        clientId: CLIENT_ID,
+        discoveryDocs: DISCOVERY_DOCS,
+        scope: SCOPES
+    }).then(() =>
+    {
+        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus)
+
+        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())
+
+        authorizeButton.addEventListener('click', () =>
+        {
+            gapi.auth2.getAuthInstance().signIn()
+        })
+        signoutButton.addEventListener('click', () =>
+        {
+            gapi.auth2.getAuthInstance().signOut()
+        })
+    })
+}
+
+const updateSigninStatus = (isSignedIn) =>
+{
+    if(isSignedIn)
+    {
+        authorizeButton.style.display = 'none'
+        signoutButton.style.display = 'block'
+
+        // // List files
+        // gapi.client.drive.files.list({
+        //     pageSize: 10,
+        //     fields: 'nextPageToken, files(id, name)'
+        // }).then((response) =>
+        // {
+        //     console.log(response)
+        // })
+
+        const body = { test: 'uh' }
+
+        gapi.client.drive.files.create(
+            {
+                resource:
+                {
+                    title: 'config.json',
+                    parents: [{ id: 'appDataFolder' }] // { id: 'appDataFolder' }
+                },
+                media:
+                {
+                    mimeType: 'application/json',
+                    body
+                },
+                fields: 'id'
+            }
+        ).execute((error, file) =>
+        {
+            if(error)
+            {
+                console.log(error)
+            }
+            else
+            {
+                console.log('File Id:', file.id)
+            }
+        })
+    }
+    else
+    {
+        authorizeButton.style.display = 'block'
+        signoutButton.style.display = 'none'
+    }
+}
+
+gapi.load('client:auth2', initClient)
+
+// Code
+const $textarea = document.querySelector('textarea')
+$textarea.innerHTML = `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur ver. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam maiores aperiam pariatur explicabo odio dicta culpa perspiciatis aliquid nihil sapiente labore asperiores, exercitationem possimus esse blanditiis, quas repellendus non voluptate!
 Omagni sunt exercitationem, rem accusamus quidem dolor
 Reprehenderit repellendus perferendis nam a. Delectus, commodi illum quas
 
@@ -46,7 +149,6 @@ document.body.appendChild($textarea)
 CodeMirror.defineSimpleMode(
     'simplemode',
     {
-        // The start state contains the rules that are intially used
         start:
         [
             { regex: /\s*#.+/, sol: true, token: 'title' },
@@ -56,41 +158,11 @@ CodeMirror.defineSimpleMode(
             { regex: /(\[)([?])(])(\s)(.+)/, token: [null, 'warning', null, null, 'warning-value'] },
             { regex: /\[\s]/, token: '' },
             { regex: /\[.+\]/, token: 'brackets' }
-
-            // { regex: /test/, token: 'test2' },
-            // // The regex matches the token, the token property contains the type
-            // { regex: /"(?:[^\\]|\\.)*?(?:"|$)/, token: 'string' },
-            // // You can match multiple tokens at once. Note that the captured
-            // // groups must span the whole string in this case
-            // { regex: /(function)(\s+)([a-z$][\w$]*)/, token: ['keyword', null, 'variable-2'] },
-            // // Rules are matched in the order in which they appear, so there is
-            // // no ambiguity between this one and the one above
-            // { regex: /(?:function|var|return|if|for|while|else|do|this)\b/, token: 'keyword' },
-            // { regex: /true|false|null|undefined/, token: 'atom' },
-            // { regex: /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i, token: 'number' },
-            // { regex: /\/\/.*/, token: 'comment' },
-            // { regex: /\/(?:[^\\]|\\.)*?\//, token: 'variable-3' },
-            // // A next property will cause the mode to move to a different state
-            // { regex: /\/\*/, token: 'comment', next: 'comment' },
-            // { regex: /[-+\/*=<>!]+/, token: 'operator' },
-            // // indent and dedent properties guide autoindentation
-            // { regex: /[\{\[\(]/, indent: true },
-            // { regex: /[\}\]\)]/, dedent: true },
-            // { regex: /[a-z$][\w$]*/, token: 'variable' },
-            // // You can embed other modes with the mode property. This rule
-            // // causes all code between << and >> to be highlighted with the XML
-            // // mode.
-            // { regex: /<</, token: "meta", mode: { spec: 'xml', end: />>/ } }
         ],
-        // The multi-line comment state.
         comment: [
             { regex: /.*?\*\//, token: 'comment', next: 'start' },
             { regex: /.*/, token: 'comment' }
         ],
-        // The meta property contains global information about the mode. It
-        // can contain properties like lineComment, which are supported by
-        // all modes, and also directives like dontIndentStates, which are
-        // specific to simple modes.
         meta:
         {
             dontIndentStates: ['comment'],
@@ -98,7 +170,6 @@ CodeMirror.defineSimpleMode(
         }
     }
 )
-
 
 CodeMirror.fromTextArea(
     $textarea,

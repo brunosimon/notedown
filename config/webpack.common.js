@@ -16,8 +16,8 @@ module.exports = {
     [
         new CleanWebpackPlugin(['./dist']),
         new HtmlWebpackPlugin({
-            title: 'Nodedown',
-            hash: true
+            hash: true,
+            template: './index.html'
         })
     ],
     module:
