@@ -1,16 +1,18 @@
+const merge = require('webpack-merge')
+const webpackCommonConfig = require('./webpack.common.js')
 const webpack = require('webpack')
-const webpackMerge = require('webpack-merge')
-const common = require('./webpack.common.js')
+const ip = require('ip')
 
-module.exports = webpackMerge(common, {
-    devServer:
+module.exports = merge(
+    webpackCommonConfig,
     {
-        contentBase: './dist',
-        hot: true
-    },
-    devtool: 'source-map',
-    plugins:
-    [
-        new webpack.HotModuleReplacementPlugin()
-    ]
-})
+        devServer:
+        {
+            contentBase: './dist'
+        },
+        plugins:
+        [
+            new webpack.HotModuleReplacementPlugin()
+        ]
+    }
+)

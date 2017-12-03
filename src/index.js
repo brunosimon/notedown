@@ -1,5 +1,5 @@
 import 'codemirror/lib/codemirror.css'
-import './style.styl'
+import './style.sass'
 
 import GoogleDriveAPI from './GoogleDriveAPI.js'
 import Code from './Code.js'

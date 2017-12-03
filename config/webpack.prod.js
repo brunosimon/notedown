@@ -1,10 +1,16 @@
-const UglifyJSWebpackPlugin = require('uglifyjs-webpack-plugin')
-const webpackMerge = require('webpack-merge')
-const common = require('./webpack.common.js')
+const path = require('path')
+const merge = require('webpack-merge')
+const webpackCommonConfig = require('./webpack.common.js')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 
-module.exports = webpackMerge(common, {
-    plugins:
-    [
-        new UglifyJSWebpackPlugin()
-    ]
-})
+module.exports = merge(
+    webpackCommonConfig,
+    {
+        plugins:
+        [
+            new CleanWebpackPlugin(['build'], { root: path.resolve(__dirname, '..') }),
+            new UglifyJSPlugin()
+        ]
+    }
+)

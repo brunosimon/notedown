@@ -46,11 +46,13 @@ export default class GoogleDriveAPI extends EventEmitter
         super()
 
         this.gapi = window.gapi
+        console.log(this.gapi)
 
         // Init the google API
         this.gapi
             .load('client:auth2', () =>
             {
+                console.log('init')
                 this.gapi.client
                     .init({
                         apiKey: API_KEY,
@@ -58,8 +60,13 @@ export default class GoogleDriveAPI extends EventEmitter
                         discoveryDocs: DISCOVERY_DOCS,
                         scope: SCOPES
                     })
+                    .catch(() =>
+                    {
+                        console.log('catch')
+                    })
                     .then(() =>
                     {
+                        console.log('init then')
                         this.setButtons()
 
                         this.gapi.auth2.getAuthInstance().isSignedIn.listen((isSignedIn) =>
@@ -100,6 +107,7 @@ export default class GoogleDriveAPI extends EventEmitter
      */
     signinStatusUpdate(isSignedIn)
     {
+        console.log('signinStatusUpdate', isSignedIn)
         if(isSignedIn)
         {
             // Update buttons
