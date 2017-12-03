@@ -4,15 +4,12 @@ module.exports = {
         'browser': true,
         'es6': true
     },
-    'plugins': ['node'],
-    'extends': ['eslint:recommended', 'plugin:node/recommended'],
     'parserOptions':
     {
         'sourceType': 'module'
     },
     'rules':
     {
-        'node/no-unsupported-features': 0,
         'no-unused-vars': 1,
         'no-console': 0,
         'dot-notation': 1,
@@ -31,8 +28,8 @@ module.exports = {
         'comma-style': [1, 'last'],
         'func-style': [1, 'expression'],
         'id-length': 0,
-        'indent': [1, 4],
-        'keyword-spacing': [1, { after: false, before: true, overrides: { from: { after: true }, return: { after: true }, import: { after: true } } }],
+        'indent': [1, 4, { SwitchCase: 1 }],
+        'keyword-spacing': [1, { after: false, before: true, overrides: { from: { after: true }, return: { after: true }, import: { after: true }, case: { after: true } } }],
         'max-len': 0,
         'new-cap': [1, { newIsCap: true, newIsCapExceptions: [], capIsNew: false, capIsNewExceptions: ['Immutable.Map', 'Immutable.Set', 'Immutable.List'] }],
         'no-array-constructor': 1,
@@ -50,7 +47,7 @@ module.exports = {
         'one-var': [1, 'never'],
         'padded-blocks': [1, 'never'],
         'quote-props': [1, 'as-needed'],
-        'quotes': 0,
+        'quotes': [1, 'single'],
         'semi': [1, 'never'],
         'space-before-blocks': [1, 'always'],
         'space-before-function-paren': [1, { anonymous: 'never', named: 'never', asyncArrow: 'never' }],
@@ -65,7 +62,7 @@ module.exports = {
         'no-duplicate-imports': 0,
         'no-useless-constructor': 1,
         'no-var': 1,
-        'object-shorthand': 1,
+        'object-shorthand': 0,
         'prefer-const': 1,
         'prefer-rest-params': 1,
         'prefer-spread': 1,
