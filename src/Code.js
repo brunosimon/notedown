@@ -42,6 +42,9 @@ export default class Code extends EventEmitter
             }
         )
 
+        // Update key mapping
+        CodeMirror.keyMap.default['Shift-Tab'] = 'indentLess'
+
         // Set code mirror
         this.codeMirror = CodeMirror.fromTextArea(
             this.$textarea,
