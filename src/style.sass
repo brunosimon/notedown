@@ -2,6 +2,7 @@
 *
     margin: 0
     padding: 0
+    box-sizing: border-box
 
 // Fonts
 @font-face
@@ -29,11 +30,10 @@ body
     font-size: 12px
     font-family: Helvetica, Arial
     padding: 10px
-    z-index: 1
     display: none
     text-decoration: none
     border-radius: 2px
-    z-index: 1
+    z-index: 2
 
     .background
         display: block
@@ -151,3 +151,43 @@ body
 
 .CodeMirror .cm-warning-value
     color: #ffc32f
+
+// Logs
+.logs
+    position: absolute
+    bottom: 0
+    right: 0
+    width: 200px
+    font-family: Inconsolata
+    font-size: 10px
+    color: #fff
+    opacity: 0
+    transition: opacity 0.3s
+    will-change: opacity
+    z-index: 2
+
+    .background
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+
+    .messages
+        position: absolute
+        bottom: 0
+        right: 0
+        width: 100%
+        padding: 20px
+        background: rgba(39, 40, 45, 0.75)
+
+        .message
+            margin-bottom: 0.75em
+            opacity: 0.4
+
+            &.urgent
+                opacity: 0.8
+                color: #ff6a49
+
+    &:hover
+        opacity: 1

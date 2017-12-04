@@ -63,7 +63,7 @@ export default class GoogleDriveAPI extends EventEmitter
                     })
                     .catch(() =>
                     {
-                        console.log('catch')
+                        this.trigger('errorInit')
                     })
                     .then(() =>
                     {
@@ -123,23 +123,33 @@ export default class GoogleDriveAPI extends EventEmitter
                 })
                 .execute((response) =>
                 {
-                    const file = response.files.find((file) => file.name === FILE_NAME)
-
-                    // File doesn't exist
-                    // Create
-                    if(!file)
+                    // Error
+                    if(response.error)
                     {
-                        this.create()
+                        this.trigger('errorList')
                     }
 
-                    // File exist
-                    // Fetch
+                    // No error
                     else
                     {
-                        this.file = file
+                        const file = response.files.find((file) => file.name === FILE_NAME)
 
-                        // Download
-                        this.fetch()
+                        // File doesn't exist
+                        // Create
+                        if(!file)
+                        {
+                            this.create()
+                        }
+
+                        // File exist
+                        // Fetch
+                        else
+                        {
+                            this.file = file
+
+                            // Download
+                            this.fetch()
+                        }
                     }
                 })
         }
@@ -193,8 +203,18 @@ export default class GoogleDriveAPI extends EventEmitter
 
         request.execute((result) =>
         {
-            this.file = result
-            this.trigger('endCreate', [BASE_CONTENT])
+            // Error
+            if(!result)
+            {
+                this.trigger('errorCreate')
+            }
+
+            // No error
+            else
+            {
+                this.file = result
+                this.trigger('endCreate', [BASE_CONTENT])
+            }
         })
     }
 
@@ -244,9 +264,20 @@ export default class GoogleDriveAPI extends EventEmitter
 
         this.trigger('startUpdate')
 
-        request.execute(() =>
+        request.execute((result) =>
         {
-            this.trigger('endUpdate')
+            // Error
+            if(!result)
+            {
+                this.trigger('errorUpdate')
+            }
+
+            // No error
+            else
+            {
+                this.file = result
+                this.trigger('endUpdate', [BASE_CONTENT])
+            }
         })
     }
 
@@ -269,22 +300,22 @@ export default class GoogleDriveAPI extends EventEmitter
 
         const accessToken = this.gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token
 
-        const xhr = new XMLHttpRequest()
-        xhr.open('GET', 'https://www.googleapis.com/drive/v3/files/' + this.file.id + '?alt=media', true)
-        xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken)
+        const request = new XMLHttpRequest()
+        request.open('GET', 'https://www.googleapis.com/drive/v3/files/' + this.file.id + '?alt=media', true)
+        request.setRequestHeader('Authorization', 'Bearer ' + accessToken)
 
         this.trigger('startFetch')
 
-        xhr.onload = () =>
+        request.addEventListener('load', () =>
         {
-            this.trigger('endFetch', [xhr.responseText])
-        }
+            this.trigger('endFetch', [request.responseText])
+        })
 
-        xhr.onerror = () =>
+        request.addEventListener('error', () =>
         {
-            console.log('Fetch error')
-        }
+            this.trigger('errorFetch')
+        })
 
-        xhr.send()
+        request.send()
     }
 }
