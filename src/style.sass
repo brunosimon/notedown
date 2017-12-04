@@ -52,38 +52,38 @@ body
         -webkit-font-smoothing: antialiased
         -moz-osx-font-smoothing: grayscale
 
-.CodeMirror-lines
+.CodeMirror .CodeMirror-lines
     padding-top: 52px
     padding-right: 56px
     padding-bottom: 100vh
     padding-left: 56px
 
 // Cursor
-.CodeMirror-cursor
+.CodeMirror .CodeMirror-cursor
     border-left-color: #fff
 
 // Selection
-.CodeMirror-selected
+.CodeMirror .CodeMirror-selected
     background: #3f4147
-.CodeMirror-focused .CodeMirror-selected
+.CodeMirror .CodeMirror-focused .CodeMirror-selected
     background: #3f4147
-.CodeMirror-line::selection
-.CodeMirror-line > span::selection
-.CodeMirror-line > span > span::selection
+.CodeMirror .CodeMirror-line::selection,
+.CodeMirror .CodeMirror-line > span::selection,
+.CodeMirror .CodeMirror-line > span > span::selection
     background: #3f4147
-.CodeMirror-line::-moz-selection
-.CodeMirror-line > span::-moz-selection
-.CodeMirror-line > span > span::-moz-selection
+.CodeMirror .CodeMirror-line::-moz-selection,
+.CodeMirror .CodeMirror-line > span::-moz-selection,
+.CodeMirror .CodeMirror-line > span > span::-moz-selection
     background: #3f4147
 
 // Scrollbar
-.CodeMirror-simplescroll-horizontal
-.CodeMirror-simplescroll-vertical
+.CodeMirror .CodeMirror-simplescroll-horizontal,
+.CodeMirror .CodeMirror-simplescroll-vertical
     background: none
     width: 18px
 
-.CodeMirror-simplescroll-horizontal div
-.CodeMirror-simplescroll-vertical div
+.CodeMirror .CodeMirror-simplescroll-horizontal div,
+.CodeMirror .CodeMirror-simplescroll-vertical div
     background: #fff
     border: none
     width: 7px
@@ -91,32 +91,35 @@ body
     right: 2px
     opacity: 0.2
 
+.CodeMirror .CodeMirror-scrollbar-filler
+    background: none
+
 // Elements
-.cm-title
+.CodeMirror .cm-title
     font-weight: bold
     color: #fff
 
-.cm-parenthesis
+.CodeMirror .cm-parenthesis
     color: #51dcff
 
-.cm-brackets
+.CodeMirror .cm-brackets
     color: #ed9ffe
 
-.cm-checked
+.CodeMirror .cm-checked
     color: #98e42e
 
-.cm-checked-value
+.CodeMirror .cm-checked-value
     color: #98e42e
     text-decoration: line-through
 
-.cm-danger
+.CodeMirror .cm-danger
     color: #ff6a49
 
-.cm-danger-value
+.CodeMirror .cm-danger-value
     color: #ff6a49
 
-.cm-warning
+.CodeMirror .cm-warning
     color: #ffc32f
 
-.cm-warning-value
+.CodeMirror .cm-warning-value
     color: #ffc32f
