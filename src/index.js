@@ -11,6 +11,11 @@ code.on('throttleUpdate', () =>
     googleDriveAPI.updateFile(googleDriveAPI.file.id, code.codeMirror.getValue())
 })
 
+code.on('save', () =>
+{
+    googleDriveAPI.updateFile(googleDriveAPI.file.id, code.codeMirror.getValue())
+})
+
 const googleDriveAPI = new GoogleDriveAPI()
 
 googleDriveAPI.on('contentFetched', (content) =>

@@ -54,6 +54,14 @@ export default class Code extends EventEmitter
             const currentLine = codeMirror.getCursor().line
             codeMirror.replaceRange(`${codeMirror.getLine(currentLine)}\n`, { line: currentLine, ch: 0 })
         }
+        CodeMirror.keyMap.default['Cmd-S'] = (codeMirror) =>
+        {
+            this.trigger('save')
+        }
+        CodeMirror.keyMap.default['Ctrl-S'] = (codeMirror) =>
+        {
+            this.trigger('save')
+        }
 
         // Set code mirror
         this.codeMirror = CodeMirror.fromTextArea(
