@@ -25,7 +25,6 @@ body
     position: absolute
     top: 20px
     right: 20px
-    background: rgba(255, 255, 255, 0.2)
     color: #fff
     font-size: 12px
     font-family: Helvetica, Arial
@@ -33,6 +32,24 @@ body
     z-index: 1
     display: none
     text-decoration: none
+    border-radius: 2px
+    z-index: 1
+
+    .background
+        display: block
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+        background: #fff
+        opacity: 0.2
+        transition: opacity 0.15s
+        will-change: opacity
+
+    &:hover
+        .background
+            opacity: 0.25
 
 // CodeMirror
 .CodeMirror
@@ -87,9 +104,14 @@ body
     background: #fff
     border: none
     width: 7px
-    border-radius: 3px
+    border-radius: 2px
     right: 2px
     opacity: 0.2
+    transition: opacity 0.15s
+    will-change: opacity
+
+    &:hover
+        opacity: 0.25
 
 .CodeMirror .CodeMirror-scrollbar-filler
     background: none
