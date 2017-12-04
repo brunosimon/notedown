@@ -77,19 +77,35 @@ export default class Code extends EventEmitter
         {
             this.trigger('update')
 
-            if(this.changeTimeout)
+            if(this.updateTimeout)
             {
-                window.clearTimeout(this.changeTimeout)
-                this.changeTimeout = null
+                window.clearTimeout(this.updateTimeout)
+                this.updateTimeout = null
             }
 
-            this.changeTimeout = window.setTimeout(() =>
+            this.updateTimeout = window.setTimeout(() =>
             {
                 this.trigger('throttleUpdate')
-                this.changeTimeout = null
+                this.updateTimeout = null
             }, 1000)
         })
 
-        this.changeTimeout = null
+        this.updateTimeout = null
+    }
+
+    /**
+     * Lock to prevent modification
+     */
+    lock()
+    {
+        this.codeMirror.setOption('readOnly', true)
+    }
+
+    /**
+     * Unlock to prevent modification
+     */
+    unlock()
+    {
+        this.codeMirror.setOption('readOnly', false)
     }
 }

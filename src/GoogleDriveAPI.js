@@ -47,6 +47,9 @@ export default class GoogleDriveAPI extends EventEmitter
 
         this.gapi = window.gapi
 
+        this.isReady = false
+        this.file = null
+
         // Init the google API
         this.gapi
             .load('client:auth2', () =>
@@ -64,14 +67,15 @@ export default class GoogleDriveAPI extends EventEmitter
                     })
                     .then(() =>
                     {
+                        this.isReady = true
                         this.setButtons()
 
                         this.gapi.auth2.getAuthInstance().isSignedIn.listen((isSignedIn) =>
                         {
-                            this.signinStatusUpdate(isSignedIn)
+                            this.signInStatusUpdate(isSignedIn)
                         })
 
-                        this.signinStatusUpdate(this.gapi.auth2.getAuthInstance().isSignedIn.get())
+                        this.signInStatusUpdate(this.gapi.auth2.getAuthInstance().isSignedIn.get())
                     })
             })
     }
@@ -100,9 +104,9 @@ export default class GoogleDriveAPI extends EventEmitter
     }
 
     /**
-     *
+     * Sign in status update
      */
-    signinStatusUpdate(isSignedIn)
+    signInStatusUpdate(isSignedIn)
     {
         if(isSignedIn)
         {
@@ -110,9 +114,7 @@ export default class GoogleDriveAPI extends EventEmitter
             this.$signInButton.style.display = 'none'
             this.$signOutButton.style.display = 'block'
 
-            /**
-             * List files
-             */
+            // Fetch files
             this.gapi.client.drive.files
                 .list({
                     // spaces: 'appDataFolder',
@@ -124,23 +126,20 @@ export default class GoogleDriveAPI extends EventEmitter
                     const file = response.files.find((file) => file.name === FILE_NAME)
 
                     // File doesn't exist
+                    // Create
                     if(!file)
                     {
-                        this.createFile(FILE_NAME, BASE_CONTENT, (file) =>
-                        {
-                            this.trigger('contentFetched', [BASE_CONTENT])
-                        })
+                        this.create()
                     }
+
                     // File exist
+                    // Fetch
                     else
                     {
                         this.file = file
 
                         // Download
-                        this.downloadFile(this.file.id, (content) =>
-                        {
-                            this.trigger('contentFetched', [content])
-                        })
+                        this.fetch()
                     }
                 })
         }
@@ -152,45 +151,16 @@ export default class GoogleDriveAPI extends EventEmitter
     }
 
     /**
-     * Update file using request
+     * Create
      */
-    updateFile(fileId, data = '', callback = null)
+    create()
     {
-        const boundary = '-------314159265358979323846'
-        const delimiter = `\r\n--${boundary}\r\n`
-        const closeDelim = `\r\n--${boundary}--`
-
-        const contentType = 'text/plain';
-
-        const metadata = {
-            parents: [],
-            mimeType: contentType
+        // Not ready
+        if(!this.isReady)
+        {
+            return
         }
 
-        const multipartRequestBody = `${delimiter}Content-Type: application/json\r\n\r\n${JSON.stringify(metadata)}${delimiter}Content-Type: ${contentType}\r\n\r\n${data}${closeDelim}`
-
-        const request = this.gapi.client.request({
-            path: '/upload/drive/v3/files/' + fileId,
-            method: 'PATCH',
-            params:
-            {
-                uploadType: 'multipart'
-            },
-            headers:
-            {
-                'Content-Type': `multipart/related; boundary="${boundary}"`
-            },
-            body: multipartRequestBody
-        })
-
-        request.execute(callback)
-    }
-
-    /**
-     * Create file using request
-     */
-    createFile(name, data = '', callback = null)
-    {
         const boundary = '-------314159265358979323846'
         const delimiter = `\r\n--${boundary}\r\n`
         const closeDelim = `\r\n--${boundary}--`
@@ -198,12 +168,12 @@ export default class GoogleDriveAPI extends EventEmitter
         const contentType = 'text/plain'
 
         const metadata = {
-            name: name,
+            name: FILE_NAME,
             parents: [],
             mimeType: contentType
-        };
+        }
 
-        const multipartRequestBody = `${delimiter}Content-Type: application/json\r\n\r\n${JSON.stringify(metadata)}${delimiter}Content-Type: ${contentType}\r\n\r\n${data}${closeDelim}`
+        const multipartRequestBody = `${delimiter}Content-Type: application/json\r\n\r\n${JSON.stringify(metadata)}${delimiter}Content-Type: ${contentType}\r\n\r\n${BASE_CONTENT}${closeDelim}`
 
         const request = this.gapi.client.request({
             path: '/upload/drive/v3/files',
@@ -219,32 +189,92 @@ export default class GoogleDriveAPI extends EventEmitter
             body: multipartRequestBody
         })
 
-        request.execute(callback)
+        request.execute((result) =>
+        {
+            this.file = result
+            this.trigger('create', [BASE_CONTENT])
+        })
     }
 
     /**
-     * Download file
+     * Update file using request
      */
-    downloadFile(fileId, callback = null)
+    update(data = '')
     {
+        // Not ready
+        if(!this.isReady)
+        {
+            return
+        }
+
+        // No file
+        if(!this.file)
+        {
+            return false
+        }
+
+        const boundary = '-------314159265358979323846'
+        const delimiter = `\r\n--${boundary}\r\n`
+        const closeDelim = `\r\n--${boundary}--`
+
+        const contentType = 'text/plain';
+
+        const metadata = {
+            parents: [],
+            mimeType: contentType
+        }
+
+        const multipartRequestBody = `${delimiter}Content-Type: application/json\r\n\r\n${JSON.stringify(metadata)}${delimiter}Content-Type: ${contentType}\r\n\r\n${data}${closeDelim}`
+
+        const request = this.gapi.client.request({
+            path: '/upload/drive/v3/files/' + this.file.id,
+            method: 'PATCH',
+            params:
+            {
+                uploadType: 'multipart'
+            },
+            headers:
+            {
+                'Content-Type': `multipart/related; boundary="${boundary}"`
+            },
+            body: multipartRequestBody
+        })
+
+        request.execute(() =>
+        {
+            this.trigger('update')
+        })
+    }
+
+    /**
+     * Fetch
+     */
+    fetch()
+    {
+        // Not ready
+        if(!this.isReady)
+        {
+            return false
+        }
+
+        // No file
+        if(!this.file)
+        {
+            return false
+        }
+
         const accessToken = this.gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token
 
         const xhr = new XMLHttpRequest()
-        xhr.open('GET', 'https://www.googleapis.com/drive/v3/files/' + fileId + '?alt=media', true)
+        xhr.open('GET', 'https://www.googleapis.com/drive/v3/files/' + this.file.id + '?alt=media', true)
         xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken)
         xhr.onload = () =>
         {
-            if(typeof callback === 'function')
-            {
-                callback(xhr.responseText)
-            }
+            this.trigger('fetch', [xhr.responseText])
         }
         xhr.onerror = () =>
         {
-            if(typeof callback === 'function')
-            {
-                callback(false)
-            }
+            console.log('Fetch error')
         }
         xhr.send()
     }
