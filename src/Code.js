@@ -44,6 +44,16 @@ export default class Code extends EventEmitter
 
         // Update key mapping
         CodeMirror.keyMap.default['Shift-Tab'] = 'indentLess'
+        CodeMirror.keyMap.default['Shift-Cmd-D'] = (codeMirror) =>
+        {
+            const currentLine = codeMirror.getCursor().line
+            codeMirror.replaceRange(`${codeMirror.getLine(currentLine)}\n`, { line: currentLine, ch: 0 })
+        }
+        CodeMirror.keyMap.default['Shit-Ctrl-D'] = (codeMirror) =>
+        {
+            const currentLine = codeMirror.getCursor().line
+            codeMirror.replaceRange(`${codeMirror.getLine(currentLine)}\n`, { line: currentLine, ch: 0 })
+        }
 
         // Set code mirror
         this.codeMirror = CodeMirror.fromTextArea(
