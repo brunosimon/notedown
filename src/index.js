@@ -17,21 +17,39 @@ code.on('save', () =>
     googleDriveAPI.update(code.codeMirror.getValue())
 })
 
-// Window focus
-window.addEventListener('focus', () =>
+// On tab visibility change
+document.addEventListener('visibilitychange', () =>
 {
-    // alert('focus')
+    // Document hide
+    // Lock code
+    if(document.hidden)
+    {
+        code.lock()
+    }
+
+    // Document show
+    // Lock code and fetch potentially changed data
+    else
+    {
+        code.lock()
+        googleDriveAPI.fetch()
+    }
 })
 
 // Google drive
 const googleDriveAPI = new GoogleDriveAPI()
 
-googleDriveAPI.on('fetch', (content) =>
+googleDriveAPI.on('endFetch', (content) =>
 {
     code.codeMirror.setValue(content)
+
+    if(code.locked)
+    {
+        code.unlock()
+    }
 })
 
-googleDriveAPI.on('create', (content) =>
+googleDriveAPI.on('endCreate', (content) =>
 {
     code.codeMirror.setValue(content)
 })

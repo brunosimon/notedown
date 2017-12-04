@@ -189,10 +189,12 @@ export default class GoogleDriveAPI extends EventEmitter
             body: multipartRequestBody
         })
 
+        this.trigger('startCreate')
+
         request.execute((result) =>
         {
             this.file = result
-            this.trigger('create', [BASE_CONTENT])
+            this.trigger('endCreate', [BASE_CONTENT])
         })
     }
 
@@ -240,9 +242,11 @@ export default class GoogleDriveAPI extends EventEmitter
             body: multipartRequestBody
         })
 
+        this.trigger('startUpdate')
+
         request.execute(() =>
         {
-            this.trigger('update')
+            this.trigger('endUpdate')
         })
     }
 
@@ -268,14 +272,19 @@ export default class GoogleDriveAPI extends EventEmitter
         const xhr = new XMLHttpRequest()
         xhr.open('GET', 'https://www.googleapis.com/drive/v3/files/' + this.file.id + '?alt=media', true)
         xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken)
+
+        this.trigger('startFetch')
+
         xhr.onload = () =>
         {
-            this.trigger('fetch', [xhr.responseText])
+            this.trigger('endFetch', [xhr.responseText])
         }
+
         xhr.onerror = () =>
         {
             console.log('Fetch error')
         }
+
         xhr.send()
     }
 }

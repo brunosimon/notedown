@@ -12,6 +12,8 @@ export default class Code extends EventEmitter
     {
         super()
 
+        this.locked = false
+
         // Textarea
         this.$textarea = document.querySelector('textarea')
 
@@ -99,6 +101,9 @@ export default class Code extends EventEmitter
     lock()
     {
         this.codeMirror.setOption('readOnly', true)
+        this.codeMirror.display.wrapper.classList.add('locked')
+
+        this.locked = true
     }
 
     /**
@@ -107,5 +112,8 @@ export default class Code extends EventEmitter
     unlock()
     {
         this.codeMirror.setOption('readOnly', false)
+        this.codeMirror.display.wrapper.classList.remove('locked')
+
+        this.locked = false
     }
 }

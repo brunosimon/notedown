@@ -64,10 +64,16 @@ body
     font-size: 14px
     letter-spacing: 1px
     line-height: 1.5em
+    opacity: 1
+    transition: opacity 0.15s
 
     @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2)
         -webkit-font-smoothing: antialiased
         -moz-osx-font-smoothing: grayscale
+
+    &.locked
+        opacity: 0.75
+        pointer-events: none
 
 .CodeMirror .CodeMirror-lines
     padding-top: 52px
