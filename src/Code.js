@@ -15,7 +15,7 @@ export default class Code extends EventEmitter
         this.locked = false
 
         // Textarea
-        this.$textarea = document.querySelector('textarea')
+        this.$textarea = document.querySelector('.js-textarea')
 
         // Use code mirror simple mode
         CodeMirror.defineSimpleMode(
