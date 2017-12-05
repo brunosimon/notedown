@@ -298,24 +298,44 @@ export default class GoogleDriveAPI extends EventEmitter
             return false
         }
 
+        // Retrieve token
         const accessToken = this.gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token
 
-        const request = new XMLHttpRequest()
-        request.open('GET', 'https://www.googleapis.com/drive/v3/files/' + this.file.id + '?alt=media', true)
-        request.setRequestHeader('Authorization', 'Bearer ' + accessToken)
-
+        // Start fetching
         this.trigger('startFetch')
 
-        request.addEventListener('load', () =>
-        {
-            this.trigger('endFetch', [request.responseText])
-        })
+        fetch(
+            `https://www.googleapis.com/drive/v3/files/${this.file.id}?alt=media`,
+            {
+                method: 'get',
+                headers:
+                {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+            })
+            .then((response) =>
+            {
+                console.log('response', response)
 
-        request.addEventListener('error', () =>
-        {
-            this.trigger('errorFetch')
-        })
-
-        request.send()
+                if(response.status === 200)
+                {
+                    return response.text()
+                }
+                else
+                {
+                    throw 'Response status != 200'
+                }
+            })
+            .catch((error) =>
+            {
+                console.log('error', error)
+                this.trigger('errorFetch')
+            })
+            .then((result) =>
+            {
+                console.log('result', result)
+                this.trigger('endFetch', [result])
+            })
     }
 }
