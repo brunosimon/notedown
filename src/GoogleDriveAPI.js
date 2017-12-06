@@ -72,6 +72,7 @@ export default class GoogleDriveAPI extends EventEmitter
 
                         this.gapi.auth2.getAuthInstance().isSignedIn.listen((isSignedIn) =>
                         {
+                            console.log('signIn listen callback')
                             this.signInStatusUpdate(isSignedIn)
                         })
 
@@ -324,6 +325,7 @@ export default class GoogleDriveAPI extends EventEmitter
                 }
                 else
                 {
+                    this.gapi.auth2.getAuthInstance().signIn()
                     throw 'Response status != 200'
                 }
             })
@@ -335,7 +337,10 @@ export default class GoogleDriveAPI extends EventEmitter
             .then((result) =>
             {
                 console.log('result', result)
-                this.trigger('endFetch', [result])
+                if(result)
+                {
+                    this.trigger('endFetch', [result])
+                }
             })
     }
 }
