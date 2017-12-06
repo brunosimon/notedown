@@ -2,14 +2,18 @@
 
 > A simple note website with syntax coloration
 
-## Details
+## :link: Live version
+
+[notedown.bruno-simon.com](http://notedown.bruno-simon.com)
+
+## :memo: Details
 
 Notedown doesn't save anything on server side. In fact, there is no server side. Instead, it asks for access to the user Google Drive and save the note on it. User may retrieve those note directly from his Drive.
 Want to retrieve your notes on another computer? Simply connect to notedown with the same Google account.
 Notedown works on any browser with Internet and will simply add some syntax coloration. It works best for todo list.
 No save button, simply write your stuff.
 
-## Instructions
+## :wrench: Instructions
 
 ### Node.js / NPM
 
