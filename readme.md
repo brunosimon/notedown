@@ -28,6 +28,7 @@ No save button, simply write your stuff.
 - Go to project the credentials page
 - Create credentials for Javascript with access to user data (the rest is up to you)
 - Add your URLs as both authorized and redirections (Use `http://localhost:8080` to test on local)
+- Create an `.env` file at the root with the Google `CLIENT ID` and `API KEY` as shown on the `.env.example` file
 
 ### Compile
 
