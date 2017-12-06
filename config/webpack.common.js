@@ -2,6 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const DotenvWebpack = require('dotenv-webpack')
 
 const extractSass = new ExtractTextPlugin({
     filename: 'css/[name].[contenthash].css',
@@ -11,6 +12,10 @@ const extractSass = new ExtractTextPlugin({
 module.exports = {
     entry: './src/index.js',
     devtool: 'source-map',
+    node:
+    {
+        fs: 'empty'
+    },
 	devServer:
 	{
 		contentBase: path.resolve(__dirname, '../build'),
@@ -22,7 +27,10 @@ module.exports = {
             template: 'src/index.html'
 		}),
         extractSass,
-        new CopyWebpackPlugin([{ from: path.resolve(__dirname, '../static'), to: 'static' }])
+        new CopyWebpackPlugin([{ from: path.resolve(__dirname, '../static'), to: 'static' }]),
+        new DotenvWebpack({
+            path: path.resolve(__dirname, '../.env')
+        })
     ],
     output:
     {

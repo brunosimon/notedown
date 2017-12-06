@@ -1,7 +1,7 @@
 import EventEmitter from './EventEmitter.js'
 
-const CLIENT_ID = '410247995746-9pfn735ilt6m7giqmmjiq93jr1bca5vr.apps.googleusercontent.com'
-const API_KEY = 'AIzaSyDDXgOOeN_6c5P7aJ3PqGUKRLD3Pbocdto'
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const API_KEY = process.env.GOOGLE_API_KEY
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
 const SCOPES = 'https://www.googleapis.com/auth/drive.file'
 const FILE_NAME = 'notedown'
@@ -326,6 +326,7 @@ export default class GoogleDriveAPI extends EventEmitter
                 else
                 {
                     this.gapi.auth2.getAuthInstance().signIn()
+                    console.log('isSignedIn', this.gapi.auth2.getAuthInstance().isSignedIn.get())
                     throw 'Response status != 200'
                 }
             })
