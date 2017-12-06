@@ -14,6 +14,7 @@ const logs = new Logs()
  * Code
  */
 const code = new Code()
+window.code = code
 
 code.on('throttleUpdate', () =>
 {
@@ -38,7 +39,9 @@ const googleDriveAPI = new GoogleDriveAPI()
 
 googleDriveAPI.on('endFetch', (content) =>
 {
+    const scrollInto = code.codeMirror.getScrollInfo()
     code.codeMirror.setValue(content)
+    code.codeMirror.scrollTo(scrollInto.left, scrollInto.top)
 
     if(code.locked)
     {
