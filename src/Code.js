@@ -24,12 +24,12 @@ export default class Code extends EventEmitter
                 start:
                 [
                     { regex: /\s*#.+/, sol: true, token: 'title' },
-                    { regex: /\(.+\)/, token: 'parenthesis' },
                     { regex: /(\[)([√xX])(])(\s)(.+)/, token: [null, 'checked', null, null, 'checked-value'] },
                     { regex: /(\[)([!])(])(\s)(.+)/, token: [null, 'danger', null, null, 'danger-value'] },
                     { regex: /(\[)([?])(])(\s)(.+)/, token: [null, 'warning', null, null, 'warning-value'] },
                     { regex: /\[\s]/, token: '' },
-                    { regex: /\[.+\]/, token: 'brackets' }
+                    { regex: /\([^)]+\)/, token: 'parenthesis' },
+                    { regex: /\[[^\]]+\]/, token: 'brackets' }
                 ],
                 comment:
                 [
