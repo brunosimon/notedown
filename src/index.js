@@ -14,7 +14,6 @@ const logs = new Logs()
  * Code
  */
 const code = new Code()
-window.code = code
 
 code.on('throttleUpdate', () =>
 {
