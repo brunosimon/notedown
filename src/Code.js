@@ -44,7 +44,130 @@ export default class Code extends EventEmitter
             }
         )
 
+        // Commands
+        CodeMirror.commands.swapLineUp = (cm) =>
+        {
+            if(cm.isReadOnly())
+            {
+                return CodeMirror.Pass
+            }
+
+            const ranges = cm.listSelections()
+            const linesToMove = []
+            let at = cm.firstLine() - 1
+            const newSels = []
+
+            for(var i = 0; i < ranges.length; i++)
+            {
+                const range = ranges[i]
+                const from = range.from().line - 1
+                let to = range.to().line
+
+                newSels.push({
+                    anchor: CodeMirror.Pos(range.anchor.line - 1, range.anchor.ch),
+                    head: CodeMirror.Pos(range.head.line - 1, range.head.ch)
+                })
+
+                if(range.to().ch == 0 && !range.empty())
+                {
+                    --to
+                }
+
+                if(from > at)
+                {
+                    linesToMove.push(from, to)
+                }
+                else if (linesToMove.length)
+                {
+                    linesToMove[linesToMove.length - 1] = to
+                }
+
+                at = to
+            }
+
+            cm.operation(() =>
+            {
+                for (let i = 0; i < linesToMove.length; i += 2)
+                {
+                    const from = linesToMove[i], to = linesToMove[i + 1]
+                    const line = cm.getLine(from)
+
+                    cm.replaceRange('', CodeMirror.Pos(from, 0), CodeMirror.Pos(from + 1, 0), '+swapLine')
+
+                    if(to > cm.lastLine())
+                    {
+                        cm.replaceRange('\n' + line, CodeMirror.Pos(cm.lastLine()), null, '+swapLine')
+                    }
+                    else
+                    {
+                        cm.replaceRange(line + '\n', CodeMirror.Pos(to, 0), null, '+swapLine')
+                    }
+                }
+
+                cm.setSelections(newSels)
+                cm.scrollIntoView()
+            })
+        }
+
+        CodeMirror.commands.swapLineDown = (cm) =>
+        {
+            if(cm.isReadOnly())
+            {
+                return CodeMirror.Pass
+            }
+
+            const ranges = cm.listSelections()
+            const linesToMove = []
+            let at = cm.lastLine() + 1
+
+            for(let i = ranges.length - 1; i >= 0; i--)
+            {
+                const range = ranges[i]
+                let from = range.to().line + 1
+                const to = range.from().line
+
+                if(range.to().ch == 0 && !range.empty())
+                {
+                    from--
+                }
+
+                if (from < at)
+                {
+                    linesToMove.push(from, to)
+                }
+                else if(linesToMove.length)
+                {
+                    linesToMove[linesToMove.length - 1] = to
+                }
+
+                at = to
+            }
+
+            cm.operation(() =>
+            {
+                for(let i = linesToMove.length - 2; i >= 0; i -= 2)
+                {
+                    const from = linesToMove[i], to = linesToMove[i + 1]
+                    const line = cm.getLine(from)
+
+                    if(from == cm.lastLine())
+                    {
+                        cm.replaceRange('', CodeMirror.Pos(from - 1), CodeMirror.Pos(from), '+swapLine')
+                    }
+                    else
+                    {
+                        cm.replaceRange('', CodeMirror.Pos(from, 0), CodeMirror.Pos(from + 1, 0), '+swapLine')
+                        cm.replaceRange(line + '\n', CodeMirror.Pos(to, 0), null, '+swapLine')
+                    }
+                }
+
+                cm.scrollIntoView()
+            })
+        }
+
         // Update key mapping
+        CodeMirror.keyMap.default['Alt-Up'] = 'swapLineUp'
+        CodeMirror.keyMap.default['Alt-Down'] = 'swapLineDown'
         CodeMirror.keyMap.default['Shift-Tab'] = 'indentLess'
         CodeMirror.keyMap.default['Shift-Cmd-D'] = (codeMirror) =>
         {
