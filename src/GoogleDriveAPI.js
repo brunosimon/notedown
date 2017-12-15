@@ -6,39 +6,6 @@ const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/r
 const SCOPES = 'https://www.googleapis.com/auth/drive.file'
 const FILE_NAME = 'notedown'
 
-const BASE_CONTENT = `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur ver. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam maiores aperiam pariatur explicabo odio dicta culpa perspiciatis aliquid nihil sapiente labore asperiores, exercitationem possimus esse blanditiis, quas repellendus non voluptate!
-Omagni sunt exercitationem, rem accusamus quidem dolor
-Reprehenderit repellendus perferendis nam a. Delectus, commodi illum quas
-
-Explicabo veniam, perspiciatis.
-
-
-# This is a list
-- Lorem
-- Ipsum (with parentheses)
-- Dolor
-- Site amet [Something inside brackets]
-- And that "a string"
-
-# This is an indented list
-- Lorem
-    - Ipsum
-    - Dolor
-
-# This is a todo list
-- [ ] Clean house
-- [x] Buy stuff
-- [ ] Do homework
-- [!] Call mum
-- [√] Feed dog
-- [ ] Cool project
-    - [√] Design
-    - [?] Website
-    - [ ] Application
-
-# Hey look, it’s a folded title
-`
-
 export default class GoogleDriveAPI extends EventEmitter
 {
     constructor()
@@ -72,12 +39,20 @@ export default class GoogleDriveAPI extends EventEmitter
 
                         this.gapi.auth2.getAuthInstance().isSignedIn.listen((isSignedIn) =>
                         {
-                            console.log('signIn listen callback')
-                            this.signInStatusUpdate(isSignedIn)
+                            this.isSignedIn = isSignedIn
+
+                            this.trigger('signedInUpdate')
+                            this.signInStatusUpdate()
                         })
 
-                        this.signInStatusUpdate(this.gapi.auth2.getAuthInstance().isSignedIn.get())
+                        this.isSignedIn = this.gapi.auth2.getAuthInstance().isSignedIn.get()
+
+                        this.signInStatusUpdate()
+
+                        this.trigger('apiReady')
                     })
+
+                this.trigger('apiLoaded')
             })
     }
 
@@ -107,9 +82,9 @@ export default class GoogleDriveAPI extends EventEmitter
     /**
      * Sign in status update
      */
-    signInStatusUpdate(isSignedIn)
+    signInStatusUpdate()
     {
-        if(isSignedIn)
+        if(this.isSignedIn)
         {
             // Update buttons
             this.$signInButton.style.display = 'none'
@@ -184,7 +159,7 @@ export default class GoogleDriveAPI extends EventEmitter
             mimeType: contentType
         }
 
-        const multipartRequestBody = `${delimiter}Content-Type: application/json\r\n\r\n${JSON.stringify(metadata)}${delimiter}Content-Type: ${contentType}\r\n\r\n${BASE_CONTENT}${closeDelim}`
+        const multipartRequestBody = `${delimiter}Content-Type: application/json\r\n\r\n${JSON.stringify(metadata)}${delimiter}Content-Type: ${contentType}\r\n\r\n${''}${closeDelim}`
 
         const request = this.gapi.client.request({
             path: '/upload/drive/v3/files',
@@ -214,7 +189,7 @@ export default class GoogleDriveAPI extends EventEmitter
             else
             {
                 this.file = result
-                this.trigger('endCreate', [BASE_CONTENT])
+                this.trigger('endCreate')
             }
         })
     }
@@ -277,7 +252,7 @@ export default class GoogleDriveAPI extends EventEmitter
             else
             {
                 this.file = result
-                this.trigger('endUpdate', [BASE_CONTENT])
+                this.trigger('endUpdate')
             }
         })
     }

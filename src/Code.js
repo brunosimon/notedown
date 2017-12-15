@@ -198,19 +198,9 @@ export default class Code extends EventEmitter
             }
         )
 
-        // Get and set latest version from localstorage
-        const latestVersion = window.localStorage.getItem('latestVersion')
-        if(latestVersion)
-        {
-            this.lock()
-            this.codeMirror.setValue(latestVersion)
-        }
-
         this.codeMirror.on('change', () =>
         {
             this.trigger('update')
-
-            window.localStorage.setItem('latestVersion', this.codeMirror.getValue())
 
             if(this.updateTimeout)
             {
