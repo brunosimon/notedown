@@ -5,6 +5,7 @@
     box-sizing: border-box
 
 // Fonts
+//  azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN<>,?!;.:/=+*$€£1234567890-_@#&'"“`%()[]<>éèêçàùÉÈÊÇÀÙôÔœ
 @font-face
     font-family: 'Inconsolata'
     font-weight: normal
@@ -13,9 +14,21 @@
 
 @font-face
     font-family: 'Inconsolata'
+    font-weight: normal
+    font-style: italic
+    src: url('/static/fonts/Inconsolata-Regular-Italic.woff2') format('woff2'), url('/static/fonts/Inconsolata-Regular-Italic.woff') format('woff')
+
+@font-face
+    font-family: 'Inconsolata'
     font-weight: bold
     font-style: normal
     src: url('/static/fonts/Inconsolata-Bold.woff2') format('woff2'), url('/static/fonts/Inconsolata-Bold.woff') format('woff')
+
+@font-face
+    font-family: 'Inconsolata'
+    font-weight: bold
+    font-style: italic
+    src: url('/static/fonts/Inconsolata-Bold-Italic.woff2') format('woff2'), url('/static/fonts/Inconsolata-Bold-Italic.woff') format('woff')
 
 // Body
 body
@@ -153,6 +166,20 @@ body
 
 .CodeMirror .cm-parenthesis
     color: #51dcff
+
+.CodeMirror .cm-italic
+    font-style: italic
+    font-size: 12px
+
+.CodeMirror .cm-bold
+    font-weight: bold
+    color: #fff
+
+.CodeMirror .cm-underline
+    text-decoration: underline
+
+.CodeMirror .cm-lineThrough
+    text-decoration: line-through
 
 .CodeMirror .cm-brackets
     color: #ed9ffe

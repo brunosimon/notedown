@@ -10,7 +10,8 @@ Notedown will simply add a some syntax coloration to your text just like a code 
 
 # Here's some examples
 
-You can put some text.
+You can put some text and *add* _fancy_ "styling" ~stuff~.
+It also work with url like this http://test.com
 
 - [ ] This is an item on a list
 - [x] This one is done

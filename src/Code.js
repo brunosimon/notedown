@@ -29,7 +29,12 @@ export default class Code extends EventEmitter
                     { regex: /(\[)([?])(])(\s)(.+)/, token: [null, 'warning', null, null, 'warning-value'] },
                     { regex: /\[\s]/, token: '' },
                     { regex: /\([^)]+\)/, token: 'parenthesis' },
-                    { regex: /\[[^\]]+\]/, token: 'brackets' }
+                    { regex: /\[[^\]]+\]/, token: 'brackets' },
+                    { regex: /(")([^"]+)(")/, token: [null, 'italic', null] },
+                    { regex: /(\*)([^\*]+)(\*)/, token: [null, 'bold', null] },
+                    { regex: /(_)([^_]+)(_)/, token: [null, 'underline', null] },
+                    { regex: /(~)([^~]+)(~)/, token: [null, 'lineThrough', null] },
+                    { regex: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, token: 'underline' },
                 ],
                 comment:
                 [
