@@ -103,7 +103,7 @@ export default class Codedown
                 const scrollInfo = this.code.codeMirror.getScrollInfo()
                 const cursorInfo = this.code.codeMirror.getCursor()
 
-                this.code.codeMirror.setValue(content)
+                this.code.setValue(content, true)
                 this.code.codeMirror.scrollTo(scrollInfo.left, scrollInfo.top)
                 this.code.codeMirror.setCursor(cursorInfo)
             }
@@ -206,10 +206,10 @@ export default class Codedown
         // Found a local version
         if(localVersion)
         {
-            this.logs.addMessage('first time')
+            this.logs.addMessage('use local version')
 
             // Set the value
-            this.code.codeMirror.setValue(localVersion)
+            this.code.setValue(localVersion, true)
         }
 
         // Wait for the API to be ready
@@ -222,7 +222,7 @@ export default class Codedown
                 if(!localVersion || localVersion === '')
                 {
                     this.logs.addMessage('first time')
-                    this.code.codeMirror.setValue(BASE_CONTENT)
+                    this.code.setValue(BASE_CONTENT, true)
                 }
 
                 // Unlock the code

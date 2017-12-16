@@ -8,7 +8,7 @@ export default class Logs
         this.$container = document.querySelector('.js-logs')
         this.$messages = this.$container.querySelector('.js-messages')
 
-        this.limit = 10
+        this.limit = 15
         this.$allMessages = []
     }
 

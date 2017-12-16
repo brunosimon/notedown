@@ -13,6 +13,7 @@ export default class Code extends EventEmitter
         super()
 
         this.locked = false
+        this.preventUpdate = false
 
         // Textarea
         this.$textarea = document.querySelector('.js-textarea')
@@ -205,22 +206,40 @@ export default class Code extends EventEmitter
 
         this.codeMirror.on('change', () =>
         {
-            this.trigger('update')
-
-            if(this.updateTimeout)
+            // Don't prevent update
+            if(!this.preventUpdate)
             {
-                window.clearTimeout(this.updateTimeout)
-                this.updateTimeout = null
+                // Trigger
+                this.trigger('update')
+
+                // Wait a few time then trigger the throttle update
+                if(this.updateTimeout)
+                {
+                    window.clearTimeout(this.updateTimeout)
+                    this.updateTimeout = null
+                }
+
+                this.updateTimeout = window.setTimeout(() =>
+                {
+                    this.trigger('throttleUpdate')
+                    this.updateTimeout = null
+                }, 1000)
             }
 
-            this.updateTimeout = window.setTimeout(() =>
-            {
-                this.trigger('throttleUpdate')
-                this.updateTimeout = null
-            }, 1000)
+            // Reset prevent update
+            this.preventUpdate = false
         })
 
         this.updateTimeout = null
+    }
+
+    /**
+     * Set value
+     */
+    setValue(value, preventUpdate = false)
+    {
+        this.preventUpdate = preventUpdate
+        this.codeMirror.setValue(value)
     }
 
     /**

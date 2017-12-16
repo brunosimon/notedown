@@ -292,8 +292,6 @@ export default class GoogleDriveAPI extends EventEmitter
             })
             .then((response) =>
             {
-                console.log('response', response)
-
                 if(response.status === 200)
                 {
                     return response.text()
@@ -312,7 +310,6 @@ export default class GoogleDriveAPI extends EventEmitter
             })
             .then((result) =>
             {
-                console.log('result', result)
                 if(result)
                 {
                     this.trigger('endFetch', [result])
