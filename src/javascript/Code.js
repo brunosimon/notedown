@@ -172,27 +172,23 @@ export default class Code extends EventEmitter
         }
 
         // Update key mapping
+        const duplicateLine = (codeMirror) =>
+        {
+            const currentLine = codeMirror.getCursor().line
+            codeMirror.replaceRange(`${codeMirror.getLine(currentLine)}\n`, { line: currentLine, ch: 0 })
+        }
+        const save = (codeMirror) =>
+        {
+            this.trigger('save')
+        }
+
         CodeMirror.keyMap.default['Alt-Up'] = 'swapLineUp'
         CodeMirror.keyMap.default['Alt-Down'] = 'swapLineDown'
         CodeMirror.keyMap.default['Shift-Tab'] = 'indentLess'
-        CodeMirror.keyMap.default['Shift-Cmd-D'] = (codeMirror) =>
-        {
-            const currentLine = codeMirror.getCursor().line
-            codeMirror.replaceRange(`${codeMirror.getLine(currentLine)}\n`, { line: currentLine, ch: 0 })
-        }
-        CodeMirror.keyMap.default['Shit-Ctrl-D'] = (codeMirror) =>
-        {
-            const currentLine = codeMirror.getCursor().line
-            codeMirror.replaceRange(`${codeMirror.getLine(currentLine)}\n`, { line: currentLine, ch: 0 })
-        }
-        CodeMirror.keyMap.default['Cmd-S'] = (codeMirror) =>
-        {
-            this.trigger('save')
-        }
-        CodeMirror.keyMap.default['Ctrl-S'] = (codeMirror) =>
-        {
-            this.trigger('save')
-        }
+        CodeMirror.keyMap.default['Shift-Cmd-D'] = duplicateLine
+        CodeMirror.keyMap.default['Shift-Ctrl-D'] = duplicateLine
+        CodeMirror.keyMap.default['Cmd-S'] = save
+        CodeMirror.keyMap.default['Ctrl-S'] = save
 
         // Set code mirror
         this.codeMirror = CodeMirror.fromTextArea(

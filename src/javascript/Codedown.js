@@ -75,14 +75,12 @@ export default class Codedown
         // After throttle update (when user stop doing changes), save in the google drive API
         this.code.on('throttleUpdate', () =>
         {
-            this.logs.addMessage('code > throttleUpdate')
             this.googleDriveAPI.update(this.code.codeMirror.getValue())
         })
 
         // When save asked
         this.code.on('save', () =>
         {
-            this.logs.addMessage('code > save')
             this.googleDriveAPI.update(this.code.codeMirror.getValue())
         })
     }
