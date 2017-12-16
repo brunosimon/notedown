@@ -136,10 +136,11 @@ export default class Codedown
         document.addEventListener('visibilitychange', () =>
         {
             // Document hide
-            // Lock code
+            // Save and lock code
             if(document.hidden)
             {
                 this.logs.addMessage('document > hide')
+                this.googleDriveAPI.update(this.code.codeMirror.getValue())
 
                 this.code.lock()
             }
