@@ -97,9 +97,16 @@ export default class Codedown
         // After fetching data from the drive API, update and unloack code
         this.googleDriveAPI.on('endFetch', (content) =>
         {
-            const scrollInto = this.code.codeMirror.getScrollInfo()
-            this.code.codeMirror.setValue(content)
-            this.code.codeMirror.scrollTo(scrollInto.left, scrollInto.top)
+            // Update content only if changed
+            if(content !== this.code.codeMirror.getValue())
+            {
+                const scrollInfo = this.code.codeMirror.getScrollInfo()
+                const cursorInfo = this.code.codeMirror.getCursor()
+
+                this.code.codeMirror.setValue(content)
+                this.code.codeMirror.scrollTo(scrollInfo.left, scrollInfo.top)
+                this.code.codeMirror.setCursor(cursorInfo)
+            }
 
             if(this.code.locked)
             {
