@@ -99,24 +99,54 @@ body
 
 .CodeMirror .CodeMirror-lines
     padding-top: 52px
-    padding-right: 56px
     padding-bottom: 100vh
-    padding-left: 56px
 
     @media (max-width: 800px)
         padding-top: 36px
-        padding-right: 36px
-        padding-left: 36px
 
     @media (max-width: 500px)
         padding-top: 26px
-        padding-right: 26px
-        padding-left: 26px
 
     @media (max-width: 400px)
         padding-top: 16px
-        padding-right: 16px
-        padding-left: 16px
+
+.CodeMirror .CodeMirror-line
+    padding-left: 21px
+    padding-right: 56px
+
+    @media (max-width: 800px)
+        padding-right: 36px
+        padding-left: 11px
+
+    // @media (max-width: 500px)
+    //     padding-right: 26px
+    //     padding-left: 1px
+
+    // @media (max-width: 400px)
+    //     padding-right: 16px
+    //     // padding-left: 16px
+
+// Fold
+.CodeMirror .CodeMirror-gutters
+    background: none
+    border-right: none
+
+.CodeMirror .CodeMirror-foldgutter
+    width: 35px
+
+    @media (max-width: 800px)
+        width: 25px
+
+    // @media (max-width: 500px)
+    //     width: 15px
+
+.CodeMirror .CodeMirror-guttermarker-subtle
+    text-align: right
+    color: #dadada
+    opacity: 0.25
+
+.CodeMirror .CodeMirror-foldmarker
+    display: none
 
 // Cursor
 .CodeMirror .CodeMirror-cursor

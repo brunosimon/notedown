@@ -2,7 +2,17 @@ import CodeMirror from 'codemirror'
 import 'codemirror/addon/mode/simple.js'
 import 'codemirror/addon/scroll/simplescrollbars.js'
 import 'codemirror/addon/scroll/simplescrollbars.css'
+import 'codemirror/addon/fold/foldcode.js'
+import 'codemirror/addon/fold/foldgutter.js'
+// import 'codemirror/addon/fold/brace-fold.js'
+// import 'codemirror/addon/fold/xml-fold.js'
+import 'codemirror/addon/fold/indent-fold.js'
+// import 'codemirror/addon/fold/markdown-fold.js'
+// import 'codemirror/addon/fold/comment-fold.js'
+// import 'codemirror/mode/markdown/markdown.js'
+
 import 'codemirror/lib/codemirror.css'
+import 'codemirror/addon/fold/foldgutter.css'
 
 import EventEmitter from './EventEmitter.js'
 
@@ -194,6 +204,13 @@ export default class Code extends EventEmitter
         this.codeMirror = CodeMirror.fromTextArea(
             this.$textarea,
             {
+                // lineNumbers: true,
+                foldGutter:
+                {
+                    rangeFinder: CodeMirror.fold.indent
+                },
+                gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+
                 scrollbarStyle: 'simple',
                 lineWrapping: true,
                 indentUnit: 4
