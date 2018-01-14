@@ -8,7 +8,7 @@ Welcome to notedown. Here you can edit this text to put anything you want like t
 Notedown will simply add a some syntax coloration to your text just like a code editor and it works on mobile.
 
 
-# Here's some examples
+# Here're some examples
 
 You can put some text and *add* _fancy_ "styling" ~stuff~.
 It also work with url like this http://test.com
@@ -28,7 +28,7 @@ It also work with url like this http://test.com
 
 You don't need to. At any time, you can leave this page and come back later. Your notes will be here.
 
-If you're affraid to loose your notes or you want to retrieve them on another computer, use the [sign in] button on the top right corner. You'll be ask to connect your Google account and authorize notedown to modify the files made by the application (notedown won't be able to access your personal files on your Drive account). Your notes will now be saved on a small file created on your Drive account. Don't worry for the security of your data, notedown doesn't save anything on the server side. In fact, there no server side.
+If you're afraid to lose your notes or you want to retrieve them on another computer, use the [sign in] button on the top right corner. You'll be asked to connect your Google account and authorize notedown to modify the files made by the application (notedown won't be able to access your personal files on your Drive account). Your notes will now be saved on a small file created on your Drive account. Don't worry for the security of your data, notedown doesn't save anything on the server side. In fact, there no server side.
 
 
 # Shortcuts
