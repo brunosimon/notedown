@@ -13,6 +13,7 @@ export default class GoogleDriveAPI extends EventEmitter
         super()
 
         this.gapi = window.gapi
+        this.authInstance = null
 
         this.isReady = false
         this.file = null
@@ -35,9 +36,11 @@ export default class GoogleDriveAPI extends EventEmitter
                     .then(() =>
                     {
                         this.isReady = true
+                        this.authInstance = this.gapi.auth2.getAuthInstance()
+
                         this.setButtons()
 
-                        this.gapi.auth2.getAuthInstance().isSignedIn.listen((isSignedIn) =>
+                        this.authInstance.isSignedIn.listen((isSignedIn) =>
                         {
                             this.isSignedIn = isSignedIn
 
@@ -45,7 +48,7 @@ export default class GoogleDriveAPI extends EventEmitter
                             this.signInStatusUpdate()
                         })
 
-                        this.isSignedIn = this.gapi.auth2.getAuthInstance().isSignedIn.get()
+                        this.isSignedIn = this.authInstance.isSignedIn.get()
 
                         this.signInStatusUpdate()
 
@@ -69,13 +72,13 @@ export default class GoogleDriveAPI extends EventEmitter
         this.$signInButton.addEventListener('click', (event) =>
         {
             event.preventDefault()
-            this.gapi.auth2.getAuthInstance().signIn()
+            this.authInstance.signIn()
         })
 
         this.$signOutButton.addEventListener('click', (event) =>
         {
             event.preventDefault()
-            this.gapi.auth2.getAuthInstance().signOut()
+            this.authInstance.signOut()
         })
     }
 
@@ -102,6 +105,13 @@ export default class GoogleDriveAPI extends EventEmitter
                     // Error
                     if(response.error)
                     {
+                        this.authInstance.signIn().then(() =>
+                        {
+                            this.isSignedIn = this.authInstance.isSignedIn.get()
+
+                            this.trigger('signedInUpdate')
+                            this.signInStatusUpdate()
+                        })
                         this.trigger('errorList')
                     }
 
@@ -275,7 +285,7 @@ export default class GoogleDriveAPI extends EventEmitter
         }
 
         // Retrieve token
-        const accessToken = this.gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token
+        const accessToken = this.authInstance.currentUser.get().getAuthResponse().access_token
 
         // Start fetching
         this.trigger('startFetch')
@@ -298,8 +308,8 @@ export default class GoogleDriveAPI extends EventEmitter
                 }
                 else
                 {
-                    this.gapi.auth2.getAuthInstance().signIn()
-                    console.log('isSignedIn', this.gapi.auth2.getAuthInstance().isSignedIn.get())
+                    this.authInstance.signIn()
+                    console.log('isSignedIn', this.authInstance.isSignedIn.get())
                     throw 'Response status != 200'
                 }
             })

@@ -178,7 +178,7 @@ export default class Codedown
         this.googleDriveAPI.on('apiReady', () => this.logs.addMessage('api > apiReady'))
         this.googleDriveAPI.on('signedInUpdate', () => this.logs.addMessage('api > signedInUpdate'))
         this.googleDriveAPI.on('errorInit', () => this.logs.addMessage('api > errorInit', 'urgent'))
-        this.googleDriveAPI.on('fetchListError', () => this.logs.addMessage('api > fetchListError', 'urgent'))
+        this.googleDriveAPI.on('listError', () => this.logs.addMessage('api > listError', 'urgent'))
         this.googleDriveAPI.on('startFetch', () => this.logs.addMessage('api > startFetch'))
         this.googleDriveAPI.on('endFetch', () => this.logs.addMessage('api > endFetch'))
         this.googleDriveAPI.on('errorFetch', () => this.logs.addMessage('api > errorFetch', 'urgent'))
