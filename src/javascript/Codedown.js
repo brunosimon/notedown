@@ -123,11 +123,11 @@ export default class Codedown
         {
             if(this.googleDriveAPI.isSignedIn)
             {
-                alert('Congratulation! Notedown can now save your notes on your Drive')
+                // alert('Congratulation! Notedown can now save your notes on your Drive')
             }
             else
             {
-                alert('Be carefull, changes won\'t be saved on your Drive anymore')
+                // alert('Be carefull, changes won\'t be saved on your Drive anymore')
             }
         })
     }
