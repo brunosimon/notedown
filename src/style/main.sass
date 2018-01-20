@@ -68,6 +68,46 @@ body
         .background
             opacity: 0.25
 
+// Controller
+.controller
+    position: absolute
+    top: 0
+    left: 0
+    transform: translateX(700px) translateY(150px)
+    z-index: 8
+    will-change: transform
+
+    .area
+        position: absolute
+        top: -25px
+        left: -25px
+        width: 50px
+        height: 50px
+        border-radius: 25px
+        cursor: all-scroll
+
+    .center
+        position: absolute
+        top: -15px
+        left: -15px
+        width: 30px
+        height: 30px
+        border-radius: 15px
+        background: #fff
+        opacity: 0.2
+        cursor: all-scroll
+        pointer-events: none
+
+    .item
+        position: absolute
+        top: -15px
+        left: -15px
+        width: 30px
+        height: 30px
+        border-radius: 15px
+        background: #444
+        will-change: transform
+
 // CodeMirror
 .CodeMirror
     position: absolute

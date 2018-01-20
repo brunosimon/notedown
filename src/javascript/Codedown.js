@@ -1,6 +1,7 @@
 import Logs from './Logs.js'
 import Code from './Code.js'
 import GoogleDriveAPI from './GoogleDriveAPI.js'
+import Controller from './Controller.js'
 
 const BASE_CONTENT = `Hi,
 
@@ -57,6 +58,7 @@ export default class Codedown
         this.setVisibilityToggle()
         this.setLogs()
         this.setInitialState()
+        this.setController()
     }
 
     /**
@@ -227,5 +229,13 @@ export default class Codedown
                 this.code.unlock()
             }
         })
+    }
+
+    /**
+     * Set the controller
+     */
+    setController()
+    {
+        this.controller = new Controller()
     }
 }
