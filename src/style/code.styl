@@ -11,11 +11,22 @@
     font-size 14px
     line-height 1.5em
     letter-spacing 1px
+    -webkit-touch-callout none
+    -webkit-user-select none
+    -khtml-user-select none
+    -moz-user-select none
+    -ms-user-select none
+    user-select none
+
+    *
+        padding 0
+        margin 0
 
     /**
      * Lines
      */
     .line
+        position relative
         font-family Inconsolata
         color #dadada
         cursor text
@@ -27,13 +38,24 @@
             pointer-events none
             visibility hidden
 
+        .parts
+            position relative
+
+        .selection
+            position absolute
+            top 0
+            left 0
+            width 0
+            height 100%
+            background #3f4147
+
     /**
      * Cursor
      */
     .cursor
         position absolute
         top 0
-        left 50px
+        left 0
         width 0
         font-family Inconsolata
         // pointer-events none

@@ -6,17 +6,30 @@ export default class Line
         this.$element = document.createElement('div')
         this.$element.classList.add('line')
 
-        // Text
-        this.$text = document.createElement('span')
-        this.$text.classList.add('text')
-        this.$element.appendChild(this.$text)
-
         // Set up
         this.originalText = null
         this.styledText = []
 
         // Set initial text
+        this.setSelection()
+        this.setParts()
         this.setText(_text)
+    }
+
+    setSelection()
+    {
+        this.selection = {}
+        this.selection.$element = document.createElement('div')
+        this.selection.$element.classList.add('selection')
+        this.$element.appendChild(this.selection.$element)
+    }
+
+    setParts()
+    {
+        this.parts = {}
+        this.parts.$element = document.createElement('div')
+        this.parts.$element.classList.add('parts')
+        this.$element.appendChild(this.parts.$element)
     }
 
     setText(_text)
@@ -42,9 +55,9 @@ export default class Line
     updateDOM()
     {
         // Remove
-        while(this.$text.children.length)
+        while(this.parts.$element.children.length)
         {
-            this.$text.children[0].remove()
+            this.parts.$element.children[0].remove()
         }
 
         // Add
@@ -53,7 +66,7 @@ export default class Line
             const $part = document.createElement('span')
             $part.classList.add('part')
             $part.textContent = _part
-            this.$text.appendChild($part)
+            this.parts.$element.appendChild($part)
         }
     }
 }
