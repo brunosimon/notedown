@@ -2,6 +2,7 @@ export default class Cursor
 {
     constructor(_options)
     {
+        // Options
         this.measures = _options.measures
 
         // Element
@@ -15,17 +16,23 @@ export default class Cursor
 
         // Set
         this.active = false
-
-        this.position = { line: 0, row: 0 }
-        this.start = { line: 0, row: 0 }
-        this.end = { line: 0, row: 0 }
+        this.position = { lineIndex: 0, rowIndex: 0 }
     }
 
     setPosition(_position)
     {
-        const x = _position.rowIndex * this.measures.width
-        const y = _position.lineIndex * this.measures.height
+        this.position.lineIndex = _position.lineIndex
+        this.position.rowIndex = _position.rowIndex
+
+        const x = _position.rowIndex * this.measures.rowWidth
+        const y = _position.lineIndex * this.measures.lineHeight
 
         this.$element.style.transform = `translateX(${x}px) translateY(${y}px)`
+        this.$element.classList.remove('animated')
+
+        window.requestAnimationFrame(() =>
+        {
+            this.$element.classList.add('animated')
+        })
     }
 }

@@ -1,5 +1,4 @@
 import Lines from './Lines.js'
-import Line from './Line.js'
 import Textarea from './Textarea.js'
 import Cursor from './Cursor.js'
 
@@ -9,17 +8,40 @@ export default class Code
     {
         this.setContainer()
         this.setLines()
-        this.setMeasures()
         this.setCursor()
         this.setTextarea()
+        this.setSelection()
     }
 
     setCursor()
     {
         this.cursor = new Cursor({
-            measures: this.measures
+            measures: this.lines.measures
         })
         this.container.$element.appendChild(this.cursor.$element)
+
+        // Events callback
+        const mousedown = (_event) =>
+        {
+            const position = this.getPosition(_event.clientX, _event.clientY)
+            this.cursor.setPosition(position)
+
+            window.addEventListener('mousemove', mousemove)
+            window.addEventListener('mouseup', mouseup)
+        }
+        const mousemove = (_event) =>
+        {
+            const position = this.getPosition(_event.clientX, _event.clientY)
+            this.cursor.setPosition(position)
+        }
+        const mouseup = () =>
+        {
+            window.removeEventListener('mousemove', mousemove)
+            window.removeEventListener('mouseup', mousemove)
+        }
+
+        // Mousedown
+        this.container.$element.addEventListener('mousedown', mousedown)
     }
 
     setContainer()
@@ -30,15 +52,6 @@ export default class Code
         this.container.$element = document.createElement('div')
         this.container.$element.classList.add('code')
         document.body.appendChild(this.container.$element)
-
-        // Mousedown
-        this.container.$element.addEventListener('mousedown', (_event) =>
-        {
-            const position = this.getPosition(_event.clientX, _event.clientY)
-            this.cursor.setPosition(position)
-
-            console.log('position', position)
-        })
     }
 
     getPosition(_x, _y)
@@ -52,7 +65,7 @@ export default class Code
         /**
          * Line
          */
-        lineIndex = Math.floor(_y / this.measures.height)
+        lineIndex = Math.floor(_y / this.lines.measures.lineHeight)
 
         // Before first line
         if(lineIndex < 0)
@@ -94,7 +107,7 @@ export default class Code
         // Between first and last line
         else
         {
-            rowIndex = Math.round(_x / this.measures.width)
+            rowIndex = Math.round(_x / this.lines.measures.rowWidth)
 
             const line = this.lines.items[lineIndex]
 
@@ -120,17 +133,54 @@ export default class Code
         this.container.$element.appendChild(this.textarea.$element)
     }
 
+    setSelection()
+    {
+        this.selection = {}
+        this.selection.direction = 'normal'
+        this.selection.start = { lineIndex: 0, rowIndex: 0 }
+        this.selection.end = { lineIndex: 0, rowIndex: 0 }
+
+        // Events callback
+        const mousedown = (_event) =>
+        {
+            this.selection.start = this.getPosition(_event.clientX, _event.clientY)
+            this.selection.end = { ...this.selection.start }
+
+            this.lines.updateSelection(this.selection)
+
+            window.addEventListener('mousemove', mousemove)
+            window.addEventListener('mouseup', mouseup)
+        }
+        const mousemove = (_event) =>
+        {
+            this.selection.end = this.getPosition(_event.clientX, _event.clientY)
+
+            if(this.selection.end.lineIndex < this.selection.start.lineIndex || this.selection.end.lineIndex === this.selection.start.lineIndex && this.selection.end.rowIndex < this.selection.start.rowIndex)
+            {
+                this.selection.direction = 'reverse'
+            }
+            else
+            {
+                this.selection.direction = 'normal'
+            }
+
+            this.lines.updateSelection(this.selection)
+        }
+        const mouseup = () =>
+        {
+            window.removeEventListener('mousemove', mousemove)
+            window.removeEventListener('mouseup', mousemove)
+        }
+
+        // Mousedown
+        this.container.$element.addEventListener('mousedown', mousedown)
+    }
+
     setLines()
     {
         this.lines = new Lines()
         this.container.$element.appendChild(this.lines.$element)
-    }
-
-    setMeasures()
-    {
-        this.measures = {}
-        this.measures.width = this.lines.dummy.line.parts.$element.offsetWidth
-        this.measures.height = this.lines.dummy.line.$element.offsetHeight
+        this.lines.updateMeasures()
     }
 
     destruct()

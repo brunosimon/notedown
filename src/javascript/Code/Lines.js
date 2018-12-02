@@ -10,12 +10,17 @@ export default class Lines
 
         // Set up
         this.items = []
-        this.setDummy()
+        this.setMeasures()
 
         // Test lines
-        this.add('Toto 1')
-        this.add('Toto 2')
-        this.add('Toto 3')
+        this.add('# Title')
+        this.add('    ## Subtitle')
+        this.add('')
+        this.add('        - [ ] Toto 1')
+        this.add('        - [ ] Toto 2')
+        this.add('        - [ ] Toto 3')
+        this.add('')
+        this.add('lorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum dolores')
     }
 
     add(_text = '')
@@ -25,12 +30,65 @@ export default class Lines
         this.items.push(line)
     }
 
-    setDummy()
+    setMeasures()
     {
-        this.dummy = {}
-        this.dummy.line = new Line('0')
-        this.dummy.line.$element.classList.add('dummy')
+        this.measures = {}
+        this.measures.rowWidth = null
+        this.measures.lineHeight = null
+        this.measures.line = new Line('0')
+        this.measures.line.$element.classList.add('dummy')
 
-        this.$element.appendChild(this.dummy.line.$element)
+        this.$element.appendChild(this.measures.line.$element)
+    }
+
+    updateMeasures()
+    {
+        this.measures.rowWidth = this.measures.line.parts.$element.offsetWidth
+        this.measures.lineHeight = this.measures.line.$element.offsetHeight
+    }
+
+    updateSelection(_selection)
+    {
+        const start = _selection.direction === 'normal' ? _selection.start : _selection.end
+        const end = _selection.direction === 'normal' ? _selection.end : _selection.start
+
+        const lines = this.items.slice(start.lineIndex, end.lineIndex + 1)
+        const otherLines = [ ...this.items.slice(0, start.lineIndex), ...this.items.slice(end.lineIndex + 1, this.items.length) ] //
+
+        // One line
+        if(lines.length === 1)
+        {
+            const line = lines[0]
+
+            line.updateSelection(start.rowIndex * this.measures.rowWidth, end.rowIndex * this.measures.rowWidth)
+        }
+        else
+        {
+            for(let i = 0; i < lines.length; i++)
+            {
+                const line = lines[i]
+
+                // First
+                if(i === 0)
+                {
+                    line.updateSelection(start.rowIndex * this.measures.rowWidth, line.originalText.length * this.measures.rowWidth)
+                }
+                // Last
+                else if(i === lines.length - 1)
+                {
+                    line.updateSelection(0, end.rowIndex * this.measures.rowWidth)
+                }
+                // Between
+                else
+                {
+                    line.updateSelection(0, line.originalText.length * this.measures.rowWidth)
+                }
+            }
+        }
+
+        for(const _line of otherLines)
+        {
+            _line.updateSelection(0, 0)
+        }
     }
 }

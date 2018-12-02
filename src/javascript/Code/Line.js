@@ -3,7 +3,7 @@ export default class Line
     constructor(_text = '')
     {
         // Element
-        this.$element = document.createElement('div')
+        this.$element = document.createElement('pre')
         this.$element.classList.add('line')
 
         // Set up
@@ -13,7 +13,7 @@ export default class Line
         // Set initial text
         this.setSelection()
         this.setParts()
-        this.setText(_text)
+        this.updateText(_text)
     }
 
     setSelection()
@@ -32,7 +32,7 @@ export default class Line
         this.$element.appendChild(this.parts.$element)
     }
 
-    setText(_text)
+    updateText(_text)
     {
         // Didn't change
         if(_text === this.originalText)
@@ -65,8 +65,21 @@ export default class Line
         {
             const $part = document.createElement('span')
             $part.classList.add('part')
-            $part.textContent = _part
+            if(this.styledText.length === 1 && _part === '')
+            {
+                $part.innerHTML = '&#8203;'
+            }
+            else
+            {
+                $part.textContent = _part
+            }
             this.parts.$element.appendChild($part)
         }
+    }
+
+    updateSelection(_startX, _endX)
+    {
+        this.selection.$element.style.left = `${_startX}px`
+        this.selection.$element.style.width = `${_endX - _startX}px`
     }
 }

@@ -58,7 +58,19 @@
         left 0
         width 0
         font-family Inconsolata
-        // pointer-events none
+        pointer-events none
+
+        &.animated
+            animation cursor-bar-blink 1s infinite
+            will-change opacity
+
+            @keyframes cursor-bar-blink
+                0%
+                49%
+                    opacity 1
+                50%
+                100%
+                    opacity 0
 
         &::after
             content '0'
@@ -71,16 +83,6 @@
             height 100%
             width 1px
             background #ffffff
-            animation cursor-bar-blink 1s infinite
-            will-change opacity
-
-            @keyframes cursor-bar-blink
-                0%
-                49%
-                    opacity 0
-                50%
-                100%
-                    opacity 1
 
     /**
      * Textarea
