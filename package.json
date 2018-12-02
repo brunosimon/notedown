@@ -1,36 +1,21 @@
 {
-  "name": "nodedown",
-  "version": "1.0.0",
+  "name": "notedown",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config ./config/webpack.prod.js",
-    "dev": "webpack-dev-server --open --config ./config/webpack.dev.js"
+    "predev": "npm run clean",
+    "dev": "parcel src/index.html -p 1234 --open",
+    "prebuild": "npm run clean",
+    "build": "parcel build src/index.html --out-dir ./dist --public-url . --detailed-report",
+    "clean": "shx rm -rf dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.0",
-    "clean-webpack-plugin": "^0.1.16",
-    "codemirror": "^5.29.0",
-    "copy-webpack-plugin": "^4.0.1",
-    "css-loader": "^0.28.7",
-    "dotenv": "^4.0.0",
-    "dotenv-webpack": "^1.5.4",
-    "eslint-plugin-node": "^5.1.1",
-    "extract-text-webpack-plugin": "^3.0.0",
-    "file-loader": "^0.11.2",
-    "html-webpack-plugin": "^2.30.1",
-    "ip": "^1.1.5",
-    "node-sass": "^4.5.3",
-    "sass-loader": "^6.0.6",
-    "style-loader": "^0.18.2",
-    "uglifyjs-webpack-plugin": "^0.4.6",
-    "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.8.2",
-    "webpack-merge": "^4.1.0"
-  }
+    "parcel-bundler": "^1.10.3",
+    "parcel-plugin-asset-copier": "^1.0.0",
+    "shx": "^0.3.2"
+  },
+  "assetsPath": "assets"
 }
