@@ -22,7 +22,7 @@
         "no-useless-escape": 1,
         "radix": [1, "as-needed"],
         "no-undef": 2,
-        "array-bracket-spacing": [1, "never"],
+        "array-bracket-spacing": [1, "always"],
         "brace-style": [1, "allman"],
         "camelcase": [1, { "properties": "always" }],
         "comma-dangle": [1, "never"],

@@ -1,0 +1,69 @@
+/**
+ * Code
+ */
+.code
+    position absolute
+    top 0
+    left 0
+    width 100%
+    height 100%
+    background #27282d
+    font-size 14px
+    line-height 1.5em
+    letter-spacing 1px
+
+    /**
+     * Lines
+     */
+    .line
+        font-family Inconsolata
+        color #dadada
+        cursor text
+
+        &.dummy
+            position absolute
+            top 0
+            left 0
+            pointer-events none
+            visibility hidden
+
+    /**
+     * Cursor
+     */
+    .cursor
+        position absolute
+        top 0
+        left 50px
+        width 0
+        font-family Inconsolata
+        // pointer-events none
+
+        &::after
+            content '0'
+            visibility hidden
+
+        .bar
+            position absolute
+            top 0
+            left 0
+            height 100%
+            width 1px
+            background #ffffff
+            animation cursor-bar-blink 1s infinite
+            will-change opacity
+
+            @keyframes cursor-bar-blink
+                0%
+                49%
+                    opacity 0
+                50%
+                100%
+                    opacity 1
+
+    /**
+     * Textarea
+     */
+    .textarea
+        position absolute
+        opacity 0
+        pointer-events none

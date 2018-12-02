@@ -1,12 +1,14 @@
+import Code from './Code/index.js'
+
 export default class Application
 {
     constructor()
     {
-        console.log('construct')
+        this.code = new Code()
     }
 
     destruct()
     {
-        console.log('destruct')
+        this.code.destruct()
     }
 }
