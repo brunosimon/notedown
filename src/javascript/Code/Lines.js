@@ -18,6 +18,8 @@ export default class Lines
         const line = new Line(_text)
         this.$element.appendChild(line.$element)
         this.items.push(line)
+
+        return line
     }
 
     setMeasures()
@@ -33,7 +35,7 @@ export default class Lines
 
     updateMeasures()
     {
-        this.measures.rowWidth = this.measures.line.parts.$element.offsetWidth
+        this.measures.rowWidth = this.measures.line.fragments.$element.offsetWidth
         this.measures.lineHeight = this.measures.line.$element.offsetHeight
     }
 

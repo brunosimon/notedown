@@ -15,20 +15,34 @@ export default class Code
         this.setSelection()
 
         // Test lines
-        this.lines.add('# Title')
-        this.lines.add('    ## Subtitle')
-        this.lines.add('')
-        this.lines.add('        - [x] Toto 1')
-        this.lines.add('        - [!] Toto 2')
-        this.lines.add('        - [?] Toto 2')
-        this.lines.add('        - [ ] Toto 3')
-        this.lines.add('')
-        this.lines.add('lorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum dolores')
+        const texts = [
+            '# Title http://google.fr',
+            // '    ## Subtitle',
+            // '',
+            // '        - [x] Toto 1',
+            // '        - [!] Toto 2',
+            // '        - [?] Toto 2',
+            // '        - [ ] Toto 3',
+            // '',
+            // 'lorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum dolores'
+        ]
 
-        for(let i = 0; i < 100; i++)
+        for(const _text of texts)
         {
-            this.lines.add(`Test ${i}`)
+            this.lines.add(_text)
         }
+
+        // const line = this.lines.add()
+
+        // window.setInterval(() =>
+        // {
+        //     line.updateText(texts[Math.floor(Math.random() * texts.length)])
+        // }, 1000)
+
+        // for(let i = 0; i < 100; i++)
+        // {
+        //     this.lines.add(`Test ${i}`)
+        // }
     }
 
     setCursor()

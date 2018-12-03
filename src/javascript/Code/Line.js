@@ -1,3 +1,5 @@
+import fragmentsConfig from './config/fragments.js'
+
 export default class Line
 {
     constructor(_text = '')
@@ -8,7 +10,7 @@ export default class Line
 
         // Set up
         this.originalText = null
-        this.styledText = []
+        this.fragments = []
 
         // Set initial text
         this.setSelection()
@@ -26,10 +28,12 @@ export default class Line
 
     setParts()
     {
-        this.parts = {}
-        this.parts.$element = document.createElement('div')
-        this.parts.$element.classList.add('parts')
-        this.$element.appendChild(this.parts.$element)
+        this.fragments = {}
+        this.fragments.$element = document.createElement('div')
+        this.fragments.$element.classList.add('fragment')
+        this.$element.appendChild(this.fragments.$element)
+
+        this.fragments.items = []
     }
 
     updateText(_text)
@@ -47,7 +51,28 @@ export default class Line
 
     updateStyled()
     {
-        this.styledText = [ this.originalText ]
+        for(const _fragment of fragmentsConfig.lines)
+        {
+            const lineMatches = this.originalText.match(_fragment.regex)
+            let fragmented = _fragment.replacement
+
+            if(lineMatches)
+            {
+                // console.log(lineMatches)
+                let i = 0
+                for(const _match of lineMatches)
+                {
+                    console.log(_match)
+                    fragmented = fragmented.replace(`$${i}`, _match)
+                    i++
+                }
+
+                console.log(fragmented)
+            }
+            // const fragmented = this.originalText.replace(_fragment.regex, _fragment.replacement)
+            // console.log(fragmented)
+        }
+        this.fragments.items = [ this.originalText ]
 
         this.updateDOM()
     }
@@ -55,25 +80,25 @@ export default class Line
     updateDOM()
     {
         // Remove
-        while(this.parts.$element.children.length)
+        while(this.fragments.$element.children.length)
         {
-            this.parts.$element.children[0].remove()
+            this.fragments.$element.children[0].remove()
         }
 
         // Add
-        for(const _part of this.styledText)
+        for(const _fragment of this.fragments.items)
         {
-            const $part = document.createElement('span')
-            $part.classList.add('part')
-            if(this.styledText.length === 1 && _part === '')
+            const $fragment = document.createElement('span')
+            $fragment.classList.add('fragment')
+            if(this.fragments.length === 1 && _fragment === '')
             {
-                $part.innerHTML = '&#8203;'
+                $fragment.innerHTML = '&#8203;'
             }
             else
             {
-                $part.textContent = _part
+                $fragment.textContent = _fragment
             }
-            this.parts.$element.appendChild($part)
+            this.fragments.$element.appendChild($fragment)
         }
     }
 
