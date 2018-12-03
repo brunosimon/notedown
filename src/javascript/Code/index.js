@@ -1,16 +1,34 @@
 import Lines from './Lines.js'
 import Textarea from './Textarea.js'
 import Cursor from './Cursor.js'
+import Scroll from './Scroll.js'
 
 export default class Code
 {
     constructor()
     {
         this.setContainer()
+        this.setScroll()
         this.setLines()
         this.setCursor()
         this.setTextarea()
         this.setSelection()
+
+        // Test lines
+        this.lines.add('# Title')
+        this.lines.add('    ## Subtitle')
+        this.lines.add('')
+        this.lines.add('        - [x] Toto 1')
+        this.lines.add('        - [!] Toto 2')
+        this.lines.add('        - [?] Toto 2')
+        this.lines.add('        - [ ] Toto 3')
+        this.lines.add('')
+        this.lines.add('lorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum dolores')
+
+        for(let i = 0; i < 100; i++)
+        {
+            this.lines.add(`Test ${i}`)
+        }
     }
 
     setCursor()
@@ -18,7 +36,7 @@ export default class Code
         this.cursor = new Cursor({
             measures: this.lines.measures
         })
-        this.container.$element.appendChild(this.cursor.$element)
+        this.scroll.$inner.appendChild(this.cursor.$element)
 
         // Events callback
         const mousedown = (_event) =>
@@ -52,6 +70,12 @@ export default class Code
         this.container.$element = document.createElement('div')
         this.container.$element.classList.add('code')
         document.body.appendChild(this.container.$element)
+    }
+
+    setScroll()
+    {
+        this.scroll = new Scroll()
+        this.container.$element.appendChild(this.scroll.$element)
     }
 
     getPosition(_x, _y)
@@ -179,7 +203,7 @@ export default class Code
     setLines()
     {
         this.lines = new Lines()
-        this.container.$element.appendChild(this.lines.$element)
+        this.scroll.$inner.appendChild(this.lines.$element)
         this.lines.updateMeasures()
     }
 

@@ -11,16 +11,6 @@ export default class Lines
         // Set up
         this.items = []
         this.setMeasures()
-
-        // Test lines
-        this.add('# Title')
-        this.add('    ## Subtitle')
-        this.add('')
-        this.add('        - [ ] Toto 1')
-        this.add('        - [ ] Toto 2')
-        this.add('        - [ ] Toto 3')
-        this.add('')
-        this.add('lorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum dolores')
     }
 
     add(_text = '')

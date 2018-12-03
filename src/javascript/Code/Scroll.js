@@ -1,0 +1,48 @@
+export default class
+{
+    constructor()
+    {
+        this.scrollbarWidth = this.getScrollbarWidth()
+
+        // Element
+        this.$element = document.createElement('div')
+        this.$element.style.right = `-${this.scrollbarWidth}px`
+        this.$element.style.bottom = `-${this.scrollbarWidth}px`
+        this.$element.classList.add('scroll')
+
+        // Inner
+        this.$inner = document.createElement('div')
+        this.$inner.classList.add('scroll-inner')
+        this.$element.appendChild(this.$inner)
+    }
+
+    getScrollbarWidth()
+    {
+        const $inner = document.createElement('div')
+        $inner.style.width = '100%'
+        $inner.style.height = '200px'
+
+        const $outer = document.createElement('div')
+        $outer.style.position = 'absolute'
+        $outer.style.top = '0px'
+        $outer.style.left = '0px'
+        $outer.style.visibility = 'hidden'
+        $outer.style.width = '200px'
+        $outer.style.height = '150px'
+        $outer.style.overflow = 'hidden'
+        $outer.appendChild($inner)
+
+        document.body.appendChild($outer)
+        const width1 = $inner.offsetWidth
+        $outer.style.overflow = 'scroll'
+        const width2 = $inner.offsetWidth
+        if(width1 === width2)
+        {
+            width2 = $outer.clientWidth
+        }
+
+        document.body.removeChild($outer)
+
+        return width1 - width2
+    }
+}
