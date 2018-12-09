@@ -9,9 +9,11 @@
     height 100%
     overflow hidden
     background #27282d
-    font-size 14px
-    line-height 1.5em
+    font-size 13px
+    line-height 1.7em
     letter-spacing 1px
+    -webkit-font-smoothing antialiased
+    -moz-osx-font-smoothing grayscale
     -webkit-touch-callout none
     -webkit-user-select none
     -khtml-user-select none
@@ -44,7 +46,7 @@
      */
     .line
         position relative
-        font-family Inconsolata
+        font-family Consolas
         color #dadada
         cursor text
 
@@ -55,9 +57,6 @@
             pointer-events none
             visibility hidden
 
-        .fragments
-            position relative
-
         .selection
             position absolute
             top 0
@@ -65,6 +64,77 @@
             width 0
             height 100%
             background #3f4147
+
+        .fragments
+            position relative
+
+            /**
+            * Fragments
+            */
+            .url
+                color inherit
+                text-decoration none
+
+                &:hover
+                    text-decoration underline
+
+            .success
+                .task-value
+                    color #98e42e
+
+                .task-description
+                    color #98e42e
+                    text-decoration line-through
+
+                    .parenthesis
+                    .brackets
+                        text-decoration line-through
+
+            .canceled
+                .task-description
+                    text-decoration line-through
+
+                    .parenthesis
+                    .brackets
+                        text-decoration line-through
+
+            .warning
+                .task-value
+                .task-description
+                    color #ffc32f
+
+            .danger
+                .task-value
+                .task-description
+                    color #ff6a49
+
+            .parenthesis
+                color #51dcff
+
+            .brackets
+                color #ed9ffe
+
+            .title
+                font-weight bold
+                color #ffffff
+
+            .strong
+                .strong-value
+                    font-weight bold
+                    color #ffffff
+
+            .quote
+                .quote-value
+                    font-style italic
+                    color #ffffff
+
+            .strike
+                .strike-value
+                    text-decoration line-through
+
+            .comment
+                color #888888
+                text-decoration none
 
     /**
      * Cursor

@@ -61,13 +61,12 @@ export default class Line
 
     applyFragments(_text, _fragments)
     {
-        let text = _text
-        const fragmentIndex = _fragments.findIndex((_item) => text.match(_item.regex))
+        const fragmentIndex = _fragments.findIndex((_item) => _text.match(_item.regex))
 
         // No fragment found (end)
         if(fragmentIndex === -1)
         {
-            return text
+            return _text
         }
 
         // Extract fragment from fragments
@@ -76,21 +75,25 @@ export default class Line
         newFragments.splice(fragmentIndex, 1)
 
         // Find matches
-        const matches = text.match(fragment.regex)
-        text = fragment.replacement
+        const matches = _text.match(fragment.regex)
+        let text = fragment.replacement
 
         // Apply fragments to text before and after match
         let beforeText = _text.slice(0, matches.index)
-        beforeText = this.applyFragments(beforeText, _fragments)
+        beforeText = beforeText !== '' ? this.applyFragments(beforeText, _fragments) : ''
         let afterText = _text.slice(matches.index + matches[0].length, _text.length)
-        afterText = this.applyFragments(afterText, _fragments)
+        afterText = afterText !== '' ? this.applyFragments(afterText, _fragments) : ''
 
         // Apply fragments to matches parts
-        for(let i = 1; i < matches.length; i++)
+        for(let i = 0; i < matches.length; i++)
         {
             let _match = matches[i]
-            _match = this.applyFragments(_match, newFragments)
-            text = text.replace(`$${i}`, _match)
+            if(i > 0 && !fragment.noSubFragments)
+            {
+                _match = this.applyFragments(_match, newFragments)
+            }
+
+            text = text.replace(new RegExp(`\\$${i}`, 'g'), _match)
         }
 
         // Concatenate

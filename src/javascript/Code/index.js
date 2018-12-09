@@ -16,17 +16,43 @@ export default class Code
 
         // Test lines
         const texts = [
-            '    - [x] Test (parenthese) Yop (again)',
-            '(parenthese)',
-            '# Title http://google.fr',
+            // '    - [x] Test (parenthese) Yop (again)',
+            '# Title',
+            '    ## Sub title',
+            '(parenthesis)',
+            '[brackets]',
+            '    [brackets]',
+            '(parenthesis) coucou [brackets] (parenthesis)',
+
+            'http://google.fr',
+            'https://google.fr?toto=tata',
+            'https://google.fr?toto=tata#hash',
+            'https://google.fr/search?toto=tata#hash',
+            'https://google.fr/search/keyword?toto=tata&tutu=titi#hash',
+            'file:///Users/brunosimon/Sites/notedown/src/index.html',
+            'Toto http://google.fr tata',
+            'Toto (http://google.fr)',
+
             // '    ## Subtitle',
             // '',
-            // '        - [x] Toto 1',
-            // '        - [!] Toto 2',
-            // '        - [?] Toto 2',
-            // '        - [ ] Toto 3',
-            // '',
-            // 'lorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum dolores'
+            '        - [x] Toto 1',
+            '        - [x] Toto 1 http://google.fr',
+            '        - [x] Toto 1 (parenthesis)',
+            '        - [x] Toto 1 [parenthesis]',
+            '        - [x] Toto 1 [parenthesis http://google.fr]',
+            '        - [!] Toto 2',
+            '        - [?] Toto 2',
+            '        - [-] Toto 2',
+            '        - [ ] Toto 3',
+            '',
+            'lorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum doloresorem ipsum dolores',
+            'Before *I am strong* after',
+            'Before "I am a quote" after',
+            'Before ~I am a striked~ after',
+            '// Comment',
+            'Hey // Comment after test',
+            '- [x] Toto 1 // Comment',
+            '(parenthesis // Comment)'
         ]
 
         for(const _text of texts)
