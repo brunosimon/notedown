@@ -2,9 +2,12 @@ import EventEmitter from './EventEmitter.js'
 
 export default class Inputs extends EventEmitter
 {
-    constructor()
+    constructor(_options)
     {
         super()
+
+        this.root = _options.root
+        this.root.inputs = this
 
         this.setTextarea()
     }
@@ -16,6 +19,7 @@ export default class Inputs extends EventEmitter
         // Element
         this.textarea.$element = document.createElement('textarea')
         this.textarea.$element.classList.add('textarea')
+        this.root.container.$element.appendChild(this.textarea.$element)
 
         this.textarea.$element.addEventListener('input', () =>
         {
@@ -23,6 +27,11 @@ export default class Inputs extends EventEmitter
             this.textarea.$element.value = ''
 
             this.trigger('input', [ value ])
+        })
+
+        this.root.lines.$element.addEventListener('mouseup', () =>
+        {
+            this.focus()
         })
     }
 

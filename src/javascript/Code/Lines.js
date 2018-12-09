@@ -1,21 +1,20 @@
 import Line from './Line.js'
-import Inputs from './Inputs.js'
-import Cursor from './Cursor.js'
 
 export default class Lines
 {
-    constructor()
+    constructor(_options)
     {
+        this.root = _options.root
+        this.root.lines = this
+
         // Container
         this.$element = document.createElement('div')
         this.$element.classList.add('lines')
+        this.root.scroll.$inner.appendChild(this.$element)
 
         // Set up
         this.items = []
         this.setMeasures()
-        this.setSelection()
-        this.setInputs()
-        this.setCursor()
     }
 
     add(_text = '')
@@ -41,62 +40,24 @@ export default class Lines
 
     setMeasures()
     {
+        // Set up
         this.measures = {}
         this.measures.rowWidth = null
         this.measures.lineHeight = null
+
+        // Create invisible dummy line
         this.measures.line = new Line('0')
         this.measures.line.$element.classList.add('dummy')
-
         this.$element.appendChild(this.measures.line.$element)
+
+        // Update measures
+        this.updateMeasures()
     }
 
     updateMeasures()
     {
         this.measures.rowWidth = this.measures.line.fragments.$element.offsetWidth
         this.measures.lineHeight = this.measures.line.$element.offsetHeight
-    }
-
-    setSelection()
-    {
-        this.selection = {}
-        this.selection.direction = 'normal'
-        this.selection.start = { lineIndex: 0, rowIndex: 0 }
-        this.selection.end = { lineIndex: 0, rowIndex: 0 }
-
-        // Events callback
-        const mousedown = (_event) =>
-        {
-            this.selection.start = this.getPosition(_event.clientX, _event.clientY)
-            this.selection.end = { ...this.selection.start }
-
-            this.updateSelection(this.selection)
-
-            window.addEventListener('mousemove', mousemove)
-            window.addEventListener('mouseup', mouseup)
-        }
-        const mousemove = (_event) =>
-        {
-            this.selection.end = this.getPosition(_event.clientX, _event.clientY)
-
-            if(this.selection.end.lineIndex < this.selection.start.lineIndex || this.selection.end.lineIndex === this.selection.start.lineIndex && this.selection.end.rowIndex < this.selection.start.rowIndex)
-            {
-                this.selection.direction = 'reverse'
-            }
-            else
-            {
-                this.selection.direction = 'normal'
-            }
-
-            this.updateSelection(this.selection)
-        }
-        const mouseup = () =>
-        {
-            window.removeEventListener('mousemove', mousemove)
-            window.removeEventListener('mouseup', mousemove)
-        }
-
-        // Mousedown
-        this.$element.addEventListener('mousedown', mousedown)
     }
 
     getPosition(_x, _y)
@@ -215,70 +176,6 @@ export default class Lines
         {
             _line.updateSelection(0, 0)
         }
-    }
-
-    setInputs()
-    {
-        this.inputs = new Inputs()
-        this.$element.appendChild(this.inputs.textarea.$element)
-
-        this.inputs.on('input', (_value) =>
-        {
-            // Clear text at selection
-            this.clearText(this.selection)
-
-            // Reset cursor
-            this.cursor.setPosition(this.selection.start)
-
-            // Update text
-            this.updateText(_value, this.cursor.position)
-
-            // Move cursor
-            this.cursor.setPosition({ lineIndex: this.cursor.position.lineIndex, rowIndex: this.cursor.position.rowIndex + 1 })
-
-            // Reset selection
-            this.selection.start.lineIndex = this.cursor.position.lineIndex
-            this.selection.start.rowIndex = this.cursor.position.rowIndex
-            this.selection.end.lineIndex = this.cursor.position.lineIndex
-            this.selection.end.rowIndex = this.cursor.position.rowIndex
-            this.updateSelection(this.selection)
-        })
-
-        this.$element.addEventListener('mouseup', () =>
-        {
-            this.inputs.focus()
-        })
-    }
-
-    setCursor()
-    {
-        this.cursor = new Cursor({
-            measures: this.measures
-        })
-        this.$element.appendChild(this.cursor.$element)
-
-        // Events callback
-        const mousedown = (_event) =>
-        {
-            const position = this.getPosition(_event.clientX, _event.clientY)
-            this.cursor.setPosition(position)
-
-            window.addEventListener('mousemove', mousemove)
-            window.addEventListener('mouseup', mouseup)
-        }
-        const mousemove = (_event) =>
-        {
-            const position = this.getPosition(_event.clientX, _event.clientY)
-            this.cursor.setPosition(position)
-        }
-        const mouseup = () =>
-        {
-            window.removeEventListener('mousemove', mousemove)
-            window.removeEventListener('mouseup', mousemove)
-        }
-
-        // Mousedown
-        this.$element.addEventListener('mousedown', mousedown)
     }
 
     clearText(_range)

@@ -3,11 +3,13 @@ export default class Cursor
     constructor(_options)
     {
         // Options
-        this.measures = _options.measures
+        this.root = _options.root
+        this.root.cursor = this
 
         // Element
         this.$element = document.createElement('div')
         this.$element.classList.add('cursor')
+        this.root.lines.$element.appendChild(this.$element)
 
         // Bar
         this.$bar = document.createElement('div')
@@ -16,6 +18,9 @@ export default class Cursor
 
         // Set
         this.position = { lineIndex: 0, rowIndex: 0 }
+
+        // Set interactions
+        this.setInteractions()
     }
 
     setPosition(_position)
@@ -23,8 +28,8 @@ export default class Cursor
         this.position.lineIndex = _position.lineIndex
         this.position.rowIndex = _position.rowIndex
 
-        const x = _position.rowIndex * this.measures.rowWidth
-        const y = _position.lineIndex * this.measures.lineHeight
+        const x = _position.rowIndex * this.root.lines.measures.rowWidth
+        const y = _position.lineIndex * this.root.lines.measures.lineHeight
 
         this.$element.style.transform = `translateX(${x}px) translateY(${y}px)`
         this.$element.classList.remove('animated')
@@ -33,5 +38,33 @@ export default class Cursor
         {
             this.$element.classList.add('animated')
         })
+    }
+
+    setInteractions()
+    {
+        this.interactions = {}
+        this.interactions.mousedown = (_event) =>
+        {
+            const position = this.root.lines.getPosition(_event.clientX, _event.clientY)
+            this.setPosition(position)
+
+            window.addEventListener('mousemove', this.interactions.mousemove)
+            window.addEventListener('mouseup', this.interactions.mouseup)
+        }
+
+        this.interactions.mousemove = (_event) =>
+        {
+            const position = this.root.lines.getPosition(_event.clientX, _event.clientY)
+            this.setPosition(position)
+        }
+
+        this.interactions.mouseup = () =>
+        {
+            window.removeEventListener('mousemove', this.interactions.mousemove)
+            window.removeEventListener('mouseup', this.interactions.mousemove)
+        }
+
+        // Mousedown
+        this.root.lines.$element.addEventListener('mousedown', this.interactions.mousedown)
     }
 }

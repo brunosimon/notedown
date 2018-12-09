@@ -1,7 +1,11 @@
 export default class
 {
-    constructor()
+    constructor(_options)
     {
+        this.root = _options.root
+        this.root.scroll = this
+
+        // Scrollbar width
         this.scrollbarWidth = this.getScrollbarWidth()
 
         // Element
@@ -9,6 +13,7 @@ export default class
         this.$element.style.right = `-${this.scrollbarWidth}px`
         this.$element.style.bottom = `-${this.scrollbarWidth}px`
         this.$element.classList.add('scroll')
+        this.root.container.$element.appendChild(this.$element)
 
         // Inner
         this.$inner = document.createElement('div')

@@ -1,6 +1,8 @@
 import Lines from './Lines.js'
 import Cursor from './Cursor.js'
+import Selection from './Selection.js'
 import Scroll from './Scroll.js'
+import Inputs from './Inputs.js'
 
 export default class Code
 {
@@ -9,6 +11,9 @@ export default class Code
         this.setContainer()
         this.setScroll()
         this.setLines()
+        this.setSelection()
+        this.setCursor()
+        this.setInputs()
 
         // Test lines
         const texts = [
@@ -81,15 +86,59 @@ export default class Code
 
     setScroll()
     {
-        this.scroll = new Scroll()
-        this.container.$element.appendChild(this.scroll.$element)
+        new Scroll({
+            root: this
+        })
     }
 
     setLines()
     {
-        this.lines = new Lines()
-        this.scroll.$inner.appendChild(this.lines.$element)
-        this.lines.updateMeasures()
+        new Lines({
+            root: this
+        })
+    }
+
+    setSelection()
+    {
+        new Selection({
+            root: this
+        })
+    }
+
+    setCursor()
+    {
+        new Cursor({
+            root: this
+        })
+    }
+
+    setInputs()
+    {
+        this.inputs = new Inputs({
+            root: this
+        })
+
+        // this.inputs.on('input', (_value) =>
+        // {
+        //     // Clear text at selection
+        //     this.clearText(this.selection)
+
+        //     // Reset cursor
+        //     this.cursor.setPosition(this.selection.start)
+
+        //     // Update text
+        //     this.updateText(_value, this.cursor.position)
+
+        //     // Move cursor
+        //     this.cursor.setPosition({ lineIndex: this.cursor.position.lineIndex, rowIndex: this.cursor.position.rowIndex + 1 })
+
+        //     // Reset selection
+        //     this.selection.start.lineIndex = this.cursor.position.lineIndex
+        //     this.selection.start.rowIndex = this.cursor.position.rowIndex
+        //     this.selection.end.lineIndex = this.cursor.position.lineIndex
+        //     this.selection.end.rowIndex = this.cursor.position.rowIndex
+        //     this.updateSelection(this.selection)
+        // })
     }
 
     destruct()
