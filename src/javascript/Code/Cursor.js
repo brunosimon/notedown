@@ -28,8 +28,8 @@ export default class Cursor
         this.position.lineIndex = _position.lineIndex
         this.position.rowIndex = _position.rowIndex
 
-        const x = _position.rowIndex * this.root.lines.measures.rowWidth
-        const y = _position.lineIndex * this.root.lines.measures.lineHeight
+        const x = _position.rowIndex * this.root.measures.rowWidth
+        const y = _position.lineIndex * this.root.measures.lineHeight
 
         this.$element.style.transform = `translateX(${x}px) translateY(${y}px)`
         this.$element.classList.remove('animated')
