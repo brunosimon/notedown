@@ -15,7 +15,6 @@ export default class Cursor
         this.$element.appendChild(this.$bar)
 
         // Set
-        this.active = false
         this.position = { lineIndex: 0, rowIndex: 0 }
     }
 
