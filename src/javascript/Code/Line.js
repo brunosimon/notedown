@@ -14,7 +14,7 @@ export default class Line
 
         // Set initial text
         this.setSelection()
-        this.setParts()
+        this.setFragments()
         this.updateText(_text)
     }
 
@@ -26,14 +26,12 @@ export default class Line
         this.$element.appendChild(this.selection.$element)
     }
 
-    setParts()
+    setFragments()
     {
         this.fragments = {}
         this.fragments.$element = document.createElement('div')
-        this.fragments.$element.classList.add('fragment')
+        this.fragments.$element.classList.add('fragments')
         this.$element.appendChild(this.fragments.$element)
-
-        this.fragments.items = []
     }
 
     updateText(_text)
@@ -44,62 +42,62 @@ export default class Line
             return
         }
 
-        this.originalText = _text
-
-        this.updateStyled()
-    }
-
-    updateStyled()
-    {
-        for(const _fragment of fragmentsConfig.lines)
-        {
-            const lineMatches = this.originalText.match(_fragment.regex)
-            let fragmented = _fragment.replacement
-
-            if(lineMatches)
-            {
-                // console.log(lineMatches)
-                let i = 0
-                for(const _match of lineMatches)
-                {
-                    console.log(_match)
-                    fragmented = fragmented.replace(`$${i}`, _match)
-                    i++
-                }
-
-                console.log(fragmented)
-            }
-            // const fragmented = this.originalText.replace(_fragment.regex, _fragment.replacement)
-            // console.log(fragmented)
-        }
-        this.fragments.items = [ this.originalText ]
-
-        this.updateDOM()
-    }
-
-    updateDOM()
-    {
-        // Remove
+        // Clear
         while(this.fragments.$element.children.length)
         {
             this.fragments.$element.children[0].remove()
         }
 
-        // Add
-        for(const _fragment of this.fragments.items)
+        // Create new fragments
+        const fragments = [ ...fragmentsConfig ]
+        const fragmentsHTML = this.applyFragments(_text, fragments)
+
+        // Update DOM
+        this.fragments.$element.innerHTML = fragmentsHTML
+
+        // Save
+        this.originalText = _text
+    }
+
+    applyFragments(_text, _fragments)
+    {
+        let text = _text
+        const fragmentIndex = _fragments.findIndex((_item) => text.match(_item.regex))
+
+        // No fragment found (end)
+        if(fragmentIndex === -1)
         {
-            const $fragment = document.createElement('span')
-            $fragment.classList.add('fragment')
-            if(this.fragments.length === 1 && _fragment === '')
-            {
-                $fragment.innerHTML = '&#8203;'
-            }
-            else
-            {
-                $fragment.textContent = _fragment
-            }
-            this.fragments.$element.appendChild($fragment)
+            return text
         }
+
+        // Extract fragment from fragments
+        const fragment = _fragments[fragmentIndex]
+        const newFragments = [ ..._fragments ]
+        newFragments.splice(fragmentIndex, 1)
+
+        // Find matches
+        const matches = text.match(fragment.regex)
+        text = fragment.replacement
+
+        // Apply fragments to text before and after match
+        let beforeText = _text.slice(0, matches.index)
+        beforeText = this.applyFragments(beforeText, _fragments)
+        let afterText = _text.slice(matches.index + matches[0].length, _text.length)
+        afterText = this.applyFragments(afterText, _fragments)
+
+        // Apply fragments to matches parts
+        for(let i = 1; i < matches.length; i++)
+        {
+            let _match = matches[i]
+            _match = this.applyFragments(_match, newFragments)
+            text = text.replace(`$${i}`, _match)
+        }
+
+        // Concatenate
+        text = `${beforeText}${text}${afterText}`
+
+        // Return
+        return text
     }
 
     updateSelection(_startX, _endX)

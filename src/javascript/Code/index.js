@@ -16,6 +16,8 @@ export default class Code
 
         // Test lines
         const texts = [
+            '    - [x] Test (parenthese) Yop (again)',
+            '(parenthese)',
             '# Title http://google.fr',
             // '    ## Subtitle',
             // '',
@@ -167,8 +169,8 @@ export default class Code
 
     setTextarea()
     {
-        this.textarea = new Textarea()
-        this.container.$element.appendChild(this.textarea.$element)
+        // this.textarea = new Textarea()
+        // this.container.$element.appendChild(this.textarea.$element)
     }
 
     setSelection()
