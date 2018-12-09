@@ -35,7 +35,7 @@ export default class
         document.body.appendChild($outer)
         const width1 = $inner.offsetWidth
         $outer.style.overflow = 'scroll'
-        const width2 = $inner.offsetWidth
+        let width2 = $inner.offsetWidth
         if(width1 === width2)
         {
             width2 = $outer.clientWidth
