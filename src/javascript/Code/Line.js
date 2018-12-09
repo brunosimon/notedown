@@ -48,12 +48,19 @@ export default class Line
             this.fragments.$element.children[0].remove()
         }
 
-        // Create new fragments
-        const fragments = [ ...fragmentsConfig ]
-        const fragmentsHTML = this.applyFragments(_text, fragments)
-
         // Update DOM
-        this.fragments.$element.innerHTML = fragmentsHTML
+        if(_text === '')
+        {
+            this.fragments.$element.innerHTML = '&#8203'
+        }
+        else
+        {
+            // Create new fragments
+            const fragments = [ ...fragmentsConfig ]
+            const fragmentsHTML = this.applyFragments(_text, fragments)
+
+            this.fragments.$element.innerHTML = fragmentsHTML
+        }
 
         // Save
         this.originalText = _text
