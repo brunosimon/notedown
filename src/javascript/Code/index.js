@@ -60,7 +60,7 @@ export default class Code
 
         for(const _text of texts)
         {
-            this.lines.add(_text)
+            this.lines.addLine(_text)
         }
 
         // const line = this.lines.add()
@@ -127,27 +127,29 @@ export default class Code
             root: this
         })
 
-        // this.inputs.on('input', (_value) =>
-        // {
-        //     // Clear text at selection
-        //     this.clearText(this.selection)
+        this.inputs.on('input', (_value) =>
+        {
+            // Clear text at selection
+            this.lines.removeRange({ start: this.selection.start, end: this.selection.end })
 
-        //     // Reset cursor
-        //     this.cursor.setPosition(this.selection.start)
+            // Reset cursor
+            this.cursor.setPosition(this.selection.start)
 
-        //     // Update text
-        //     this.updateText(_value, this.cursor.position)
+            // Update text
+            this.lines.updateText(_value, this.cursor.position)
 
-        //     // Move cursor
-        //     this.cursor.setPosition({ lineIndex: this.cursor.position.lineIndex, rowIndex: this.cursor.position.rowIndex + 1 })
+            // Move cursor
+            // NEEDS UPDATE
+            this.cursor.setPosition({ lineIndex: this.cursor.position.lineIndex, rowIndex: this.cursor.position.rowIndex + 1 })
 
-        //     // Reset selection
-        //     this.selection.start.lineIndex = this.cursor.position.lineIndex
-        //     this.selection.start.rowIndex = this.cursor.position.rowIndex
-        //     this.selection.end.lineIndex = this.cursor.position.lineIndex
-        //     this.selection.end.rowIndex = this.cursor.position.rowIndex
-        //     this.updateSelection(this.selection)
-        // })
+            // Reset selection
+            // NEEDS UPDATE
+            this.selection.start.lineIndex = this.cursor.position.lineIndex
+            this.selection.start.rowIndex = this.cursor.position.rowIndex
+            this.selection.end.lineIndex = this.cursor.position.lineIndex
+            this.selection.end.rowIndex = this.cursor.position.rowIndex
+            this.selection.updateLines()
+        })
     }
 
     destruct()

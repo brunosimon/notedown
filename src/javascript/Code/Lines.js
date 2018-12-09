@@ -16,7 +16,7 @@ export default class Lines
         this.items = []
     }
 
-    add(_text = '')
+    addLine(_text = '')
     {
         const line = new Line(_text)
         this.$element.appendChild(line.$element)
@@ -25,7 +25,7 @@ export default class Lines
         return line
     }
 
-    remove(_line)
+    removeLine(_line)
     {
         const lineIndex = this.items.indexOf(_line)
 
@@ -110,12 +110,22 @@ export default class Lines
         }
     }
 
-    clearText(_range)
+    removeRange(_range)
     {
-        const start = _range.direction === 'normal' ? _range.start : _range.end
-        const end = _range.direction === 'normal' ? _range.end : _range.start
+        let start = null
+        let end = null
+
+        if(_range.start.lineIndex !== _range.end.lineIndex)
+        {
+            start = _range.start.lineIndex < _range.end.lineIndex ? _range.start : _range.end
+            end = _range.start.lineIndex < _range.end.lineIndex ? _range.end : _range.start
+        }
 
         const lines = this.items.slice(start.lineIndex, end.lineIndex + 1)
+
+        console.log(start.lineIndex)
+        console.log(end.lineIndex)
+        console.log(lines)
 
         // One line
         if(lines.length === 1)
@@ -139,7 +149,7 @@ export default class Lines
             for(let i = 1; i < lines.length; i++)
             {
                 const line = lines[i]
-                this.remove(line)
+                this.removeLine(line)
             }
         }
     }
