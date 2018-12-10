@@ -1,3 +1,5 @@
+import Position from './Position.js'
+
 export default class Cursor
 {
     constructor(_options)
@@ -17,7 +19,7 @@ export default class Cursor
         this.$element.appendChild(this.$bar)
 
         // Set
-        this.position = { lineIndex: 0, rowIndex: 0 }
+        this.position = new Position()
 
         // Set interactions
         this.setInteractions()
@@ -25,11 +27,10 @@ export default class Cursor
 
     setPosition(_position)
     {
-        this.position.lineIndex = _position.lineIndex
-        this.position.rowIndex = _position.rowIndex
+        this.position.copy(_position)
 
-        const x = _position.rowIndex * this.root.measures.rowWidth
-        const y = _position.lineIndex * this.root.measures.lineHeight
+        const x = this.position.rowIndex * this.root.measures.rowWidth
+        const y = this.position.lineIndex * this.root.measures.lineHeight
 
         this.$element.style.transform = `translateX(${x}px) translateY(${y}px)`
         this.$element.classList.remove('animated')

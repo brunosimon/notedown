@@ -1,3 +1,4 @@
+import Position from './Position.js'
 import Line from './Line.js'
 
 export default class Lines
@@ -39,8 +40,7 @@ export default class Lines
 
     getPosition(_x, _y)
     {
-        let lineIndex = null
-        let rowIndex = null
+        const position = new Position()
 
         let beforeFirstLine = false
         let afterLastLine = false
@@ -48,20 +48,20 @@ export default class Lines
         /**
          * Line
          */
-        lineIndex = Math.floor(_y / this.root.measures.lineHeight)
+        position.lineIndex = Math.floor(_y / this.root.measures.lineHeight)
 
         // Before first line
-        if(lineIndex < 0)
+        if(position.lineIndex < 0)
         {
             beforeFirstLine = true
-            lineIndex = 0
+            position.lineIndex = 0
         }
 
         // After last line
-        else if(lineIndex > this.items.length - 1)
+        else if(position.lineIndex > this.items.length - 1)
         {
             afterLastLine = true
-            lineIndex = this.items.length - 1
+            position.lineIndex = this.items.length - 1
         }
 
         /**
@@ -70,7 +70,7 @@ export default class Lines
         // Before first line
         if(beforeFirstLine)
         {
-            rowIndex = 0
+            position.rowIndex = 0
         }
         // After last line
         else if(afterLastLine)
@@ -78,36 +78,33 @@ export default class Lines
             // Has no line
             if(this.items.length === 0)
             {
-                rowIndex = 0
+                position.rowIndex = 0
             }
             // Last line
             else
             {
                 const lastLine = this.items[this.items.length - 1]
-                rowIndex = lastLine.originalText.length
+                position.rowIndex = lastLine.originalText.length
             }
         }
         // Between first and last line
         else
         {
-            rowIndex = Math.round(_x / this.root.measures.rowWidth)
+            position.rowIndex = Math.round(_x / this.root.measures.rowWidth)
 
-            const line = this.items[lineIndex]
+            const line = this.items[position.lineIndex]
 
-            if(rowIndex < 0)
+            if(position.rowIndex < 0)
             {
-                rowIndex = 0
+                position.rowIndex = 0
             }
-            else if(rowIndex > line.originalText.length)
+            else if(position.rowIndex > line.originalText.length)
             {
-                rowIndex = line.originalText.length
+                position.rowIndex = line.originalText.length
             }
         }
 
-        return {
-            lineIndex,
-            rowIndex
-        }
+        return position
     }
 
     removeRange(_range)
@@ -120,12 +117,13 @@ export default class Lines
             start = _range.start.lineIndex < _range.end.lineIndex ? _range.start : _range.end
             end = _range.start.lineIndex < _range.end.lineIndex ? _range.end : _range.start
         }
+        else
+        {
+            start = _range.start.rowIndex < _range.end.rowIndex ? _range.start : _range.end
+            end = _range.start.rowIndex < _range.end.rowIndex ? _range.end : _range.start
+        }
 
         const lines = this.items.slice(start.lineIndex, end.lineIndex + 1)
-
-        console.log(start.lineIndex)
-        console.log(end.lineIndex)
-        console.log(lines)
 
         // One line
         if(lines.length === 1)

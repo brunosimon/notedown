@@ -1,3 +1,5 @@
+import Range from './Range'
+
 export default class Selection
 {
     constructor(_options)
@@ -8,8 +10,7 @@ export default class Selection
 
         // Set up
         this.direction = 'normal'
-        this.start = { lineIndex: 0, rowIndex: 0 }
-        this.end = { lineIndex: 0, rowIndex: 0 }
+        this.range = new Range()
 
         // Set interactions
         this.setInteractions()
@@ -21,8 +22,9 @@ export default class Selection
 
         this.interactions.mousedown = (_event) =>
         {
-            this.start = this.root.lines.getPosition(_event.clientX, _event.clientY)
-            this.end = { ...this.start }
+            const position = this.root.lines.getPosition(_event.clientX, _event.clientY)
+            this.range.start.copy(position)
+            this.range.end.copy(position)
 
             this.updateLines(this)
 
@@ -32,16 +34,9 @@ export default class Selection
 
         this.interactions.mousemove = (_event) =>
         {
-            this.end = this.root.lines.getPosition(_event.clientX, _event.clientY)
+            this.range.end.copy(this.root.lines.getPosition(_event.clientX, _event.clientY))
 
-            if(this.end.lineIndex < this.start.lineIndex || this.end.lineIndex === this.start.lineIndex && this.end.rowIndex < this.start.rowIndex)
-            {
-                this.direction = 'reverse'
-            }
-            else
-            {
-                this.direction = 'normal'
-            }
+            this.direction = this.range.isReversed() ? 'reverse' : 'normal'
 
             this.updateLines(this)
         }
@@ -58,18 +53,18 @@ export default class Selection
 
     updateLines()
     {
-        const start = this.direction === 'normal' ? this.start : this.end
-        const end = this.direction === 'normal' ? this.end : this.start
+        const range = this.range.clone()
+        range.normalize()
 
-        const lines = this.root.lines.items.slice(start.lineIndex, end.lineIndex + 1)
-        const otherLines = [ ...this.root.lines.items.slice(0, start.lineIndex), ...this.root.lines.items.slice(end.lineIndex + 1, this.root.lines.items.length) ] //
+        const lines = this.root.lines.items.slice(range.start.lineIndex, range.end.lineIndex + 1)
+        const otherLines = [ ...this.root.lines.items.slice(0, range.start.lineIndex), ...this.root.lines.items.slice(range.end.lineIndex + 1, this.root.lines.items.length) ] //
 
         // One line
         if(lines.length === 1)
         {
             const line = lines[0]
 
-            line.updateSelection(start.rowIndex * this.root.measures.rowWidth, end.rowIndex * this.root.measures.rowWidth)
+            line.updateSelection(range.start.rowIndex * this.root.measures.rowWidth, range.end.rowIndex * this.root.measures.rowWidth)
         }
         else
         {
@@ -80,12 +75,12 @@ export default class Selection
                 // First
                 if(i === 0)
                 {
-                    line.updateSelection(start.rowIndex * this.root.measures.rowWidth, line.originalText.length * this.root.measures.rowWidth)
+                    line.updateSelection(range.start.rowIndex * this.root.measures.rowWidth, line.originalText.length * this.root.measures.rowWidth)
                 }
                 // Last
                 else if(i === lines.length - 1)
                 {
-                    line.updateSelection(0, end.rowIndex * this.root.measures.rowWidth)
+                    line.updateSelection(0, range.end.rowIndex * this.root.measures.rowWidth)
                 }
                 // Between
                 else
