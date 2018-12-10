@@ -11,6 +11,7 @@ export default class Cursor
         // Element
         this.$element = document.createElement('div')
         this.$element.classList.add('cursor')
+        this.$element.classList.add('animated')
         this.root.lines.$element.appendChild(this.$element)
 
         // Bar
@@ -25,6 +26,103 @@ export default class Cursor
         this.setInteractions()
     }
 
+    goRight()
+    {
+        const line = this.root.lines.items[this.position.lineIndex]
+        const position = new Position(this.position.lineIndex, this.position.rowIndex + 1)
+
+        // Last row
+        if(this.position.rowIndex + 1 > line.length)
+        {
+            if(this.position.lineIndex < this.root.lines.length - 1)
+            {
+                position.rowIndex = 0
+                position.lineIndex = this.position.lineIndex + 1
+            }
+            else
+            {
+                position.lineIndex = this.position.lineIndex
+                position.rowIndex = this.position.rowIndex
+            }
+        }
+
+        this.setPosition(position)
+    }
+
+    goLeft()
+    {
+        const position = new Position(this.position.lineIndex, this.position.rowIndex - 1)
+
+        // First row
+        if(this.position.rowIndex - 1 < 0)
+        {
+            if(this.position.lineIndex > 0)
+            {
+                const previousLine = this.root.lines.items[this.position.lineIndex - 1]
+                position.rowIndex = previousLine.length
+                position.lineIndex = this.position.lineIndex - 1
+            }
+            else
+            {
+                position.lineIndex = this.position.lineIndex
+                position.rowIndex = this.position.rowIndex
+            }
+        }
+
+        this.setPosition(position)
+    }
+
+    goUp()
+    {
+        const position = new Position(this.position.lineIndex - 1, this.position.rowIndex)
+
+        // First line
+        if(this.position.lineIndex - 1 < 0)
+        {
+            position.rowIndex = 0
+            position.lineIndex = 0
+        }
+
+        // Not first line
+        else
+        {
+            const previousLine = this.root.lines.items[this.position.lineIndex - 1]
+
+            if(this.position.rowIndex > previousLine.length)
+            {
+                position.rowIndex = previousLine.length
+            }
+        }
+
+        this.setPosition(position)
+    }
+
+    goDown()
+    {
+        const position = new Position(this.position.lineIndex + 1, this.position.rowIndex)
+
+        // Last line
+        if(this.position.lineIndex + 1 > this.root.lines.length - 1)
+        {
+            const line = this.root.lines.items[this.position.lineIndex]
+            position.rowIndex = line.length
+            position.lineIndex = this.position.lineIndex
+        }
+
+        // Not last line
+        else
+        {
+            const nextLine = this.root.lines.items[this.position.lineIndex + 1]
+
+            if(this.position.rowIndex > nextLine.length)
+            {
+                position.rowIndex = nextLine.length
+            }
+        }
+
+        this.setPosition(position)
+    }
+
     setPosition(_position)
     {
         this.position.copy(_position)
@@ -33,12 +131,14 @@ export default class Cursor
         const y = this.position.lineIndex * this.root.measures.lineHeight
 
         this.$element.style.transform = `translateX(${x}px) translateY(${y}px)`
-        this.$element.classList.remove('animated')
 
-        window.requestAnimationFrame(() =>
-        {
-            this.$element.classList.add('animated')
-        })
+        this.resetAnimation()
+    }
+
+    resetAnimation()
+    {
+        this.$element.removeChild(this.$bar)
+        this.$element.appendChild(this.$bar)
     }
 
     setInteractions()

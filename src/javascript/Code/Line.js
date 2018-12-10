@@ -10,6 +10,7 @@ export default class Line
 
         // Set up
         this.originalText = null
+        this.length = 0
         this.fragments = []
 
         // Set initial text
@@ -64,6 +65,7 @@ export default class Line
 
         // Save
         this.originalText = _text
+        this.length = this.originalText.length
     }
 
     applyFragments(_text, _fragments)

@@ -15,13 +15,18 @@ export default class Lines
 
         // Set up
         this.items = []
+        this.length = 0
     }
 
     addLine(_text = '')
     {
         const line = new Line(_text)
+
         this.$element.appendChild(line.$element)
+
         this.items.push(line)
+
+        this.length = this.items.length
 
         return line
     }
@@ -35,6 +40,8 @@ export default class Lines
         {
             _line.$element.remove()
             this.items.splice(lineIndex, 1)
+
+            this.length = this.items.length
         }
     }
 
