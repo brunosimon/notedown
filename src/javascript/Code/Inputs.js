@@ -10,6 +10,7 @@ export default class Inputs extends EventEmitter
         this.root.inputs = this
 
         this.setTextarea()
+        this.setKeyMapping()
     }
 
     setTextarea()
@@ -35,8 +36,69 @@ export default class Inputs extends EventEmitter
         })
     }
 
+    setKeyMapping()
+    {
+        window.addEventListener('keydown', (_event) =>
+        {
+            switch(_event.keyCode)
+            {
+                case 39:
+                    this.right()
+                    break
+
+                case 40:
+                    this.down()
+                    break
+
+                case 37:
+                    this.left()
+                    break
+
+                case 38:
+                    this.up()
+                    break
+            }
+        })
+    }
+
     focus()
     {
         this.textarea.$element.focus()
+    }
+
+    right()
+    {
+        // Cursor
+        this.root.cursor.goRight()
+
+        // Selection
+        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
+    }
+
+    down()
+    {
+        // Cursor
+        this.root.cursor.goDown()
+
+        // Selection
+        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
+    }
+
+    left()
+    {
+        // Cursor
+        this.root.cursor.goLeft()
+
+        // Selection
+        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
+    }
+
+    up()
+    {
+        // Cursor
+        this.root.cursor.goUp()
+
+        // Selection
+        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
     }
 }
