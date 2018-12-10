@@ -31,7 +31,7 @@ export default class Range
     normalize()
     {
         // Start if after end
-        if(this.start.isAfter(this.end))
+        if(this.isReversed())
         {
             // Reverse start and end
             const start = this.end

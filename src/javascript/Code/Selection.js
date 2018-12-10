@@ -9,7 +9,6 @@ export default class Selection
         this.root.selection = this
 
         // Set up
-        this.direction = 'normal'
         this.range = new Range()
 
         // Set interactions
@@ -35,8 +34,6 @@ export default class Selection
         this.interactions.mousemove = (_event) =>
         {
             this.range.end.copy(this.root.lines.getPosition(_event.clientX, _event.clientY))
-
-            this.direction = this.range.isReversed() ? 'reverse' : 'normal'
 
             this.updateLines(this)
         }
