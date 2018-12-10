@@ -30,7 +30,6 @@ export default class Cursor
     {
         const line = this.root.lines.items[this.position.lineIndex]
         const position = new Position(this.position.lineIndex, this.position.rowIndex + 1)
-        console.log('goRight')
 
         // Last row
         if(this.position.rowIndex + 1 > line.length)

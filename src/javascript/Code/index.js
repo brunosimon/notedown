@@ -4,8 +4,6 @@ import Cursor from './Cursor.js'
 import Selection from './Selection.js'
 import Scroll from './Scroll.js'
 import Inputs from './Inputs.js'
-import Range from './Range.js'
-import Position from './Position.js'
 
 export default class Code
 {

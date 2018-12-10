@@ -1,4 +1,5 @@
 import EventEmitter from './EventEmitter.js'
+import Keyboard from './Keyboard.js'
 
 export default class Inputs extends EventEmitter
 {
@@ -10,6 +11,7 @@ export default class Inputs extends EventEmitter
         this.root.inputs = this
 
         this.setTextarea()
+        this.setKeyboard()
         this.setKeyMapping()
     }
 
@@ -36,29 +38,37 @@ export default class Inputs extends EventEmitter
         })
     }
 
-    setKeyMapping()
+    setKeyboard()
     {
-        window.addEventListener('keydown', (_event) =>
+        this.keyboard = new Keyboard()
+
+        this.keyboard.on('down', () =>
         {
-            switch(_event.keyCode)
+            if(this.keyboard.isDown('up'))
             {
-                case 39:
-                    this.right()
-                    break
-
-                case 40:
-                    this.down()
-                    break
-
-                case 37:
-                    this.left()
-                    break
-
-                case 38:
-                    this.up()
-                    break
+                this.up()
+            }
+            if(this.keyboard.isDown('right'))
+            {
+                this.right()
+            }
+            if(this.keyboard.isDown('down'))
+            {
+                this.down()
+            }
+            if(this.keyboard.isDown('left'))
+            {
+                this.left()
+            }
+            if(this.keyboard.isDown([ 'cmd', 'c' ]))
+            {
+                console.log('copy')
             }
         })
+    }
+
+    setKeyMapping()
+    {
     }
 
     focus()
