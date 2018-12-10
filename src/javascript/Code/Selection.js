@@ -15,6 +15,13 @@ export default class Selection
         this.setInteractions()
     }
 
+    update(_start, _end)
+    {
+        this.range.start.copy(_start)
+        this.range.end.copy(_end)
+        this.updateLines()
+    }
+
     setInteractions()
     {
         this.interactions = {}

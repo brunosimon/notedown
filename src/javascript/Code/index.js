@@ -131,26 +131,22 @@ export default class Code
 
         this.inputs.on('input', (_value) =>
         {
-            // Clear text at selection
-            this.lines.removeRange({ start: this.selection.start, end: this.selection.end })
+            // Get normalized selection range
+            const selectionRange = this.selection.range.clone()
+            selectionRange.normalize()
 
-            // Reset cursor
-            this.cursor.setPosition(this.selection.start)
+            // Clear text at selection
+            this.lines.removeRange(selectionRange)
 
             // Update text
-            this.lines.updateText(_value, this.cursor.position)
+            this.lines.updateText(_value, selectionRange.start)
 
             // Move cursor
-            // NEEDS UPDATE
-            this.cursor.setPosition({ lineIndex: this.cursor.position.lineIndex, rowIndex: this.cursor.position.rowIndex + 1 })
+            this.cursor.setPosition(selectionRange.start)
+            this.cursor.goRight()
 
             // Reset selection
-            // NEEDS UPDATE
-            this.selection.start.lineIndex = this.cursor.position.lineIndex
-            this.selection.start.rowIndex = this.cursor.position.rowIndex
-            this.selection.end.lineIndex = this.cursor.position.lineIndex
-            this.selection.end.rowIndex = this.cursor.position.rowIndex
-            this.selection.updateLines()
+            this.selection.update(this.cursor.position, this.cursor.position)
         })
     }
 
