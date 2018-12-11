@@ -34,13 +34,23 @@ export default class Keyboard extends EventEmitter
         const keydownHandle = (_event) =>
         {
             const character = this.keycodeToCharacter(_event.keyCode)
+            let downItems = []
 
-            if(!this.downItems.includes(character))
+            if(this.isDown('cmd') && character !== 'shift' && character !== 'alt')
             {
-                this.downItems.push(character)
+                downItems = [ ...this.downItems, character ]
             }
 
-            const trigger = this.trigger('down', [ _event.keyCode, character ])
+            else
+            {
+                if(!this.downItems.includes(character))
+                {
+                    this.downItems.push(character)
+                    downItems = [ ...this.downItems ]
+                }
+            }
+
+            const trigger = this.trigger('down', [ _event.keyCode, character, downItems ])
 
             // Trigger and prevend default if asked by return false on callback
             if(trigger === false)
@@ -59,10 +69,16 @@ export default class Keyboard extends EventEmitter
                 this.downItems.splice(this.downItems.indexOf(character), 1)
             }
 
-            if(character === 'cmd')
-            {
-                this.downItems = []
-            }
+            // if(character === 'cmd')
+            // {
+            //     this.downItems = []
+            // }
+            // if(this.isDown('cmd'))
+            // {
+            //     this.downItems = [ 'cmd' ]
+            // }
+
+            // console.log(this.downItems)
 
             this.trigger('up', [ _event.keyCode, character ])
         }
@@ -85,14 +101,15 @@ export default class Keyboard extends EventEmitter
         return character
     }
 
-    isDown(_inputs)
+    isDown(_inputs, _downItems = null)
     {
+        const downItems = _downItems !== null ? _downItems : this.downItems
         let inputs = _inputs instanceof Array ? _inputs : [ _inputs ]
         inputs = inputs.map((_item) => typeof _item === 'number' ? this.keycodeToCharacter(_item) : _item)
 
         return inputs.every((_item) =>
         {
-            return this.downItems.includes(_item)
+            return downItems.includes(_item)
         })
     }
 }
