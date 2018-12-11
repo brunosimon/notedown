@@ -1,12 +1,9 @@
-import EventEmitter from './EventEmitter.js'
 import Keyboard from './Keyboard.js'
 
-export default class Inputs extends EventEmitter
+export default class Inputs
 {
     constructor(_options)
     {
-        super()
-
         this.root = _options.root
         this.root.inputs = this
 
@@ -22,23 +19,23 @@ export default class Inputs extends EventEmitter
 
         this.addShortcut([ 'right' ], () =>
         {
-            this.right()
+            this.root.actions.right()
         })
         this.addShortcut([ 'up' ], () =>
         {
-            this.up()
+            this.root.actions.up()
         })
         this.addShortcut([ 'down' ], () =>
         {
-            this.down()
+            this.root.actions.down()
         })
         this.addShortcut([ 'left' ], () =>
         {
-            this.left()
+            this.root.actions.left()
         })
         this.addShortcut([ 'cmd', 'c' ], () =>
         {
-            this.copy()
+            this.root.actions.copy()
         })
     }
 
@@ -61,7 +58,7 @@ export default class Inputs extends EventEmitter
             const value = this.textarea.$element.value
             this.textarea.$element.value = ''
 
-            this.input(value)
+            this.root.actions.input(value)
         })
 
         this.root.lines.$element.addEventListener('mouseup', () =>
@@ -89,75 +86,5 @@ export default class Inputs extends EventEmitter
     focus()
     {
         this.textarea.$element.focus()
-    }
-
-    right()
-    {
-        // Cursor
-        this.root.cursor.goRight()
-
-        // Selection
-        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
-    }
-
-    down()
-    {
-        // Cursor
-        this.root.cursor.goDown()
-
-        // Selection
-        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
-    }
-
-    left()
-    {
-        // Cursor
-        this.root.cursor.goLeft()
-
-        // Selection
-        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
-    }
-
-    up()
-    {
-        // Cursor
-        this.root.cursor.goUp()
-
-        // Selection
-        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
-    }
-
-    copy()
-    {
-        // Get text for range
-        const text = this.root.lines.getText(this.root.selection.range)
-
-        // Create textarea and copy value
-        const textarea = document.createElement('textarea')
-        textarea.value = text
-        document.body.appendChild(textarea)
-        textarea.select()
-        document.execCommand('copy')
-        document.body.removeChild(textarea)
-
-        // Focus back
-        this.focus()
-    }
-
-    input(_value)
-    {
-        // Get normalized selection range
-        const selectionRange = this.root.selection.range.clone().normalize()
-
-        // Add text at range
-        this.root.lines.addTextAtRange(_value, selectionRange)
-
-        // Move cursor
-        const cursorPosition = this.root.cursor.position.clone()
-        cursorPosition.rowIndex += _value.length
-        this.root.cursor.setPosition(cursorPosition)
-
-        // Reset selection
-        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
     }
 }

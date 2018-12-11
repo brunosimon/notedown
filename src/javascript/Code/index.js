@@ -4,6 +4,7 @@ import Cursor from './Cursor.js'
 import Selection from './Selection.js'
 import Scroll from './Scroll.js'
 import Inputs from './Inputs.js'
+import Actions from './Actions.js'
 
 export default class Code
 {
@@ -15,6 +16,7 @@ export default class Code
         this.setMeasures()
         this.setSelection()
         this.setCursor()
+        this.setActions()
         this.setInputs()
 
         // Test lines
@@ -117,6 +119,13 @@ export default class Code
     setCursor()
     {
         new Cursor({
+            root: this
+        })
+    }
+
+    setActions()
+    {
+        this.inputs = new Actions({
             root: this
         })
     }
