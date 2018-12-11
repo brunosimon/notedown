@@ -42,6 +42,22 @@ export default class Actions
         this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
     }
 
+    startLine()
+    {
+        const cursorPosition = this.root.cursor.position.clone()
+        cursorPosition.rowIndex = 0
+        this.root.cursor.setPosition(cursorPosition)
+    }
+
+    endLine()
+    {
+        const line = this.root.lines.items[this.root.cursor.position.lineIndex]
+
+        const cursorPosition = this.root.cursor.position.clone()
+        cursorPosition.rowIndex = line.length
+        this.root.cursor.setPosition(cursorPosition)
+    }
+
     copy()
     {
         // Get text for range

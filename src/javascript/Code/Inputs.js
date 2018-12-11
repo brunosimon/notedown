@@ -17,6 +17,14 @@ export default class Inputs
         this.shortcuts = {}
         this.shortcuts.items = []
 
+        this.addShortcut([ 'cmd', 'right' ], () =>
+        {
+            this.root.actions.endLine()
+        })
+        this.addShortcut([ 'cmd', 'left' ], () =>
+        {
+            this.root.actions.startLine()
+        })
         this.addShortcut([ 'right' ], () =>
         {
             this.root.actions.right()
@@ -71,13 +79,15 @@ export default class Inputs
     {
         this.keyboard = new Keyboard()
 
-        this.keyboard.on('down', () =>
+        this.keyboard.on('down', (_keyCode, _character, _downItems) =>
         {
             for(const _item of this.shortcuts.items)
             {
-                if(this.keyboard.isDown(_item.inputs))
+                if(this.keyboard.isDown(_item.inputs, _downItems))
                 {
                     _item.method()
+
+                    break
                 }
             }
         })
