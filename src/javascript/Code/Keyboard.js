@@ -59,6 +59,11 @@ export default class Keyboard extends EventEmitter
                 this.downItems.splice(this.downItems.indexOf(character), 1)
             }
 
+            if(character === 'cmd')
+            {
+                this.downItems = []
+            }
+
             this.trigger('up', [ _event.keyCode, character ])
         }
 
