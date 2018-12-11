@@ -130,18 +130,15 @@ export default class Code
         this.inputs.on('input', (_value) =>
         {
             // Get normalized selection range
-            const selectionRange = this.selection.range.clone()
-            selectionRange.normalize()
+            const selectionRange = this.selection.range.clone().normalize()
 
-            // Clear text at selection
-            this.lines.removeRange(selectionRange)
-
-            // Update text
-            this.lines.updateText(_value, selectionRange.start)
+            // Add text at range
+            this.lines.addTextAtRange(_value, selectionRange)
 
             // Move cursor
-            this.cursor.setPosition(selectionRange.start)
-            this.cursor.goRight()
+            const cursorPosition = this.cursor.position.clone()
+            cursorPosition.rowIndex += _value.length
+            this.cursor.setPosition(cursorPosition)
 
             // Reset selection
             this.selection.update(this.cursor.position, this.cursor.position)

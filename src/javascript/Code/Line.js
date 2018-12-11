@@ -68,6 +68,34 @@ export default class Line
         this.length = this.text.length
     }
 
+    addText(_text, _startRowIndex, _endRowIndex = null)
+    {
+        // Remove text
+        if(_endRowIndex !== null && _endRowIndex !== _startRowIndex)
+        {
+            this.removeText(_startRowIndex, _endRowIndex)
+        }
+
+        // Create new text
+        const before = this.text.slice(0, _startRowIndex)
+        const after = this.text.slice(_startRowIndex, this.text.length)
+        const text = `${before}${_text}${after}`
+
+        // Update text
+        this.updateText(text)
+    }
+
+    removeText(_startRowIndex, _endRowIndex)
+    {
+        // Create new text
+        const before = this.text.slice(0, _startRowIndex)
+        const after = this.text.slice(_endRowIndex, this.text.length)
+        const text = `${before}${after}`
+
+        // Update text
+        this.updateText(text)
+    }
+
     applyFragments(_text, _fragments)
     {
         const fragmentIndex = _fragments.findIndex((_item) => _text.match(_item.regex))

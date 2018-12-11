@@ -58,7 +58,7 @@ export default class Inputs extends EventEmitter
 
         this.textarea.$element.addEventListener('input', () =>
         {
-            const value = this.textarea.$element.value[0]
+            const value = this.textarea.$element.value
             this.textarea.$element.value = ''
 
             this.trigger('input', [ value ])

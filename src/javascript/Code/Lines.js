@@ -136,21 +136,21 @@ export default class Lines
         if(lines.length === 1)
         {
             const line = lines[0]
-
-            const before = line.text.slice(0, start.rowIndex)
-            const after = line.text.slice(end.rowIndex, line.text.length)
-            const text = `${before}${after}`
-
-            line.updateText(text)
+            line.removeText(start.rowIndex, end.rowIndex)
         }
         else
         {
-            const before = lines[0].text.slice(0, start.rowIndex)
-            const after = lines[lines.length - 1].text.slice(end.rowIndex, lines[lines.length - 1].text.length)
+            // Update first line using first and last line
+            const firstLine = lines[0]
+            const lastLine = lines[lines.length - 1]
+
+            const before = firstLine.text.slice(0, start.rowIndex)
+            const after = lastLine.text.slice(end.rowIndex, lastLine.text.length)
             const text = `${before}${after}`
 
-            lines[0].updateText(text)
+            firstLine.updateText(text)
 
+            // Remove other lines
             for(let i = 1; i < lines.length; i++)
             {
                 const line = lines[i]
@@ -159,14 +159,33 @@ export default class Lines
         }
     }
 
-    updateText(_text, _position)
+    addText(_text, _destination)
     {
+        if(_destination instanceof Position)
+        {
+            this.addTextAtPosition(_text, _destination)
+        }
+        else if(_destination instanceof Range)
+        {
+            this.addTextAtRange(_text, _destination)
+        }
+    }
+
+    addTextAtPosition(_text, _position)
+    {
+        // Find line
         const line = this.items[_position.lineIndex]
 
-        const before = line.text.slice(0, _position.rowIndex)
-        const after = line.text.slice(_position.rowIndex, line.text.length)
-        const text = `${before}${_text}${after}`
-        line.updateText(text)
+        line.addText(_text, _position.rowIndex)
+    }
+
+    addTextAtRange(_text, _range)
+    {
+        // Remove range
+        this.removeRange(_range)
+
+        // Add text
+        this.addTextAtPosition(_text, _range.start)
     }
 
     getText(_range)
