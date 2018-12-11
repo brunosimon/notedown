@@ -197,7 +197,7 @@ export default class Lines
         {
             const line = lines[0]
 
-            if(range.isEmpty)
+            if(range.isEmpty())
             {
                 return line.text
             }
