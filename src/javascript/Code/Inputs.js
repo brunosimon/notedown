@@ -10,9 +10,41 @@ export default class Inputs extends EventEmitter
         this.root = _options.root
         this.root.inputs = this
 
+        this.setShortcuts()
         this.setTextarea()
         this.setKeyboard()
-        this.setKeyMapping()
+    }
+
+    setShortcuts()
+    {
+        this.shortcuts = {}
+        this.shortcuts.items = []
+
+        this.addShortcut([ 'right' ], () =>
+        {
+            this.right()
+        })
+        this.addShortcut([ 'up' ], () =>
+        {
+            this.up()
+        })
+        this.addShortcut([ 'down' ], () =>
+        {
+            this.down()
+        })
+        this.addShortcut([ 'left' ], () =>
+        {
+            this.left()
+        })
+        this.addShortcut([ 'cmd', 'c' ], () =>
+        {
+            this.copy()
+        })
+    }
+
+    addShortcut(_inputs, _method)
+    {
+        this.shortcuts.items.push({ inputs: _inputs, method: _method })
     }
 
     setTextarea()
@@ -44,31 +76,14 @@ export default class Inputs extends EventEmitter
 
         this.keyboard.on('down', () =>
         {
-            if(this.keyboard.isDown('up'))
+            for(const _item of this.shortcuts.items)
             {
-                this.up()
-            }
-            if(this.keyboard.isDown('right'))
-            {
-                this.right()
-            }
-            if(this.keyboard.isDown('down'))
-            {
-                this.down()
-            }
-            if(this.keyboard.isDown('left'))
-            {
-                this.left()
-            }
-            if(this.keyboard.isDown([ 'cmd', 'c' ]))
-            {
-                console.log('copy')
+                if(this.keyboard.isDown(_item.inputs))
+                {
+                    _item.method()
+                }
             }
         })
-    }
-
-    setKeyMapping()
-    {
     }
 
     focus()
@@ -110,5 +125,22 @@ export default class Inputs extends EventEmitter
 
         // Selection
         this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
+    }
+
+    copy()
+    {
+        // Get text for range
+        const text = this.root.lines.getText(this.root.selection.range)
+
+        // Create textarea and copy value
+        const textarea = document.createElement('textarea')
+        textarea.value = text
+        document.body.appendChild(textarea)
+        textarea.select()
+        document.execCommand('copy')
+        document.body.removeChild(textarea)
+
+        // Focus back
+        this.focus()
     }
 }

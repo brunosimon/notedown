@@ -21,11 +21,18 @@ export default class Range
     {
         this.start.copy(_range.start)
         this.end.copy(_range.end)
+
+        return this
     }
 
     isReversed()
     {
         return this.start.isAfter(this.end)
+    }
+
+    isEmpty()
+    {
+        return this.start.isEqual(this.end)
     }
 
     normalize()
@@ -40,5 +47,7 @@ export default class Range
             this.start = start
             this.end = end
         }
+
+        return this
     }
 }

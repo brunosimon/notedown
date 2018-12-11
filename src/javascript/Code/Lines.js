@@ -91,7 +91,7 @@ export default class Lines
             else
             {
                 const lastLine = this.items[this.items.length - 1]
-                position.rowIndex = lastLine.originalText.length
+                position.rowIndex = lastLine.text.length
             }
         }
         // Between first and last line
@@ -105,9 +105,9 @@ export default class Lines
             {
                 position.rowIndex = 0
             }
-            else if(position.rowIndex > line.originalText.length)
+            else if(position.rowIndex > line.text.length)
             {
-                position.rowIndex = line.originalText.length
+                position.rowIndex = line.text.length
             }
         }
 
@@ -137,16 +137,16 @@ export default class Lines
         {
             const line = lines[0]
 
-            const before = line.originalText.slice(0, start.rowIndex)
-            const after = line.originalText.slice(end.rowIndex, line.originalText.length)
+            const before = line.text.slice(0, start.rowIndex)
+            const after = line.text.slice(end.rowIndex, line.text.length)
             const text = `${before}${after}`
 
             line.updateText(text)
         }
         else
         {
-            const before = lines[0].originalText.slice(0, start.rowIndex)
-            const after = lines[lines.length - 1].originalText.slice(end.rowIndex, lines[lines.length - 1].originalText.length)
+            const before = lines[0].text.slice(0, start.rowIndex)
+            const after = lines[lines.length - 1].text.slice(end.rowIndex, lines[lines.length - 1].text.length)
             const text = `${before}${after}`
 
             lines[0].updateText(text)
@@ -163,9 +163,53 @@ export default class Lines
     {
         const line = this.items[_position.lineIndex]
 
-        const before = line.originalText.slice(0, _position.rowIndex)
-        const after = line.originalText.slice(_position.rowIndex, line.originalText.length)
+        const before = line.text.slice(0, _position.rowIndex)
+        const after = line.text.slice(_position.rowIndex, line.text.length)
         const text = `${before}${_text}${after}`
         line.updateText(text)
+    }
+
+    getText(_range)
+    {
+        const range = _range.clone().normalize()
+        const lines = this.items.slice(range.start.lineIndex, range.end.lineIndex + 1)
+
+        if(lines.length === 1)
+        {
+            const line = lines[0]
+
+            if(range.isEmpty)
+            {
+                return line.text
+            }
+            else
+            {
+                return line.text.slice(range.start.rowIndex, range.end.rowIndex)
+            }
+        }
+        else
+        {
+            const textParts = []
+
+            for(let i = 0; i < lines.length; i++)
+            {
+                const line = lines[i]
+
+                if(i === 0)
+                {
+                    textParts.push(line.text.slice(range.start.rowIndex, line.length))
+                }
+                else if(i === lines.length - 1)
+                {
+                    textParts.push(line.text.slice(0, range.end.rowIndex))
+                }
+                else
+                {
+                    textParts.push(line.text)
+                }
+            }
+
+            return textParts.join('\n')
+        }
     }
 }

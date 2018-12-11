@@ -9,7 +9,7 @@ export default class Line
         this.$element.classList.add('line')
 
         // Set up
-        this.originalText = null
+        this.text = null
         this.length = 0
         this.fragments = []
 
@@ -38,7 +38,7 @@ export default class Line
     updateText(_text)
     {
         // Didn't change
-        if(_text === this.originalText)
+        if(_text === this.text)
         {
             return
         }
@@ -64,8 +64,8 @@ export default class Line
         }
 
         // Save
-        this.originalText = _text
-        this.length = this.originalText.length
+        this.text = _text
+        this.length = this.text.length
     }
 
     applyFragments(_text, _fragments)

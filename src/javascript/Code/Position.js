@@ -19,6 +19,8 @@ export default class Position
     {
         this.lineIndex = _position.lineIndex
         this.rowIndex = _position.rowIndex
+
+        return this
     }
 
     isBefore(_position)
@@ -37,7 +39,20 @@ export default class Position
 
     isAfter(_position)
     {
-        // Return opposite of isBefore
-        return !this.isBefore(_position)
+        // Not the same line
+        if(this.lineIndex !== _position.lineIndex)
+        {
+            return this.lineIndex > _position.lineIndex
+        }
+        // Same line
+        else
+        {
+            return this.rowIndex > _position.rowIndex
+        }
+    }
+
+    isEqual(_position)
+    {
+        return this.lineIndex === _position.lineIndex && this.rowIndex === _position.rowIndex
     }
 }

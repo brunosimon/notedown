@@ -79,7 +79,7 @@ export default class Selection
                 // First
                 if(i === 0)
                 {
-                    line.updateSelection(range.start.rowIndex * this.root.measures.rowWidth, line.originalText.length * this.root.measures.rowWidth)
+                    line.updateSelection(range.start.rowIndex * this.root.measures.rowWidth, line.text.length * this.root.measures.rowWidth)
                 }
                 // Last
                 else if(i === lines.length - 1)
@@ -89,7 +89,7 @@ export default class Selection
                 // Between
                 else
                 {
-                    line.updateSelection(0, line.originalText.length * this.root.measures.rowWidth)
+                    line.updateSelection(0, line.text.length * this.root.measures.rowWidth)
                 }
             }
         }
