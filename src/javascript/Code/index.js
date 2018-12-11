@@ -126,23 +126,6 @@ export default class Code
         this.inputs = new Inputs({
             root: this
         })
-
-        this.inputs.on('input', (_value) =>
-        {
-            // Get normalized selection range
-            const selectionRange = this.selection.range.clone().normalize()
-
-            // Add text at range
-            this.lines.addTextAtRange(_value, selectionRange)
-
-            // Move cursor
-            const cursorPosition = this.cursor.position.clone()
-            cursorPosition.rowIndex += _value.length
-            this.cursor.setPosition(cursorPosition)
-
-            // Reset selection
-            this.selection.update(this.cursor.position, this.cursor.position)
-        })
     }
 
     destruct()

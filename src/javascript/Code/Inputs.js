@@ -61,7 +61,7 @@ export default class Inputs extends EventEmitter
             const value = this.textarea.$element.value
             this.textarea.$element.value = ''
 
-            this.trigger('input', [ value ])
+            this.input(value)
         })
 
         this.root.lines.$element.addEventListener('mouseup', () =>
@@ -142,5 +142,22 @@ export default class Inputs extends EventEmitter
 
         // Focus back
         this.focus()
+    }
+
+    input(_value)
+    {
+        // Get normalized selection range
+        const selectionRange = this.root.selection.range.clone().normalize()
+
+        // Add text at range
+        this.root.lines.addTextAtRange(_value, selectionRange)
+
+        // Move cursor
+        const cursorPosition = this.root.cursor.position.clone()
+        cursorPosition.rowIndex += _value.length
+        this.root.cursor.setPosition(cursorPosition)
+
+        // Reset selection
+        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
     }
 }
