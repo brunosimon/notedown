@@ -45,6 +45,10 @@ export default class Inputs
         {
             this.root.actions.copy()
         })
+        this.addShortcut([ 'cmd', 'a' ], () =>
+        {
+            this.root.actions.selectAll()
+        })
     }
 
     addShortcut(_inputs, _method)

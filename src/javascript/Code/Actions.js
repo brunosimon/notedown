@@ -1,3 +1,5 @@
+import Position from './Position'
+
 export default class Actions
 {
     constructor(_options)
@@ -90,5 +92,15 @@ export default class Actions
 
         // Reset selection
         this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
+    }
+
+    selectAll()
+    {
+        const lastLine = this.root.lines.items[this.root.lines.items.length - 1]
+        const startPosition = new Position(0, 0)
+        const endPosition = new Position(this.root.lines.items.length - 1, lastLine.length)
+
+        this.root.selection.update(startPosition, endPosition)
+        this.root.cursor.setPosition(endPosition)
     }
 }
