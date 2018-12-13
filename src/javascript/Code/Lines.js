@@ -18,13 +18,23 @@ export default class Lines
         this.length = 0
     }
 
-    addLine(_text = '')
+    addLine(_text = '', _index = null)
     {
         const line = new Line(_text)
+        const index = _index === null ? this.items.length : _index
 
-        this.$element.appendChild(line.$element)
+        // Append at the end
+        if(index === this.items.length)
+        {
+            this.$element.appendChild(line.$element)
+        }
+        else
+        {
+            this.$element.insertBefore(line.$element, this.items[index + 1].$element)
+        }
 
-        this.items.push(line)
+        this.items.splice(index + 1, 0, line)
+        console.log(this.items)
 
         this.length = this.items.length
 
@@ -173,10 +183,44 @@ export default class Lines
 
     addTextAtPosition(_text, _position)
     {
-        // Find line
-        const line = this.items[_position.lineIndex]
+        const textLines = _text.split(/\r?\n/g)
+        const newLines = []
 
-        line.addText(_text, _position.rowIndex)
+        // One line
+        if(textLines.length === 1)
+        {
+            const line = this.items[_position.lineIndex]
+            line.addText(textLines.shift(), _position.rowIndex)
+            newLines.push(line)
+        }
+
+        // Multi line
+        else
+        {
+            // First line
+            const line = this.items[_position.lineIndex]
+            const before = line.text.slice(0, _position.rowIndex)
+            const after = line.text.slice(_position.rowIndex, line.text.length)
+
+            line.updateText(`${before}${textLines.shift()}`)
+            newLines.push(line)
+
+            // Other lines
+            let i = 0
+            for(const _textLine of textLines)
+            {
+                const line = this.addLine(_textLine, _position.lineIndex + i)
+                newLines.push(line)
+
+                i++
+            }
+
+            // Add end of first line to latest line
+            const lastLine = newLines[newLines.length - 1]
+            lastLine.addText(after, lastLine.length - 1)
+        }
+
+        return newLines
     }
 
     addTextAtRange(_text, _range)
