@@ -19,6 +19,10 @@ export default class Code
 
         // Test lines
         const texts = [
+            'aa',
+            'bb',
+            'cc',
+            'dd',
             '# Title',
             '    ## Sub title',
             '(parenthesis)',

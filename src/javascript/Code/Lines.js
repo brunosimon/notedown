@@ -215,7 +215,7 @@ export default class Lines
             }
 
             // Add end of first line to latest line
-            latestLine.addText(after, latestLine.length - 1)
+            latestLine.addText(after, latestLine.length)
         }
     }
 
