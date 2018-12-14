@@ -21,6 +21,11 @@ export default class Code
 
         // Test lines
         const texts = [
+            'aaaa',
+            'bbbb',
+            'cccc',
+            'dddd',
+            'eeee',
             // '    - [x] Test (parenthese) Yop (again)',
             // '# Title',
             // '    ## Sub title',
@@ -72,10 +77,10 @@ export default class Code
         //     line.updateText(texts[Math.floor(Math.random() * texts.length)])
         // }, 1000)
 
-        for(let i = 0; i < 10; i++)
-        {
-            this.lines.addLine(`Test ${i}`)
-        }
+        // for(let i = 0; i < 10; i++)
+        // {
+        //     this.lines.addLine(`Test ${i}`)
+        // }
     }
 
     setContainer()

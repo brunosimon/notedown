@@ -24,7 +24,7 @@ export default class Lines
         const index = _index === null ? this.items.length : _index
 
         // Append at the end
-        if(index === this.items.length)
+        if(index === this.items.length || index === this.items.length - 1)
         {
             this.$element.appendChild(line.$element)
         }
@@ -34,7 +34,6 @@ export default class Lines
         }
 
         this.items.splice(index + 1, 0, line)
-        console.log(this.items)
 
         this.length = this.items.length
 
@@ -184,14 +183,12 @@ export default class Lines
     addTextAtPosition(_text, _position)
     {
         const textLines = _text.split(/\r?\n/g)
-        const newLines = []
 
         // One line
         if(textLines.length === 1)
         {
             const line = this.items[_position.lineIndex]
             line.addText(textLines.shift(), _position.rowIndex)
-            newLines.push(line)
         }
 
         // Multi line
@@ -203,24 +200,21 @@ export default class Lines
             const after = line.text.slice(_position.rowIndex, line.text.length)
 
             line.updateText(`${before}${textLines.shift()}`)
-            newLines.push(line)
 
             // Other lines
             let i = 0
+            let latestLine = null
             for(const _textLine of textLines)
             {
                 const line = this.addLine(_textLine, _position.lineIndex + i)
-                newLines.push(line)
+                latestLine = line
 
                 i++
             }
 
             // Add end of first line to latest line
-            const lastLine = newLines[newLines.length - 1]
-            lastLine.addText(after, lastLine.length - 1)
+            latestLine.addText(after, latestLine.length - 1)
         }
-
-        return newLines
     }
 
     addTextAtRange(_text, _range)

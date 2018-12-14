@@ -83,15 +83,23 @@ export default class Actions
         const selectionRange = this.root.selection.range.clone().normalize()
 
         // Add text at range
-        const newLines = this.root.lines.addTextAtRange(_value, selectionRange)
+        this.root.lines.addTextAtRange(_value, selectionRange)
 
-        // test
+        // Text
         const textLines = _value.split(/\r?\n/g)
 
         // Move cursor
         const cursorPosition = this.root.cursor.position.clone()
         cursorPosition.lineIndex = selectionRange.start.lineIndex + textLines.length - 1
-        // cursorPosition.rowIndex = selectionRange.end.rowIndex + textLines[textLines.length - 1].length
+
+        if(textLines.length === 1)
+        {
+            cursorPosition.rowIndex = selectionRange.start.rowIndex + textLines[textLines.length - 1].length
+        }
+        else
+        {
+            cursorPosition.rowIndex = textLines[textLines.length - 1].length
+        }
         this.root.cursor.setPosition(cursorPosition)
 
         // Reset selection
