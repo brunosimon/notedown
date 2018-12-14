@@ -14,7 +14,7 @@ export default class Actions
         this.root.cursor.goRight()
 
         // Selection
-        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
+        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
     down()
@@ -23,7 +23,7 @@ export default class Actions
         this.root.cursor.goDown()
 
         // Selection
-        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
+        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
     left()
@@ -32,7 +32,7 @@ export default class Actions
         this.root.cursor.goLeft()
 
         // Selection
-        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
+        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
     up()
@@ -41,8 +41,14 @@ export default class Actions
         this.root.cursor.goUp()
 
         // Selection
-        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
+        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
+
+    // pointerDown(_x, _y)
+    // {
+    //     const position = this.root.lines.getPosition(_x, _y)
+    //     this.root.cursor.setPosition(position)
+    // }
 
     startLine()
     {
@@ -63,7 +69,7 @@ export default class Actions
     copy()
     {
         // Get text for range
-        const text = this.root.lines.getText(this.root.selection.range)
+        const text = this.root.lines.getText(this.root.lines.selectionRange)
 
         // Create textarea and copy value
         const textarea = document.createElement('textarea')
@@ -80,7 +86,7 @@ export default class Actions
     input(_value)
     {
         // Get normalized selection range
-        const selectionRange = this.root.selection.range.clone().normalize()
+        const selectionRange = this.root.lines.selectionRange.clone().normalize()
 
         // Add text at range
         this.root.lines.addTextAtRange(_value, selectionRange)
@@ -103,7 +109,7 @@ export default class Actions
         this.root.cursor.setPosition(cursorPosition)
 
         // Reset selection
-        this.root.selection.update(this.root.cursor.position, this.root.cursor.position)
+        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
     selectAll()
@@ -112,7 +118,7 @@ export default class Actions
         const startPosition = new Position(0, 0)
         const endPosition = new Position(this.root.lines.items.length - 1, lastLine.length)
 
-        this.root.selection.update(startPosition, endPosition)
+        this.root.lines.updateSelection(startPosition, endPosition)
         this.root.cursor.setPosition(endPosition)
     }
 }

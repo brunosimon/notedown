@@ -1,7 +1,6 @@
 import Lines from './Lines.js'
 import Measures from './Measures.js'
 import Cursor from './Cursor.js'
-import Selection from './Selection.js'
 import Scroll from './Scroll.js'
 import Inputs from './Inputs.js'
 import Actions from './Actions.js'
@@ -14,7 +13,6 @@ export default class Code
         this.setScroll()
         this.setLines()
         this.setMeasures()
-        this.setSelection()
         this.setCursor()
         this.setActions()
         this.setInputs()
@@ -104,13 +102,6 @@ export default class Code
     setMeasures()
     {
         new Measures({
-            root: this
-        })
-    }
-
-    setSelection()
-    {
-        new Selection({
             root: this
         })
     }

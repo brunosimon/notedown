@@ -21,9 +21,6 @@ export default class Cursor
 
         // Set
         this.position = new Position()
-
-        // Set interactions
-        this.setInteractions()
     }
 
     goRight()
@@ -139,33 +136,5 @@ export default class Cursor
     {
         this.$element.removeChild(this.$bar)
         this.$element.appendChild(this.$bar)
-    }
-
-    setInteractions()
-    {
-        this.interactions = {}
-        this.interactions.mousedown = (_event) =>
-        {
-            const position = this.root.lines.getPosition(_event.clientX, _event.clientY)
-            this.setPosition(position)
-
-            window.addEventListener('mousemove', this.interactions.mousemove)
-            window.addEventListener('mouseup', this.interactions.mouseup)
-        }
-
-        this.interactions.mousemove = (_event) =>
-        {
-            const position = this.root.lines.getPosition(_event.clientX, _event.clientY)
-            this.setPosition(position)
-        }
-
-        this.interactions.mouseup = () =>
-        {
-            window.removeEventListener('mousemove', this.interactions.mousemove)
-            window.removeEventListener('mouseup', this.interactions.mousemove)
-        }
-
-        // Mousedown
-        this.root.lines.$element.addEventListener('mousedown', this.interactions.mousedown)
     }
 }

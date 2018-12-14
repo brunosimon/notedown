@@ -10,6 +10,7 @@ export default class Inputs
         this.setShortcuts()
         this.setTextarea()
         this.setKeyboard()
+        this.setPointer()
     }
 
     setShortcuts()
@@ -95,6 +96,50 @@ export default class Inputs
                 }
             }
         })
+    }
+
+    setPointer()
+    {
+        this.pointer = {}
+        this.pointer.mousedown = (_event) =>
+        {
+            // Position
+            const position = this.root.lines.getPosition(_event.clientX, _event.clientY)
+
+            // Cursor
+            this.root.cursor.setPosition(position)
+
+            // Selection
+            this.root.lines.updateSelection(position, position)
+
+            // Events
+            window.addEventListener('mousemove', this.pointer.mousemove)
+            window.addEventListener('mouseup', this.pointer.mouseup)
+        }
+
+        this.pointer.mousemove = (_event) =>
+        {
+            // Position
+            const position = this.root.lines.getPosition(_event.clientX, _event.clientY)
+
+            // Cursor
+            this.root.cursor.setPosition(position)
+
+            // Selection
+            const selectionRange = this.root.lines.selectionRange.clone()
+            selectionRange.end.copy(position)
+
+            this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
+        }
+
+        this.pointer.mouseup = () =>
+        {
+            window.removeEventListener('mousemove', this.pointer.mousemove)
+            window.removeEventListener('mouseup', this.pointer.mousemove)
+        }
+
+        // Mousedown
+        this.root.lines.$element.addEventListener('mousedown', this.pointer.mousedown)
     }
 
     focus()
