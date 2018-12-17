@@ -111,7 +111,20 @@ export default class Inputs
         this.pointer = {}
         this.pointer.mousedown = (_event) =>
         {
+            // Pointer down action
             this.root.actions.pointerDown(_event.clientX, _event.clientY)
+
+            // Double click action
+            if(_event.detail === 2)
+            {
+                this.root.actions.selectWord()
+            }
+
+            // Double click action
+            else if(_event.detail === 3)
+            {
+                this.root.actions.selectLine()
+            }
 
             // Events
             window.addEventListener('mousemove', this.pointer.mousemove)
@@ -120,6 +133,7 @@ export default class Inputs
 
         this.pointer.mousemove = (_event) =>
         {
+            // Pointer move action
             this.root.actions.pointerMove(_event.clientX, _event.clientY)
         }
 

@@ -71,6 +71,21 @@ export default class Actions
         this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
     }
 
+    selectWord()
+    {
+        console.log('selectWord')
+    }
+
+    selectLine()
+    {
+        const line = this.root.lines.items[this.root.cursor.position.lineIndex]
+
+        // Reset selection
+        const start = new Position(this.root.cursor.position.lineIndex, 0)
+        const end = new Position(this.root.cursor.position.lineIndex, line.length)
+        this.root.lines.updateSelection(start, end)
+    }
+
     startLine()
     {
         const cursorPosition = this.root.cursor.position.clone()
