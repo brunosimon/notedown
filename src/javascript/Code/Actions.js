@@ -44,11 +44,32 @@ export default class Actions
         this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
-    // pointerDown(_x, _y)
-    // {
-    //     const position = this.root.lines.getPosition(_x, _y)
-    //     this.root.cursor.setPosition(position)
-    // }
+    pointerDown(_x, _y)
+    {
+        // Position
+        const position = this.root.lines.getPosition(_x, _y)
+
+        // Cursor
+        this.root.cursor.setPosition(position)
+
+        // Selection
+        this.root.lines.updateSelection(position, position)
+    }
+
+    pointerMove(_x, _y)
+    {
+        // Position
+        const position = this.root.lines.getPosition(_x, _y)
+
+        // Cursor
+        this.root.cursor.setPosition(position)
+
+        // Selection
+        const selectionRange = this.root.lines.selectionRange.clone()
+        selectionRange.end.copy(position)
+
+        this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
+    }
 
     startLine()
     {

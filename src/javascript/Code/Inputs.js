@@ -111,14 +111,7 @@ export default class Inputs
         this.pointer = {}
         this.pointer.mousedown = (_event) =>
         {
-            // Position
-            const position = this.root.lines.getPosition(_event.clientX, _event.clientY)
-
-            // Cursor
-            this.root.cursor.setPosition(position)
-
-            // Selection
-            this.root.lines.updateSelection(position, position)
+            this.root.actions.pointerDown(_event.clientX, _event.clientY)
 
             // Events
             window.addEventListener('mousemove', this.pointer.mousemove)
@@ -127,17 +120,7 @@ export default class Inputs
 
         this.pointer.mousemove = (_event) =>
         {
-            // Position
-            const position = this.root.lines.getPosition(_event.clientX, _event.clientY)
-
-            // Cursor
-            this.root.cursor.setPosition(position)
-
-            // Selection
-            const selectionRange = this.root.lines.selectionRange.clone()
-            selectionRange.end.copy(position)
-
-            this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
+            this.root.actions.pointerMove(_event.clientX, _event.clientY)
         }
 
         this.pointer.mouseup = () =>
