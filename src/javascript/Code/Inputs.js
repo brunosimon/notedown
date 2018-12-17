@@ -50,6 +50,10 @@ export default class Inputs
         {
             this.root.actions.selectAll()
         })
+        this.addShortcut([ 'cmd', 'backspace' ], () =>
+        {
+            this.root.actions.superDeleteCharacter()
+        })
         this.addShortcut([ 'backspace' ], () =>
         {
             this.root.actions.deleteCharacter()
