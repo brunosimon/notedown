@@ -68,17 +68,20 @@ export default class Line
         this.length = this.text.length
     }
 
-    addText(_text, _startRowIndex, _endRowIndex = null)
+    addText(_text, _startRowIndex = null, _endRowIndex = null)
     {
+        // Default
+        const startRowIndex = _startRowIndex === null ? this.length : _startRowIndex
+
         // Remove text
-        if(_endRowIndex !== null && _endRowIndex !== _startRowIndex)
+        if(_endRowIndex !== null && _endRowIndex !== startRowIndex)
         {
-            this.removeText(_startRowIndex, _endRowIndex)
+            this.removeText(startRowIndex, _endRowIndex)
         }
 
         // Create new text
-        const before = this.text.slice(0, _startRowIndex)
-        const after = this.text.slice(_startRowIndex, this.text.length)
+        const before = this.text.slice(0, startRowIndex)
+        const after = this.text.slice(startRowIndex, this.text.length)
         const text = `${before}${_text}${after}`
 
         // Update text

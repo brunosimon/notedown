@@ -50,6 +50,10 @@ export default class Inputs
         {
             this.root.actions.selectAll()
         })
+        this.addShortcut([ 'backspace' ], () =>
+        {
+            this.root.actions.deleteCharacter()
+        })
     }
 
     addShortcut(_inputs, _method)

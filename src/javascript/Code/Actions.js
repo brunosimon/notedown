@@ -66,6 +66,39 @@ export default class Actions
         this.root.cursor.setPosition(cursorPosition)
     }
 
+    deleteCharacter()
+    {
+        const line = this.root.lines.items[this.root.cursor.position.lineIndex]
+        const cursorPosition = this.root.cursor.position.clone()
+        const before = line.text.slice(0, cursorPosition.rowIndex)
+
+        // Has characters to delete
+        if(before.length > 0)
+        {
+            line.removeText(cursorPosition.rowIndex - 1, cursorPosition.rowIndex)
+
+            this.root.cursor.goLeft()
+        }
+
+        // No character to delete
+        else if(this.root.cursor.position.lineIndex > 0)
+        {
+            // Remove current line
+            this.root.lines.removeLine(line)
+
+            // Move cursor
+            this.root.cursor.goLeft()
+
+            // Add rest of line at the end of previous line
+            const after = line.text.slice(cursorPosition.rowIndex, line.length)
+            const previousLine = this.root.lines.items[this.root.cursor.position.lineIndex]
+            previousLine.addText(after)
+        }
+
+        // Reset selection
+        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+    }
+
     copy()
     {
         // Get text for range
