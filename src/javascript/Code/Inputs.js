@@ -117,13 +117,13 @@ export default class Inputs
             // Double click action
             if(_event.detail === 2)
             {
-                this.root.actions.selectWord()
+                this.root.actions.doubleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y)
             }
 
             // Double click action
             else if(_event.detail === 3)
             {
-                this.root.actions.selectLine()
+                this.root.actions.tripleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y)
             }
 
             // Events

@@ -71,16 +71,80 @@ export default class Actions
         this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
     }
 
-    selectWord()
+    doubleDown(_x, _y)
     {
-        console.log('selectWord')
+        const position = this.root.lines.getPosition(_x, _y)
+        const line = this.root.lines.items[position.lineIndex]
+
+        // Empty line
+        if(line.length === 0)
+        {
+            return
+        }
+
+        // Find character at position
+        let x = Math.round((_x - this.root.measures.rowWidth * 0.5) / this.root.measures.rowWidth)
+
+        if(x < 0)
+        {
+            x = 0
+        }
+        else if(x > line.length - 1)
+        {
+            x = line.length - 1
+        }
+
+        const character = line.text[x]
+
+        // Same character condition
+        let condition = null
+
+        if(character.match(/[a-zA-Z0-1_]/i))
+        {
+            condition = (_character) => _character.match(/[a-zA-Z0-1_]/i)
+        }
+        else
+        {
+            condition = (_character) => _character === character
+        }
+
+        // Left index
+        let leftIndex = x - 1
+        let leftCharacter = line.text[leftIndex]
+
+        while(leftIndex >= 0 && condition(leftCharacter))
+        {
+            leftIndex = leftIndex - 1
+            leftCharacter = line.text[leftIndex]
+        }
+
+        leftIndex++
+
+        // Right index
+        let rightIndex = x + 1
+        let rightCharacter = line.text[rightIndex]
+
+        while(rightIndex < line.length && condition(rightCharacter))
+        {
+            rightIndex = rightIndex + 1
+            rightCharacter = line.text[rightIndex]
+        }
+
+        // Update selection
+        const start = new Position(position.lineIndex, leftIndex)
+        const end = new Position(position.lineIndex, rightIndex)
+        this.root.lines.updateSelection(start, end)
+
+        // Update selection
+        this.root.cursor.setPosition(end)
     }
 
-    selectLine()
+    tripleDown(_x, _y)
     {
-        const line = this.root.lines.items[this.root.cursor.position.lineIndex]
+        const position = this.root.lines.getPosition(_x, _y)
+        const line = this.root.lines.items[position.lineIndex]
 
-        // Reset selection
+        // Update selection
         const start = new Position(this.root.cursor.position.lineIndex, 0)
         const end = new Position(this.root.cursor.position.lineIndex, line.length)
         this.root.lines.updateSelection(start, end)
