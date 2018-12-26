@@ -8,7 +8,7 @@ export default class Actions
         this.root.actions = this
     }
 
-    right()
+    cursorRight()
     {
         // Cursor
         this.root.cursor.goRight()
@@ -17,7 +17,7 @@ export default class Actions
         this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
-    down()
+    cursorDown()
     {
         // Cursor
         this.root.cursor.goDown()
@@ -26,7 +26,7 @@ export default class Actions
         this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
-    left()
+    cursorLeft()
     {
         // Cursor
         this.root.cursor.goLeft()
@@ -35,10 +35,77 @@ export default class Actions
         this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
-    up()
+    cursorUp()
     {
         // Cursor
         this.root.cursor.goUp()
+
+        // Selection
+        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+    }
+
+    cursorRightWord()
+    {
+        console.log('cursorRightWord')
+    }
+
+    cursorLeftWord()
+    {
+        // Get line
+        let line = null
+        let lineIndex = this.root.cursor.position.lineIndex
+        let rowIndex = this.root.cursor.position.rowIndex
+
+        if(this.root.cursor.position.rowIndex === 0)
+        {
+            if(lineIndex === 0)
+            {
+                return
+            }
+            else
+            {
+                lineIndex--
+                line = this.root.lines.items[lineIndex]
+                rowIndex = line.length
+            }
+        }
+        else
+        {
+            line = this.root.lines.items[lineIndex]
+        }
+
+        // Get character
+        const character = line.text[rowIndex - 1]
+
+        // Same character condition
+        let condition = null
+
+        if(character.match(/[a-zA-Z0-1_]/i))
+        {
+            condition = (_character) => _character.match(/[a-zA-Z0-1_]/i)
+        }
+        else
+        {
+            condition = (_character) => _character === character
+        }
+
+        // Left index
+        let leftIndex = rowIndex - 1
+        let leftCharacter = line.text[leftIndex]
+
+        while(leftIndex >= 0 && (condition(leftCharacter)))
+        {
+            leftIndex = leftIndex - 1
+            leftCharacter = line.text[leftIndex]
+        }
+
+        leftIndex++
+
+        // Position
+        const position = new Position(lineIndex, leftIndex)
+
+        // Cursor
+        this.root.cursor.setPosition(position)
 
         // Selection
         this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)

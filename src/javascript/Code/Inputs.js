@@ -26,21 +26,29 @@ export default class Inputs
         {
             this.root.actions.startLine()
         })
+        this.addShortcut([ 'alt', 'right' ], () =>
+        {
+            this.root.actions.cursorRightWord()
+        })
+        this.addShortcut([ 'alt', 'left' ], () =>
+        {
+            this.root.actions.cursorLeftWord()
+        })
         this.addShortcut([ 'right' ], () =>
         {
-            this.root.actions.right()
+            this.root.actions.cursorRight()
         })
         this.addShortcut([ 'up' ], () =>
         {
-            this.root.actions.up()
+            this.root.actions.cursorUp()
         })
         this.addShortcut([ 'down' ], () =>
         {
-            this.root.actions.down()
+            this.root.actions.cursorDown()
         })
         this.addShortcut([ 'left' ], () =>
         {
-            this.root.actions.left()
+            this.root.actions.cursorLeft()
         })
         this.addShortcut([ 'cmd', 'c' ], () =>
         {
