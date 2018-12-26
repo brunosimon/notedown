@@ -19,6 +19,21 @@ export default class
         this.$inner = document.createElement('div')
         this.$inner.classList.add('scroll-inner')
         this.$element.appendChild(this.$inner)
+
+        this.setOffset()
+    }
+
+    setOffset()
+    {
+        this.offset = {}
+        this.offset.x = 0
+        this.offset.y = 0
+
+        this.$element.addEventListener('scroll', () =>
+        {
+            this.offset.x = this.$element.scrollLeft
+            this.offset.y = this.$element.scrollTop
+        })
     }
 
     getScrollbarWidth()

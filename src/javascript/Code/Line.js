@@ -13,7 +13,6 @@ export default class Line
         this.length = 0
         this.fragments = []
 
-        // Set initial text
         this.setSelection()
         this.setFragments()
         this.updateText(_text)

@@ -112,7 +112,7 @@ export default class Inputs
         this.pointer.mousedown = (_event) =>
         {
             // Pointer down action
-            this.root.actions.pointerDown(_event.clientX, _event.clientY)
+            this.root.actions.pointerDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y)
 
             // Double click action
             if(_event.detail === 2)
@@ -134,7 +134,7 @@ export default class Inputs
         this.pointer.mousemove = (_event) =>
         {
             // Pointer move action
-            this.root.actions.pointerMove(_event.clientX, _event.clientY)
+            this.root.actions.pointerMove(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y)
         }
 
         this.pointer.mouseup = () =>
