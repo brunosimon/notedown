@@ -20,7 +20,8 @@ export default class Keyboard extends EventEmitter
             38: 'up',
             39: 'right',
             40: 'down',
-            91: 'cmd'
+            46: 'delete',
+            91: 'command'
         }
 
         this.downItems = []
@@ -40,7 +41,7 @@ export default class Keyboard extends EventEmitter
             if(!this.downItems.includes(character))
             {
                 // CMD exception
-                if(!this.isDown('cmd') || character === 'shift' || character === 'alt')
+                if(!this.isDown('command') || character === 'shift' || character === 'alt')
                 {
                     this.downItems.push(character)
                 }

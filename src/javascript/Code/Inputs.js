@@ -19,11 +19,11 @@ export default class Inputs
         this.shortcuts = {}
         this.shortcuts.items = []
 
-        this.addShortcut([ 'cmd', 'right' ], () =>
+        this.addShortcut([ 'command', 'right' ], () =>
         {
             this.root.actions.endLine(this.keyboard.isDown('shift'))
         })
-        this.addShortcut([ 'cmd', 'left' ], () =>
+        this.addShortcut([ 'command', 'left' ], () =>
         {
             this.root.actions.startLine(this.keyboard.isDown('shift'))
         })
@@ -51,21 +51,29 @@ export default class Inputs
         {
             this.root.actions.cursorLeft(this.keyboard.isDown('shift'))
         })
-        this.addShortcut([ 'cmd', 'c' ], () =>
+        this.addShortcut([ 'command', 'c' ], () =>
         {
             this.root.actions.copy()
         })
-        this.addShortcut([ 'cmd', 'a' ], () =>
+        this.addShortcut([ 'command', 'a' ], () =>
         {
             this.root.actions.selectAll()
         })
-        this.addShortcut([ 'cmd', 'backspace' ], () =>
+        this.addShortcut([ 'command', 'backspace' ], () =>
         {
-            this.root.actions.superDeleteCharacter()
+            this.root.actions.superDeleteLeft()
         })
         this.addShortcut([ 'backspace' ], () =>
         {
-            this.root.actions.deleteCharacter()
+            this.root.actions.deleteLeft()
+        })
+        this.addShortcut([ 'command', 'delete' ], () =>
+        {
+            this.root.actions.superDeleteRight()
+        })
+        this.addShortcut([ 'delete' ], () =>
+        {
+            this.root.actions.deleteRight()
         })
         this.addShortcut([ 'tab' ], () =>
         {
@@ -123,21 +131,21 @@ export default class Inputs
 
     setLinks()
     {
-        // Add class when cmd is down
+        // Add class when command is down
         this.keyboard.on('down', (_keyCode, _character) =>
         {
-            if(_character === 'cmd')
+            if(_character === 'command')
             {
-                this.root.container.$element.classList.add('is-cmd-down')
+                this.root.container.$element.classList.add('is-command-down')
             }
         })
 
-        // Remove class when cmd is down
+        // Remove class when command is down
         this.keyboard.on('up', (_keyCode, _character) =>
         {
-            if(_character === 'cmd')
+            if(_character === 'command')
             {
-                this.root.container.$element.classList.remove('is-cmd-down')
+                this.root.container.$element.classList.remove('is-command-down')
             }
         })
     }

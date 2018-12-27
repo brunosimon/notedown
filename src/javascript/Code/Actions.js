@@ -322,71 +322,189 @@ export default class Actions
         this.root.lines.updateSelection(start, end)
     }
 
-    deleteCharacter()
+    deleteLeft()
     {
-        const line = this.root.lines.items[this.root.cursor.position.lineIndex]
-        const cursorPosition = this.root.cursor.position.clone()
-        const before = line.text.slice(0, cursorPosition.rowIndex)
-
-        // Has characters to delete
-        if(before.length > 0)
+        // No range selected
+        // Delete before
+        if(this.root.lines.selectionRange.isEmpty())
         {
-            line.removeText(cursorPosition.rowIndex - 1, cursorPosition.rowIndex)
+            const line = this.root.lines.items[this.root.cursor.position.lineIndex]
+            const cursorPosition = this.root.cursor.position.clone()
+            const before = line.text.slice(0, cursorPosition.rowIndex)
 
-            this.root.cursor.goLeft()
+            // Has characters to delete
+            if(before.length > 0)
+            {
+                line.removeText(cursorPosition.rowIndex - 1, cursorPosition.rowIndex)
+
+                this.root.cursor.goLeft()
+            }
+
+            // No character to delete
+            else if(this.root.cursor.position.lineIndex > 0)
+            {
+                // Remove current line
+                this.root.lines.removeLine(line)
+
+                // Move cursor
+                this.root.cursor.goLeft()
+
+                // Add rest of line at the end of previous line
+                const after = line.text.slice(cursorPosition.rowIndex, line.length)
+                const previousLine = this.root.lines.items[this.root.cursor.position.lineIndex]
+                previousLine.addText(after)
+            }
+
+            // Reset selection
+            this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
         }
 
-        // No character to delete
-        else if(this.root.cursor.position.lineIndex > 0)
+        // Range selected
+        else
         {
-            // Remove current line
-            this.root.lines.removeLine(line)
-
-            // Move cursor
-            this.root.cursor.goLeft()
-
-            // Add rest of line at the end of previous line
-            const after = line.text.slice(cursorPosition.rowIndex, line.length)
-            const previousLine = this.root.lines.items[this.root.cursor.position.lineIndex]
-            previousLine.addText(after)
+            this.deleteSelection()
         }
-
-        // Reset selection
-        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
-    superDeleteCharacter()
+    superDeleteLeft()
     {
-        const line = this.root.lines.items[this.root.cursor.position.lineIndex]
-        const cursorPosition = this.root.cursor.position.clone()
-        const before = line.text.slice(0, cursorPosition.rowIndex)
-
-        // Has characters to delete
-        if(before.length > 0)
+        // No range selected
+        // Delete before
+        if(this.root.lines.selectionRange.isEmpty())
         {
-            line.removeText(0, cursorPosition.rowIndex)
-            cursorPosition.rowIndex = 0
+            const line = this.root.lines.items[this.root.cursor.position.lineIndex]
+            const cursorPosition = this.root.cursor.position.clone()
+            const before = line.text.slice(0, cursorPosition.rowIndex)
 
-            this.root.cursor.setPosition(cursorPosition)
+            // Has characters to delete
+            if(before.length > 0)
+            {
+                line.removeText(0, cursorPosition.rowIndex)
+                cursorPosition.rowIndex = 0
+
+                this.root.cursor.setPosition(cursorPosition)
+            }
+
+            // No character to delete
+            else if(this.root.cursor.position.lineIndex > 0)
+            {
+                // Remove current line
+                this.root.lines.removeLine(line)
+
+                // Move cursor
+                this.root.cursor.goLeft()
+
+                // Add rest of line at the end of previous line
+                const after = line.text.slice(cursorPosition.rowIndex, line.length)
+                const previousLine = this.root.lines.items[this.root.cursor.position.lineIndex]
+                previousLine.addText(after)
+            }
+
+            // Reset selection
+            this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
         }
 
-        // No character to delete
-        else if(this.root.cursor.position.lineIndex > 0)
+        // Range selected
+        else
         {
-            // Remove current line
-            this.root.lines.removeLine(line)
-
-            // Move cursor
-            this.root.cursor.goLeft()
-
-            // Add rest of line at the end of previous line
-            const after = line.text.slice(cursorPosition.rowIndex, line.length)
-            const previousLine = this.root.lines.items[this.root.cursor.position.lineIndex]
-            previousLine.addText(after)
+            this.deleteSelection()
         }
+    }
+
+    deleteRight()
+    {
+        // No range selected
+        // Delete after
+        if(this.root.lines.selectionRange.isEmpty())
+        {
+            const line = this.root.lines.items[this.root.cursor.position.lineIndex]
+            const cursorPosition = this.root.cursor.position.clone()
+            const after = line.text.slice(cursorPosition.rowIndex, line.text.length)
+
+            // Has characters to delete
+            if(after.length > 0)
+            {
+                line.removeText(cursorPosition.rowIndex, cursorPosition.rowIndex + 1)
+            }
+
+            // No character to delete
+            else if(this.root.cursor.position.lineIndex < this.root.lines.length - 1)
+            {
+                // Find next line
+                const nextLine = this.root.lines.items[this.root.cursor.position.lineIndex + 1]
+
+                // Add next line text to current line
+                line.addText(nextLine.text)
+
+                // Remove current line
+                this.root.lines.removeLine(nextLine)
+            }
+
+            // Reset selection
+            this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        }
+
+        // Range selected
+        else
+        {
+            this.deleteSelection()
+        }
+    }
+
+    superDeleteRight()
+    {
+        // No range selected
+        // Delete after
+        if(this.root.lines.selectionRange.isEmpty())
+        {
+            const line = this.root.lines.items[this.root.cursor.position.lineIndex]
+            const cursorPosition = this.root.cursor.position.clone()
+            const after = line.text.slice(cursorPosition.rowIndex, line.text.length)
+
+            // Has characters to delete
+            if(after.length > 0)
+            {
+                line.removeText(cursorPosition.rowIndex, line.length)
+                cursorPosition.rowIndex = cursorPosition.rowIndex
+
+                this.root.cursor.setPosition(cursorPosition)
+            }
+
+            // No character to delete
+            else if(this.root.cursor.position.lineIndex < this.root.lines.length - 1)
+            {
+                // Find next line
+                const nextLine = this.root.lines.items[this.root.cursor.position.lineIndex + 1]
+
+                // Add next line text to current line
+                line.addText(nextLine.text)
+
+                // Remove current line
+                this.root.lines.removeLine(nextLine)
+            }
+
+            // Reset selection
+            this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        }
+
+        // Range selected
+        else
+        {
+            this.deleteSelection()
+        }
+    }
+
+    deleteSelection()
+    {
+        // Delete range
+        this.root.lines.removeRange(this.root.lines.selectionRange)
+
+        // Update cursor
+        const selectionRange = this.root.lines.selectionRange.clone().normalize()
+        this.root.cursor.setPosition(selectionRange.start)
 
         // Reset selection
-        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
     }
 
     copy()
