@@ -170,7 +170,7 @@ export default class Actions
         this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
-    pointerDown(_x, _y)
+    pointerDown(_x, _y, _extendSelection = false)
     {
         // Position
         const position = this.root.lines.getPosition(_x, _y)
@@ -179,7 +179,9 @@ export default class Actions
         this.root.cursor.setPosition(position)
 
         // Selection
-        this.root.lines.updateSelection(position, position)
+        const start = _extendSelection ? this.root.lines.selectionRange.start : position
+        const end = position
+        this.root.lines.updateSelection(start, end)
     }
 
     pointerMove(_x, _y)
@@ -197,7 +199,7 @@ export default class Actions
         this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
     }
 
-    doubleDown(_x, _y)
+    doubleDown(_x, _y, _extendSelection = false)
     {
         const position = this.root.lines.getPosition(_x, _y)
         const line = this.root.lines.items[position.lineIndex]
@@ -257,7 +259,7 @@ export default class Actions
         }
 
         // Update selection
-        const start = new Position(position.lineIndex, leftIndex)
+        const start = _extendSelection ? this.root.lines.selectionRange.start : new Position(position.lineIndex, leftIndex)
         const end = new Position(position.lineIndex, rightIndex)
         this.root.lines.updateSelection(start, end)
 
@@ -265,13 +267,13 @@ export default class Actions
         this.root.cursor.setPosition(end)
     }
 
-    tripleDown(_x, _y)
+    tripleDown(_x, _y, _extendSelection = false)
     {
         const position = this.root.lines.getPosition(_x, _y)
         const line = this.root.lines.items[position.lineIndex]
 
         // Update selection
-        const start = new Position(this.root.cursor.position.lineIndex, 0)
+        const start = _extendSelection ? this.root.lines.selectionRange.start : new Position(this.root.cursor.position.lineIndex, 0)
         const end = new Position(this.root.cursor.position.lineIndex, line.length)
         this.root.lines.updateSelection(start, end)
 

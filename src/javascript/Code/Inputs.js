@@ -142,18 +142,18 @@ export default class Inputs
         this.pointer.mousedown = (_event) =>
         {
             // Pointer down action
-            this.root.actions.pointerDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y)
+            this.root.actions.pointerDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, _event.shiftKey)
 
             // Double click action
             if(_event.detail === 2)
             {
-                this.root.actions.doubleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y)
+                this.root.actions.doubleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, _event.shiftKey)
             }
 
             // Double click action
             else if(_event.detail === 3)
             {
-                this.root.actions.tripleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y)
+                this.root.actions.tripleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, _event.shiftKey)
             }
 
             // Events
