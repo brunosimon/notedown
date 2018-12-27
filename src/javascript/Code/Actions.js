@@ -281,18 +281,27 @@ export default class Actions
 
     startLine()
     {
+        // Update cursor position
         const cursorPosition = this.root.cursor.position.clone()
         cursorPosition.rowIndex = 0
         this.root.cursor.setPosition(cursorPosition)
+
+        // Reset selection
+        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
     endLine()
     {
+        // Get line
         const line = this.root.lines.items[this.root.cursor.position.lineIndex]
 
+        // Update cursor position
         const cursorPosition = this.root.cursor.position.clone()
         cursorPosition.rowIndex = line.length
         this.root.cursor.setPosition(cursorPosition)
+
+        // Reset selection
+        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
     deleteCharacter()
