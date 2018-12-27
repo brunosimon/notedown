@@ -55,10 +55,10 @@ export default
         regex: /(~)([^~]+)(~)/,
         replacement: '<span class="strike"><span class="strike-delimiter">$1</span><span class="strike-value">$2</span><span class="strike-delimiter">$3</span></span>'
     },
-    // Url
+    // Link
     {
-        regex: /(?:ftp|http|https|file):\/\/(?:\w+:{0,1}\w*@)?(?:\S+)(?::[0-9]+)?(?:\/|\/(?:[\w#!:.?+=&%@!\-\/]))?/,
-        replacement: '<a href="$0" target="_blank" draggable="false" class="url">$0</a>',
+        regex: /(?:ftp|http|https|file):\/\/(?:\w+:{0,1}\w*@)?(?:\S+)(?::[0-9]+)?(?:\/|\/(?:[\w#!:.?+=&%@!\-/]))?/,
+        replacement: '<a href="$0" target="_blank" draggable="false" class="link">$0</a>',
         noSubFragments: true
     },
     // Comment

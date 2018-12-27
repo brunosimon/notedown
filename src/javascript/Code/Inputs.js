@@ -10,6 +10,7 @@ export default class Inputs
         this.setShortcuts()
         this.setTextarea()
         this.setKeyboard()
+        this.setLinks()
         this.setPointer()
     }
 
@@ -110,6 +111,27 @@ export default class Inputs
 
                     break
                 }
+            }
+        })
+    }
+
+    setLinks()
+    {
+        // Add class when cmd is down
+        this.keyboard.on('down', (_keyCode, _character) =>
+        {
+            if(_character === 'cmd')
+            {
+                this.root.container.$element.classList.add('is-cmd-down')
+            }
+        })
+
+        // Remove class when cmd is down
+        this.keyboard.on('up', (_keyCode, _character) =>
+        {
+            if(_character === 'cmd')
+            {
+                this.root.container.$element.classList.remove('is-cmd-down')
             }
         })
     }

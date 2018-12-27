@@ -72,12 +72,17 @@
             /**
             * Fragments
             */
-            .url
+            .link
                 color inherit
                 text-decoration none
+                pointer-events none
 
-                &:hover
-                    text-decoration underline
+                // Make link hoverable only if cmd is down
+                .is-cmd-down&
+                    pointer-events auto
+
+                    &:hover
+                        text-decoration underline
 
             .success
                 .task-value
