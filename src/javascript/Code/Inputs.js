@@ -21,35 +21,35 @@ export default class Inputs
 
         this.addShortcut([ 'cmd', 'right' ], () =>
         {
-            this.root.actions.endLine()
+            this.root.actions.endLine(this.keyboard.isDown('shift'))
         })
         this.addShortcut([ 'cmd', 'left' ], () =>
         {
-            this.root.actions.startLine()
+            this.root.actions.startLine(this.keyboard.isDown('shift'))
         })
         this.addShortcut([ 'alt', 'right' ], () =>
         {
-            this.root.actions.cursorRightWord()
+            this.root.actions.cursorRightWord(this.keyboard.isDown('shift'))
         })
         this.addShortcut([ 'alt', 'left' ], () =>
         {
-            this.root.actions.cursorLeftWord()
+            this.root.actions.cursorLeftWord(this.keyboard.isDown('shift'))
         })
         this.addShortcut([ 'right' ], () =>
         {
-            this.root.actions.cursorRight()
+            this.root.actions.cursorRight(this.keyboard.isDown('shift'))
         })
         this.addShortcut([ 'up' ], () =>
         {
-            this.root.actions.cursorUp()
+            this.root.actions.cursorUp(this.keyboard.isDown('shift'))
         })
         this.addShortcut([ 'down' ], () =>
         {
-            this.root.actions.cursorDown()
+            this.root.actions.cursorDown(this.keyboard.isDown('shift'))
         })
         this.addShortcut([ 'left' ], () =>
         {
-            this.root.actions.cursorLeft()
+            this.root.actions.cursorLeft(this.keyboard.isDown('shift'))
         })
         this.addShortcut([ 'cmd', 'c' ], () =>
         {
@@ -142,18 +142,18 @@ export default class Inputs
         this.pointer.mousedown = (_event) =>
         {
             // Pointer down action
-            this.root.actions.pointerDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, _event.shiftKey)
+            this.root.actions.pointerDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, this.keyboard.isDown('shift'))
 
             // Double click action
             if(_event.detail === 2)
             {
-                this.root.actions.doubleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, _event.shiftKey)
+                this.root.actions.doubleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, this.keyboard.isDown('shift'))
             }
 
             // Double click action
             else if(_event.detail === 3)
             {
-                this.root.actions.tripleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, _event.shiftKey)
+                this.root.actions.tripleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, this.keyboard.isDown('shift'))
             }
 
             // Events

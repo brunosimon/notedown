@@ -8,43 +8,51 @@ export default class Actions
         this.root.actions = this
     }
 
-    cursorRight()
+    cursorRight(_extendSelection = false)
     {
         // Cursor
         this.root.cursor.goRight()
 
         // Selection
-        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
     }
 
-    cursorDown()
+    cursorDown(_extendSelection = false)
     {
         // Cursor
         this.root.cursor.goDown()
 
         // Selection
-        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
     }
 
-    cursorLeft()
+    cursorLeft(_extendSelection = false)
     {
         // Cursor
         this.root.cursor.goLeft()
 
         // Selection
-        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
     }
 
-    cursorUp()
+    cursorUp(_extendSelection = false)
     {
         // Cursor
         this.root.cursor.goUp()
 
         // Selection
-        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
     }
 
-    cursorRightWord()
+    cursorRightWord(_extendSelection = false)
     {
         // Get line
         let lineIndex = this.root.cursor.position.lineIndex
@@ -103,10 +111,12 @@ export default class Actions
         this.root.cursor.setPosition(position)
 
         // Selection
-        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
     }
 
-    cursorLeftWord()
+    cursorLeftWord(_extendSelection = false)
     {
         // Get line
         let lineIndex = this.root.cursor.position.lineIndex
@@ -167,7 +177,9 @@ export default class Actions
         this.root.cursor.setPosition(position)
 
         // Selection
-        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
     }
 
     pointerDown(_x, _y, _extendSelection = false)
@@ -281,7 +293,7 @@ export default class Actions
         this.root.cursor.setPosition(end)
     }
 
-    startLine()
+    startLine(_extendSelection = false)
     {
         // Update cursor position
         const cursorPosition = this.root.cursor.position.clone()
@@ -289,10 +301,12 @@ export default class Actions
         this.root.cursor.setPosition(cursorPosition)
 
         // Reset selection
-        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
     }
 
-    endLine()
+    endLine(_extendSelection = false)
     {
         // Get line
         const line = this.root.lines.items[this.root.cursor.position.lineIndex]
@@ -303,7 +317,9 @@ export default class Actions
         this.root.cursor.setPosition(cursorPosition)
 
         // Reset selection
-        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
     }
 
     deleteCharacter()
