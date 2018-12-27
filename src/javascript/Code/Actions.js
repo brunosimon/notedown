@@ -80,7 +80,7 @@ export default class Actions
         // Same character condition
         let condition = null
 
-        if(character.match(/[a-zA-Z0-1_]/i))
+        if(character.match(/[a-zA-Z0-1_\s]/i))
         {
             condition = (_character) => _character.match(/[a-zA-Z0-1_]/i)
         }
@@ -92,11 +92,17 @@ export default class Actions
         // Left index
         let leftIndex = rowIndex - 1
         let leftCharacter = line.text[leftIndex]
+        let skipSpaces = character.match(/\s/i)
 
-        while(leftIndex >= 0 && (condition(leftCharacter)))
+        while(leftIndex >= 0 && (condition(leftCharacter) || skipSpaces))
         {
             leftIndex = leftIndex - 1
             leftCharacter = line.text[leftIndex]
+
+            if(skipSpaces && leftCharacter)
+            {
+                skipSpaces = leftCharacter.match(/\s/i)
+            }
         }
 
         leftIndex++
@@ -202,7 +208,7 @@ export default class Actions
         const end = new Position(position.lineIndex, rightIndex)
         this.root.lines.updateSelection(start, end)
 
-        // Update selection
+        // Update cursor
         this.root.cursor.setPosition(end)
     }
 
@@ -215,6 +221,9 @@ export default class Actions
         const start = new Position(this.root.cursor.position.lineIndex, 0)
         const end = new Position(this.root.cursor.position.lineIndex, line.length)
         this.root.lines.updateSelection(start, end)
+
+        // Update cursor
+        this.root.cursor.setPosition(end)
     }
 
     startLine()
