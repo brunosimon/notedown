@@ -34,22 +34,19 @@ export default class Keyboard extends EventEmitter
         const keydownHandle = (_event) =>
         {
             const character = this.keycodeToCharacter(_event.keyCode)
-            let downItems = []
+            const downItems = [ ...this.downItems, character ]
 
-            if(this.isDown('cmd') && character !== 'shift' && character !== 'alt')
+            // Not saved yet
+            if(!this.downItems.includes(character))
             {
-                downItems = [ ...this.downItems, character ]
-            }
-
-            else
-            {
-                if(!this.downItems.includes(character))
+                // CMD exception
+                if(!this.isDown('cmd') || character === 'shift' || character === 'alt')
                 {
                     this.downItems.push(character)
-                    downItems = [ ...this.downItems ]
                 }
             }
 
+            // Trigger event
             const trigger = this.trigger('down', [ _event.keyCode, character, downItems ])
 
             // Trigger and prevend default if asked by return false on callback
@@ -69,20 +66,8 @@ export default class Keyboard extends EventEmitter
                 this.downItems.splice(this.downItems.indexOf(character), 1)
             }
 
-            // if(character === 'cmd')
-            // {
-            //     this.downItems = []
-            // }
-            // if(this.isDown('cmd'))
-            // {
-            //     this.downItems = [ 'cmd' ]
-            // }
-
-            // console.log(this.downItems)
-
             this.trigger('up', [ _event.keyCode, character ])
         }
-
 
         // Listen
         document.addEventListener('keydown', keydownHandle)
