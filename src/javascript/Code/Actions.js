@@ -446,4 +446,50 @@ export default class Actions
         this.root.lines.updateSelection(startPosition, endPosition)
         this.root.cursor.setPosition(endPosition)
     }
+
+    tabulate()
+    {
+        const selectionRange = this.root.lines.selectionRange.clone().normalize()
+        const lines = this.root.lines.items.slice(selectionRange.start.lineIndex, selectionRange.end.lineIndex + 1)
+        const tabSize = 4
+        const tabText = ' '.repeat(tabSize)
+
+        if(lines.length > 1 || selectionRange.end.rowIndex - selectionRange.start.rowIndex === lines[0].length)
+        {
+            for(const _line of lines)
+            {
+                const text = `${tabText}${_line.text}`
+                _line.updateText(text)
+            }
+
+            const oldSelectionRange = this.root.lines.selectionRange.clone().normalize()
+
+            // Update selection
+            const selectionRange = this.root.lines.selectionRange.clone().normalize()
+            selectionRange.end.rowIndex += tabSize
+            this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
+
+            // Update cursor
+            if(this.root.cursor.position.isEqual(oldSelectionRange.end))
+            {
+                this.root.cursor.setPosition(selectionRange.end)
+            }
+        }
+        else
+        {
+            // Get normalized selection range
+            const selectionRange = this.root.lines.selectionRange.clone().normalize()
+
+            // Add text at range
+            this.root.lines.addTextAtRange(tabText, selectionRange)
+
+            // Update cursor
+            const cursorPosition = selectionRange.start
+            cursorPosition.rowIndex += tabSize
+            this.root.cursor.setPosition(cursorPosition)
+
+            // Update selection
+            this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        }
+    }
 }

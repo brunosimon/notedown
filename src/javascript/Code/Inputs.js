@@ -67,6 +67,12 @@ export default class Inputs
         {
             this.root.actions.deleteCharacter()
         })
+        this.addShortcut([ 'tab' ], () =>
+        {
+            this.root.actions.tabulate()
+
+            return false
+        })
     }
 
     addShortcut(_inputs, _method)
@@ -107,7 +113,7 @@ export default class Inputs
             {
                 if(this.keyboard.isDown(_item.inputs, _downItems))
                 {
-                    _item.method()
+                    return _item.method()
 
                     break
                 }
