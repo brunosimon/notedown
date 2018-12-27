@@ -394,7 +394,7 @@ export default class Actions
         const selectionRange = this.root.lines.selectionRange.clone().normalize()
 
         // Add text at range
-        this.root.lines.addTextAtRange(_value, selectionRange)
+        const update = this.root.lines.addTextAtRange(_value, selectionRange)
 
         // Text
         const textLines = _value.split(/\r?\n/g)
@@ -411,10 +411,12 @@ export default class Actions
         {
             cursorPosition.rowIndex = textLines[textLines.length - 1].length
         }
+        cursorPosition.rowIndex += update.indent.length
+
         this.root.cursor.setPosition(cursorPosition)
 
         // Reset selection
-        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        this.root.lines.updateSelection(cursorPosition, cursorPosition)
     }
 
     selectAll()

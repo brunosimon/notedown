@@ -174,16 +174,23 @@ export default class Lines
     {
         if(_destination instanceof Position)
         {
-            this.addTextAtPosition(_text, _destination)
+            return this.addTextAtPosition(_text, _destination)
         }
         else if(_destination instanceof Range)
         {
-            this.addTextAtRange(_text, _destination)
+            return this.addTextAtRange(_text, _destination)
         }
     }
 
     addTextAtPosition(_text, _position)
     {
+        // Update info
+        const update = {}
+        update.modifiedLines = []
+        update.newLines = []
+        update.indent = ''
+
+        // Text split by lines
         const textLines = _text.split(/\r?\n/g)
 
         // One line
@@ -191,25 +198,44 @@ export default class Lines
         {
             const line = this.items[_position.lineIndex]
             line.addText(textLines.shift(), _position.rowIndex)
+            update.newLines.push(line)
         }
 
         // Multi line
         else
         {
             // First line
-            const line = this.items[_position.lineIndex]
-            const before = line.text.slice(0, _position.rowIndex)
-            const after = line.text.slice(_position.rowIndex, line.text.length)
+            const firstLine = this.items[_position.lineIndex]
+            const before = firstLine.text.slice(0, _position.rowIndex)
+            const after = firstLine.text.slice(_position.rowIndex, firstLine.text.length)
 
-            line.updateText(`${before}${textLines.shift()}`)
+            update.modifiedLines.push(firstLine)
+
+            firstLine.updateText(`${before}${textLines.shift()}`)
 
             // Other lines
             let i = 0
             let latestLine = null
             for(const _textLine of textLines)
             {
-                const line = this.addLine(_textLine, _position.lineIndex + i)
+                let text = _textLine
+
+                // Only one new line => keep firstLine indent
+                if(textLines.length === 1)
+                {
+                    let indent = ''
+                    if(firstLine.text.match(/^\s+/))
+                    {
+                        indent = firstLine.text.replace(/^(\s+).*/, '$1')
+                    }
+                    text = `${indent}${text}`
+
+                    update.indent = indent
+                }
+
+                const line = this.addLine(text, _position.lineIndex + i)
                 latestLine = line
+                update.newLines.push(line)
 
                 i++
             }
@@ -217,6 +243,8 @@ export default class Lines
             // Add end of first line to latest line
             latestLine.addText(after, latestLine.length)
         }
+
+        return update
     }
 
     addTextAtRange(_text, _range)
@@ -225,7 +253,7 @@ export default class Lines
         this.removeRange(_range)
 
         // Add text
-        this.addTextAtPosition(_text, _range.start)
+        return this.addTextAtPosition(_text, _range.start)
     }
 
     getText(_range)
