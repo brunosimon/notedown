@@ -11,7 +11,6 @@ export default class Cursor
         // Element
         this.$element = document.createElement('div')
         this.$element.classList.add('cursor')
-        this.$element.classList.add('animated')
         this.root.lines.$element.appendChild(this.$element)
 
         // Bar
@@ -19,8 +18,19 @@ export default class Cursor
         this.$bar.classList.add('bar')
         this.$element.appendChild(this.$bar)
 
-        // Set
+        // Set up
         this.position = new Position()
+
+        // Handle window focus
+        window.addEventListener('blur', () =>
+        {
+            this.$element.removeChild(this.$bar)
+        })
+
+        window.addEventListener('focus', () =>
+        {
+            this.$element.appendChild(this.$bar)
+        })
     }
 
     goRight()
