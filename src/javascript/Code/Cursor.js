@@ -124,8 +124,8 @@ export default class Cursor
     {
         this.position.copy(_position)
 
-        const x = this.position.rowIndex * this.root.measures.rowWidth
-        const y = this.position.lineIndex * this.root.measures.lineHeight
+        const x = Math.round(this.position.rowIndex * this.root.measures.rowWidth)
+        const y = Math.round(this.position.lineIndex * this.root.measures.lineHeight)
 
         this.$element.style.transform = `translateX(${x}px) translateY(${y}px)`
 
