@@ -46,15 +46,72 @@ export default class Actions
 
     cursorRightWord()
     {
-        console.log('cursorRightWord')
+        // Get line
+        let lineIndex = this.root.cursor.position.lineIndex
+        let rowIndex = this.root.cursor.position.rowIndex
+        let line = this.root.lines.items[lineIndex]
+
+        if(this.root.cursor.position.rowIndex === line.length)
+        {
+            if(lineIndex === this.root.lines.length - 1)
+            {
+                return
+            }
+            else
+            {
+                lineIndex++
+                line = this.root.lines.items[lineIndex]
+                rowIndex = 0
+            }
+        }
+
+        // Get character
+        const character = line.text[rowIndex]
+
+        // Same character condition
+        let condition = null
+
+        if(character.match(/[a-zA-Z0-1_\s]/i))
+        {
+            condition = (_character) => _character.match(/[a-zA-Z0-1_]/i)
+        }
+        else
+        {
+            condition = (_character) => _character === character
+        }
+
+        // Right index
+        let rightIndex = rowIndex + 1
+        let rightCharacter = line.text[rightIndex]
+        let skipSpaces = character.match(/\s/i)
+
+        while(rightIndex < line.length && (condition(rightCharacter) || skipSpaces))
+        {
+            rightIndex = rightIndex + 1
+            rightCharacter = line.text[rightIndex]
+
+            if(skipSpaces && rightCharacter)
+            {
+                skipSpaces = rightCharacter.match(/\s/i)
+            }
+        }
+
+        // Position
+        const position = new Position(lineIndex, rightIndex)
+
+        // Cursor
+        this.root.cursor.setPosition(position)
+
+        // Selection
+        this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
     }
 
     cursorLeftWord()
     {
         // Get line
-        let line = null
         let lineIndex = this.root.cursor.position.lineIndex
         let rowIndex = this.root.cursor.position.rowIndex
+        let line = this.root.lines.items[lineIndex]
 
         if(this.root.cursor.position.rowIndex === 0)
         {
@@ -68,10 +125,6 @@ export default class Actions
                 line = this.root.lines.items[lineIndex]
                 rowIndex = line.length
             }
-        }
-        else
-        {
-            line = this.root.lines.items[lineIndex]
         }
 
         // Get character
