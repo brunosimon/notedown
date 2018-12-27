@@ -69,9 +69,16 @@ export default class Keyboard extends EventEmitter
             this.trigger('up', [ _event.keyCode, character ])
         }
 
+        // Focus
+        const focusHandle = () =>
+        {
+            this.downItems = []
+        }
+
         // Listen
         document.addEventListener('keydown', keydownHandle)
         document.addEventListener('keyup', keyupHandle)
+        window.addEventListener('focus', focusHandle)
     }
 
     keycodeToCharacter(_keycode)
