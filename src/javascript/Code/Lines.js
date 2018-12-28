@@ -170,15 +170,33 @@ export default class Lines
         }
     }
 
-    addText(_text, _destination)
+    empty()
     {
-        if(_destination instanceof Position)
+        this.removeRange(this.getFullRange())
+    }
+
+    addText(_text, _destination = null)
+    {
+        let destination = _destination
+
+        // No destination
+        if(destination === null)
         {
-            return this.addTextAtPosition(_text, _destination)
+            // Add to the end
+            const fullRange = this.getFullRange()
+            destination = fullRange.end
         }
-        else if(_destination instanceof Range)
+
+        // Using position
+        if(destination instanceof Position)
         {
-            return this.addTextAtRange(_text, _destination)
+            return this.addTextAtPosition(_text, destination)
+        }
+
+        // Using range
+        else if(destination instanceof Range)
+        {
+            return this.addTextAtRange(_text, destination)
         }
     }
 
@@ -256,9 +274,24 @@ export default class Lines
         return this.addTextAtPosition(_text, _range.start)
     }
 
-    getText(_range)
+    getFullRange()
     {
-        const range = _range.clone().normalize()
+        // Start
+        const start = new Position(0, 0)
+
+        // End
+        const lastLine = this.items[this.items.length - 1]
+        const end = new Position(this.length - 1, lastLine.length)
+
+        // Range
+        const range = new Range(start, end)
+
+        return range
+    }
+
+    getText(_range = null)
+    {
+        const range = _range === null ? this.getFullRange() : _range.clone().normalize()
         const lines = this.items.slice(range.start.lineIndex, range.end.lineIndex + 1)
 
         if(lines.length === 1)

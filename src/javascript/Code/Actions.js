@@ -1,4 +1,5 @@
 import Position from './Position'
+import Range from './Range'
 
 export default class Actions
 {
@@ -6,6 +7,16 @@ export default class Actions
     {
         this.root = _options.root
         this.root.actions = this
+    }
+
+    undo()
+    {
+        this.root.history.undo()
+    }
+
+    redo()
+    {
+        this.root.history.redo()
     }
 
     cursorRight(_extendSelection = false)
@@ -182,6 +193,35 @@ export default class Actions
         this.root.lines.updateSelection(start, end)
     }
 
+    cursorStartOfLine(_extendSelection = false)
+    {
+        // Update cursor position
+        const cursorPosition = this.root.cursor.position.clone()
+        cursorPosition.rowIndex = 0
+        this.root.cursor.setPosition(cursorPosition)
+
+        // Update selection
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
+    }
+
+    cursorEndOfLine(_extendSelection = false)
+    {
+        // Get line
+        const line = this.root.lines.items[this.root.cursor.position.lineIndex]
+
+        // Update cursor position
+        const cursorPosition = this.root.cursor.position.clone()
+        cursorPosition.rowIndex = line.length
+        this.root.cursor.setPosition(cursorPosition)
+
+        // Update selection
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
+    }
+
     pointerDown(_x, _y, _extendSelection = false)
     {
         // Position
@@ -211,7 +251,7 @@ export default class Actions
         this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
     }
 
-    doubleDown(_x, _y, _extendSelection = false)
+    pointerDoubleDown(_x, _y, _extendSelection = false)
     {
         const position = this.root.lines.getPosition(_x, _y)
         const line = this.root.lines.items[position.lineIndex]
@@ -279,7 +319,7 @@ export default class Actions
         this.root.cursor.setPosition(end)
     }
 
-    tripleDown(_x, _y, _extendSelection = false)
+    pointerTripleDown(_x, _y, _extendSelection = false)
     {
         const position = this.root.lines.getPosition(_x, _y)
         const line = this.root.lines.items[position.lineIndex]
@@ -293,37 +333,21 @@ export default class Actions
         this.root.cursor.setPosition(end)
     }
 
-    startLine(_extendSelection = false)
+    selectAll()
     {
-        // Update cursor position
-        const cursorPosition = this.root.cursor.position.clone()
-        cursorPosition.rowIndex = 0
-        this.root.cursor.setPosition(cursorPosition)
+        const lastLine = this.root.lines.items[this.root.lines.items.length - 1]
+        const startPosition = new Position(0, 0)
+        const endPosition = new Position(this.root.lines.items.length - 1, lastLine.length)
 
-        // Reset selection
-        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
-        const end = this.root.cursor.position
-        this.root.lines.updateSelection(start, end)
-    }
-
-    endLine(_extendSelection = false)
-    {
-        // Get line
-        const line = this.root.lines.items[this.root.cursor.position.lineIndex]
-
-        // Update cursor position
-        const cursorPosition = this.root.cursor.position.clone()
-        cursorPosition.rowIndex = line.length
-        this.root.cursor.setPosition(cursorPosition)
-
-        // Reset selection
-        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
-        const end = this.root.cursor.position
-        this.root.lines.updateSelection(start, end)
+        this.root.lines.updateSelection(startPosition, endPosition)
+        this.root.cursor.setPosition(endPosition)
     }
 
     deleteLeft()
     {
+        // History
+        this.root.history.saveState()
+
         // No range selected
         // Delete before
         if(this.root.lines.selectionRange.isEmpty())
@@ -335,7 +359,8 @@ export default class Actions
             // Has characters to delete
             if(before.length > 0)
             {
-                line.removeText(cursorPosition.rowIndex - 1, cursorPosition.rowIndex)
+                const range = new Range(new Position(this.root.cursor.position.lineIndex, cursorPosition.rowIndex - 1), new Position(this.root.cursor.position.lineIndex, cursorPosition.rowIndex))
+                this.root.lines.removeRange(range)
 
                 this.root.cursor.goLeft()
             }
@@ -355,7 +380,7 @@ export default class Actions
                 previousLine.addText(after)
             }
 
-            // Reset selection
+            // Update selection
             this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
         }
 
@@ -368,6 +393,9 @@ export default class Actions
 
     superDeleteLeft()
     {
+        // History
+        this.root.history.saveState()
+
         // No range selected
         // Delete before
         if(this.root.lines.selectionRange.isEmpty())
@@ -379,7 +407,8 @@ export default class Actions
             // Has characters to delete
             if(before.length > 0)
             {
-                line.removeText(0, cursorPosition.rowIndex)
+                const range = new Range(new Position(this.root.cursor.position.lineIndex, 0), new Position(this.root.cursor.position.lineIndex, cursorPosition.rowIndex))
+                this.root.lines.removeRange(range)
                 cursorPosition.rowIndex = 0
 
                 this.root.cursor.setPosition(cursorPosition)
@@ -400,7 +429,7 @@ export default class Actions
                 previousLine.addText(after)
             }
 
-            // Reset selection
+            // Update selection
             this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
         }
 
@@ -413,6 +442,9 @@ export default class Actions
 
     deleteRight()
     {
+        // History
+        this.root.history.saveState()
+
         // No range selected
         // Delete after
         if(this.root.lines.selectionRange.isEmpty())
@@ -424,7 +456,8 @@ export default class Actions
             // Has characters to delete
             if(after.length > 0)
             {
-                line.removeText(cursorPosition.rowIndex, cursorPosition.rowIndex + 1)
+                const range = new Range(new Position(this.root.cursor.position.lineIndex, cursorPosition.rowIndex), new Position(this.root.cursor.position.lineIndex, cursorPosition.rowIndex + 1))
+                this.root.lines.removeRange(range)
             }
 
             // No character to delete
@@ -440,7 +473,7 @@ export default class Actions
                 this.root.lines.removeLine(nextLine)
             }
 
-            // Reset selection
+            // Update selection
             this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
         }
 
@@ -453,6 +486,9 @@ export default class Actions
 
     superDeleteRight()
     {
+        // History
+        this.root.history.saveState()
+
         // No range selected
         // Delete after
         if(this.root.lines.selectionRange.isEmpty())
@@ -464,9 +500,11 @@ export default class Actions
             // Has characters to delete
             if(after.length > 0)
             {
-                line.removeText(cursorPosition.rowIndex, line.length)
+                const range = new Range(new Position(this.root.cursor.position.lineIndex, cursorPosition.rowIndex), new Position(this.root.cursor.position.lineIndex, line.length))
+                this.root.lines.removeRange(range)
                 cursorPosition.rowIndex = cursorPosition.rowIndex
 
+                // Update cursor
                 this.root.cursor.setPosition(cursorPosition)
             }
 
@@ -483,7 +521,7 @@ export default class Actions
                 this.root.lines.removeLine(nextLine)
             }
 
-            // Reset selection
+            // Update selection
             this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
         }
 
@@ -496,6 +534,9 @@ export default class Actions
 
     deleteSelection()
     {
+        // History
+        this.root.history.saveState()
+
         // Delete range
         this.root.lines.removeRange(this.root.lines.selectionRange)
 
@@ -503,7 +544,7 @@ export default class Actions
         const selectionRange = this.root.lines.selectionRange.clone().normalize()
         this.root.cursor.setPosition(selectionRange.start)
 
-        // Reset selection
+        // Update selection
         this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
     }
 
@@ -526,6 +567,9 @@ export default class Actions
 
     input(_value)
     {
+        // History
+        this.root.history.saveState()
+
         // Get normalized selection range
         const selectionRange = this.root.lines.selectionRange.clone().normalize()
 
@@ -549,24 +593,18 @@ export default class Actions
         }
         cursorPosition.rowIndex += update.indent.length
 
+        // Update cursor
         this.root.cursor.setPosition(cursorPosition)
 
-        // Reset selection
+        // Update selection
         this.root.lines.updateSelection(cursorPosition, cursorPosition)
-    }
-
-    selectAll()
-    {
-        const lastLine = this.root.lines.items[this.root.lines.items.length - 1]
-        const startPosition = new Position(0, 0)
-        const endPosition = new Position(this.root.lines.items.length - 1, lastLine.length)
-
-        this.root.lines.updateSelection(startPosition, endPosition)
-        this.root.cursor.setPosition(endPosition)
     }
 
     tabulate()
     {
+        // History
+        this.root.history.saveState()
+
         const selectionRange = this.root.lines.selectionRange.clone().normalize()
         const lines = this.root.lines.items.slice(selectionRange.start.lineIndex, selectionRange.end.lineIndex + 1)
         const tabSize = 4

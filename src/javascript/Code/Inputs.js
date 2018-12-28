@@ -19,13 +19,21 @@ export default class Inputs
         this.shortcuts = {}
         this.shortcuts.items = []
 
+        this.addShortcut([ 'command', 'shift', 'z' ], () =>
+        {
+            this.root.actions.redo()
+        })
+        this.addShortcut([ 'command', 'z' ], () =>
+        {
+            this.root.actions.undo()
+        })
         this.addShortcut([ 'command', 'right' ], () =>
         {
-            this.root.actions.endLine(this.keyboard.isDown('shift'))
+            this.root.actions.cursorEndOfLine(this.keyboard.isDown('shift'))
         })
         this.addShortcut([ 'command', 'left' ], () =>
         {
-            this.root.actions.startLine(this.keyboard.isDown('shift'))
+            this.root.actions.cursorStartOfLine(this.keyboard.isDown('shift'))
         })
         this.addShortcut([ 'alt', 'right' ], () =>
         {
@@ -161,13 +169,13 @@ export default class Inputs
             // Double click action
             if(_event.detail === 2)
             {
-                this.root.actions.doubleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, this.keyboard.isDown('shift'))
+                this.root.actions.pointerDoubleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, this.keyboard.isDown('shift'))
             }
 
             // Double click action
             else if(_event.detail === 3)
             {
-                this.root.actions.tripleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, this.keyboard.isDown('shift'))
+                this.root.actions.pointerTripleDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, this.keyboard.isDown('shift'))
             }
 
             // Events
