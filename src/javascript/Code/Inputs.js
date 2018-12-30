@@ -22,10 +22,14 @@ export default class Inputs
         this.addShortcut([ 'command', 'shift', 'z' ], () =>
         {
             this.root.actions.redo()
+
+            return false
         })
         this.addShortcut([ 'command', 'z' ], () =>
         {
             this.root.actions.undo()
+
+            return false
         })
         this.addShortcut([ 'command', 'right' ], () =>
         {

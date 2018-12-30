@@ -5,12 +5,11 @@ export default class History
         this.root = _options.root
         this.root.history = this
 
+        this.states = []
         this.saving = false
         this.locked = false
-        this.raf = null
-        this.states = []
         this.index = 0
-        this.limitSize = 256
+        this.limitSize = 1024
     }
 
     getState()
@@ -76,6 +75,10 @@ export default class History
             return
         }
 
+        // Erase states and reset index
+        this.states.splice(0, this.index)
+        this.index = 0
+
         // Compare current state and latest state
         const state = this.getState()
         const latestState = this.states[0]
@@ -83,12 +86,9 @@ export default class History
         // State didn't change
         if(typeof latestState  !== 'undefined' && !this.isStateDifferent(state, latestState))
         {
+            console.log('same')
             return
         }
-
-        // Erase states and reset index
-        this.states.splice(0, this.index - 1)
-        this.index = 0
 
         // Save state
         this.states.unshift(state)
@@ -107,9 +107,18 @@ export default class History
     undo()
     {
         // Limit
-        if(this.index > this.states.length - 1)
+        if(this.index > this.states.length - 2)
         {
             return
+        }
+
+        // Save current state in order to redo to it
+        if(this.index === 0)
+        {
+            const state = this.getState()
+            this.states.unshift(state)
+
+            this.index = 0
         }
 
         // Update index
@@ -132,5 +141,19 @@ export default class History
 
         // Set state
         this.setState()
+    }
+
+    log(_info = '')
+    {
+        console.log('---------------')
+        console.log(_info)
+        console.log('---------------')
+        console.log(`index: ${this.index} / length: ${this.states.length}`)
+        let i = 0
+        for(const _state of this.states)
+        {
+            console.log(`[${i === this.index ? 'x' : ' '}] ${_state.text} ${' '.repeat(i)}`)
+            i++
+        }
     }
 }

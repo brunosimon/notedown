@@ -140,10 +140,10 @@ export default class Code
         this.history = new History({
             root: this
         })
-        window.requestAnimationFrame(() =>
-        {
-            this.history.saveState()
-        })
+        // window.requestAnimationFrame(() =>
+        // {
+        //     this.history.saveState()
+        // })
     }
 
     destruct()

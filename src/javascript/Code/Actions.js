@@ -567,8 +567,18 @@ export default class Actions
 
     input(_value)
     {
+        // No input
+        if(_value === '')
+        {
+            return
+        }
+
         // History
-        this.root.history.saveState()
+        // if(_value.match(/[a-z0-9]/i) === null)
+        // {
+        //     console.log('save')
+            this.root.history.saveState()
+        // }
 
         // Get normalized selection range
         const selectionRange = this.root.lines.selectionRange.clone().normalize()
