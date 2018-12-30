@@ -574,11 +574,7 @@ export default class Actions
         }
 
         // History
-        // if(_value.match(/[a-z0-9]/i) === null)
-        // {
-        //     console.log('save')
-            this.root.history.saveState()
-        // }
+        this.root.history.saveState()
 
         // Get normalized selection range
         const selectionRange = this.root.lines.selectionRange.clone().normalize()
