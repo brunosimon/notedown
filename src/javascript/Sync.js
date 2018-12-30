@@ -1,55 +1,89 @@
 import firebase from 'firebase/app'
 import firebaseDatabase from 'firebase/database'
 import * as firebaseUI from 'firebaseui'
+import EventEmitter from './EventEmitter'
 
-export default class Sync
+export default class Sync extends EventEmitter
 {
     constructor()
     {
-        /**
-         * APP
-         */
+        super()
+
+        this.user = false
+
+        this.setApp()
+        this.setAuth()
+        this.setUI()
+    }
+
+    /**
+     * App
+     */
+    setApp()
+    {
         firebase.initializeApp({
             apiKey: process.env.FIREBASE_API_KEY,
             authDomain: process.env.FIREBASE_AUTH_DOMAIN,
             databaseURL: process.env.FIREBASE_DATABASE_URL,
             projectId: process.env.FIREBASE_PROJECT_ID
         })
+    }
 
-        /**
-         * AUTH
-         */
-        const auth = firebase.auth()
+    /**
+     * Auth
+     */
+    setAuth()
+    {
+        this.auth = firebase.auth()
 
-        auth.onAuthStateChanged((_user) =>
+        this.auth.onAuthStateChanged((_user) =>
         {
+            // Already signed in
             if(_user)
             {
-                const user = {
+                // Create user
+                this.user = {
                     displayName: _user.displayName,
                     email: _user.email,
-                    emailVerified: _user.emailVerified,
-                    photoURL: _user.photoURL,
                     isAnonymous: _user.isAnonymous,
                     uid: _user.uid,
                     providerData: _user.providerData
                 }
 
-                console.log('user', user)
+                console.log('user.isAnonymous', this.user.isAnonymous)
+                console.log('user.uid', this.user.uid)
+
+                // Set database
+                this.setDatabase()
             }
+
+            // Not signed in
             else
             {
-                // User is signed out.
-                // ...
+                // Sign in as anonymous
+                this.auth.signInAnonymously().catch((_error) =>
+                {
+                    console.log('signInAnonymously', '_error', _error)
+                })
             }
         })
+    }
 
-        /**
-         * UI
-         */
-        const ui = new firebaseUI.auth.AuthUI(auth)
+    /**
+     * UI
+     */
+    setUI()
+    {
+        // Add style
+        const $link = document.createElement('link')
+        $link.setAttribute('type', 'text/css')
+        $link.setAttribute('rel', 'stylesheet')
+        $link.setAttribute('href', 'https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css')
+        document.querySelector('head').appendChild($link)
 
-        ui.start(
+        this.ui = new firebaseUI.auth.AuthUI(this.auth)
+
+        this.ui.start(
             '.auth',
             {
                 signInOptions:
@@ -70,36 +104,36 @@ export default class Sync
                 }
             }
         )
+    }
 
-        /**
-         * STYLE
-         */
-        const $link = document.createElement('link')
-        $link.setAttribute('type', 'text/css')
-        $link.setAttribute('rel', 'stylesheet')
-        $link.setAttribute('href', 'https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css')
-        document.querySelector('head').appendChild($link)
+    /**
+     * Database
+     */
+    setDatabase()
+    {
+        this.database = firebase.database()
+        this.ref = this.database.ref(`users/${this.user.uid}`)
 
-        /**
-         * DATABSE
-         */
-        const database = firebase.database()
-
-        const ref = database.ref('users/a')
-        ref.set(
-            {
-                name: 'toto',
-                time: Date.now()
-            },
-            (_error) =>
-            {
-                console.log('_error', _error)
-            }
-        )
-
-        ref.on('value', (_snapshot) =>
+        // Try to retrieve data
+        this.ref.on('value', (_snapshot) =>
         {
-            console.log('value', _snapshot.val())
+            const value = _snapshot.val()
+
+            // No data found
+            if(value === null)
+            {
+                console.log('create initial data')
+
+                // Create initial data
+                this.ref.set({
+                    time: Date.now()
+                })
+            }
+            else
+            {
+                console.log('has data')
+                this.trigger('update', [ value ])
+            }
         })
     }
 }
