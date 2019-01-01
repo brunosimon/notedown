@@ -7,27 +7,27 @@ export default
     },
     // Task success
     {
-        regex: /(\s*-\s)(\[)([√xX])(])(\s+)(.+)/,
+        regex: /(\s*-\s)(\[)([√xX])(])(\s*)(.*)/,
         replacement: '<span class="success">$1<span class="task-delimiter">$2</span><span class="task-value">$3</span><span class="task-delimiter">$4</span>$5<span class="task-description">$6</span></span>'
     },
     // Task danger
     {
-        regex: /(\s*-\s)(\[)([!])(])(\s+)(.+)/,
+        regex: /(\s*-\s)(\[)([!])(])(\s*)(.*)/,
         replacement: '<span class="danger">$1<span class="task-delimiter">$2</span><span class="task-value">$3</span><span class="task-delimiter">$4</span>$5<span class="task-description">$6</span></span>'
     },
     // Task warning
     {
-        regex: /(\s*-\s)(\[)([?])(])(\s+)(.+)/,
+        regex: /(\s*-\s)(\[)([?])(])(\s*)(.*)/,
         replacement: '<span class="warning">$1<span class="task-delimiter">$2</span><span class="task-value">$3</span><span class="task-delimiter">$4</span>$5<span class="task-description">$6</span></span>'
     },
     // Task empty
     {
-        regex: /(\s*-\s)(\[)([ ])(])(\s+)(.+)/,
+        regex: /(\s*-\s)(\[)([ ])(])(\s*)(.*)/,
         replacement: '<span class="empty">$1<span class="task-delimiter">$2</span><span class="task-value">$3</span><span class="task-delimiter">$4</span>$5<span class="task-description">$6</span></span>'
     },
     // Task canceled
     {
-        regex: /(\s*-\s)(\[)([-])(])(\s+)(.+)/,
+        regex: /(\s*-\s)(\[)([-])(])(\s*)(.*)/,
         replacement: '<span class="canceled">$1<span class="task-delimiter">$2</span><span class="task-value">$3</span><span class="task-delimiter">$4</span>$5<span class="task-description">$6</span></span>'
     },
     // Parenthesis
