@@ -8,10 +8,10 @@
 
 ## :memo: Details
 
-Notedown doesn't save anything on server side. In fact, there is no server side. Instead, it asks for access to the user Google Drive and save the note on it. User may retrieve those note directly from his Drive.
-Want to retrieve your notes on another computer? Simply connect to notedown with the same Google account.
-Notedown works on any browser with Internet and will simply add some syntax coloration. It works best for todo list.
+Notedown use Firebase to save the notes. Data access are restricted to the user (no one can access another user data).
 No save button, simply write your stuff.
+If you want to use your notes across multiple devices, use the [sign in] button on the top right corner. You'll be asked to connect your Google account and authorize Notedown.
+Notedown works on any modern browser with Internet and will simply add some syntax coloration. It works great with todo lists.
 
 ## :wrench: Instructions
 
@@ -21,14 +21,11 @@ No save button, simply write your stuff.
 - Open the terminal and go to project folder
 - Install dependencies using `npm install` (You may need to add `sudo`)
 
-### Google API
+### Firebase
 
-- Go to [Google APIs Console](https://console.developers.google.com/apis/) and create a new project
-- Activate Google Drive API
-- Go to project the credentials page
-- Create credentials for Javascript with access to user data (the rest is up to you)
-- Add your URLs as both authorized and redirections (Use `http://localhost:8080` to test on local)
-- Create an `.env` file at the root with the Google `CLIENT ID` and `API KEY` as shown on the `.env.example` file
+- Go to [Firebase](https://firebase.google.com) and create a Realtime Database
+- Activate Google Auth
+- Create an `.env` file at the root folder following the `.env.demo` example and add the firebase informations.
 
 ### Compile
 
