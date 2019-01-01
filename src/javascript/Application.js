@@ -54,7 +54,7 @@ export default class Application
             // Has already data
             else
             {
-                console.log('already')
+                this.code.setState(_value.state)
             }
         })
 

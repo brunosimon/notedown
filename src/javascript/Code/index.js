@@ -167,6 +167,34 @@ export default class Code extends EventEmitter
         return state
     }
 
+    setState(_state)
+    {
+        // Text
+        if(_state.text)
+        {
+            this.lines.empty()
+            this.lines.addText(_state.text)
+        }
+
+        // Cursor
+        if(_state.cursorPosition)
+        {
+            this.cursor.setPosition(_state.cursorPosition)
+        }
+
+        // Selection
+        if(_state.selectionRange)
+        {
+            this.lines.updateSelection(_state.selectionRange.start, _state.selectionRange.end)
+        }
+
+        // Scroll
+        if(_state.scroll)
+        {
+            this.scroll.setOffset(_state.scroll.x, _state.scroll.y)
+        }
+    }
+
     destruct()
     {
         this.container.$element.remove()

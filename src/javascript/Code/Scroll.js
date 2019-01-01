@@ -20,11 +20,7 @@ export default class
         this.$inner.classList.add('scroll-inner')
         this.$element.appendChild(this.$inner)
 
-        this.setOffset()
-    }
-
-    setOffset()
-    {
+        // Offset
         this.offset = {}
         this.offset.x = 0
         this.offset.y = 0
@@ -34,6 +30,12 @@ export default class
             this.offset.x = this.$element.scrollLeft
             this.offset.y = this.$element.scrollTop
         })
+    }
+
+    setOffset(_x, _y)
+    {
+        this.$element.scrollLeft = _x
+        this.$element.scrollTop = _y
     }
 
     getScrollbarWidth()

@@ -6,38 +6,8 @@ export default class History
         this.root.history = this
 
         this.states = []
-        this.saving = false
-        this.locked = false
         this.index = 0
         this.limitSize = 1024
-    }
-
-    setState(_index = null)
-    {
-        const index = _index === null ? this.index : _index
-        const state = this.states[index]
-
-        // No state
-        if(!state)
-        {
-            return
-        }
-
-        // Lock history
-        this.locked = true
-
-        // Text
-        this.root.lines.empty()
-        this.root.lines.addText(state.text)
-
-        // Cursor
-        this.root.cursor.setPosition(state.cursorPosition)
-
-        // Selection
-        this.root.lines.updateSelection(state.selectionRange.start, state.selectionRange.end)
-
-        // Unlock history
-        this.locked = false
     }
 
     isStateDifferent(_stateA, _stateB)
@@ -47,18 +17,6 @@ export default class History
 
     saveState()
     {
-        // Locked
-        if(this.locked)
-        {
-            return
-        }
-
-        // Already saving
-        if(this.saving)
-        {
-            return
-        }
-
         // Erase states and reset index
         this.states.splice(0, this.index)
         this.index = 0
@@ -78,14 +36,6 @@ export default class History
 
         // Trim states
         this.states.splice(this.limitSize, this.states.length)
-
-        // Prevent multiple save on same frame
-        this.saving = true
-
-        window.requestAnimationFrame(() =>
-        {
-            this.saving = false
-        })
     }
 
     undo()
@@ -109,7 +59,8 @@ export default class History
         this.index++
 
         // Set state
-        this.setState()
+        const state = this.states[this.index]
+        this.root.setState(state)
     }
 
     redo()
@@ -124,7 +75,8 @@ export default class History
         this.index--
 
         // Set state
-        this.setState()
+        const state = this.states[this.index]
+        this.root.setState(state)
     }
 
     log(_info = '')

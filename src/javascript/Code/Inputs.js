@@ -12,6 +12,8 @@ export default class Inputs
         this.setKeyboard()
         this.setLinks()
         this.setPointer()
+
+        this.focus()
     }
 
     setShortcuts()
