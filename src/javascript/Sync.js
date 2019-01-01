@@ -3,8 +3,6 @@ import firebaseDatabase from 'firebase/database'
 import * as firebaseUI from 'firebaseui'
 import EventEmitter from './EventEmitter'
 
-import initialText from './config/initialText.js'
-
 export default class Sync extends EventEmitter
 {
     constructor()
@@ -114,26 +112,22 @@ export default class Sync extends EventEmitter
     setDatabase()
     {
         this.database = firebase.database()
-        this.ref = this.database.ref(`users/${this.user.uid}`)
+        this.refs = {}
+        this.refs.main = this.database.ref(`users/${this.user.uid}`)
+        this.refs.state = this.refs.main.child('state')
 
-        // Try to retrieve data
-        this.ref.on('value', (_snapshot) =>
+        this.refs.main.once('value', (_snapshot) =>
         {
             const value = _snapshot.val()
 
-            // No data found
-            if(value === null)
-            {
-                // Create initial data
-                this.ref.set({
-                    time: Date.now(),
-                    text: initialText
-                })
-            }
-            else
-            {
-                this.trigger('update', [ value ])
-            }
+            this.trigger('firstSync', [ value ])
+        })
+
+        this.refs.state.on('value', (_snapshot) =>
+        {
+            const value = _snapshot.val()
+
+            this.trigger('stateUpdate', [ value ])
         })
     }
 }
