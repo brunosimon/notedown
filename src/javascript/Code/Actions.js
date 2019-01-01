@@ -1,10 +1,13 @@
 import Position from './Position'
 import Range from './Range'
+import EventEmitter from '../EventEmitter'
 
-export default class Actions
+export default class Actions extends EventEmitter
 {
     constructor(_options)
     {
+        super()
+
         this.root = _options.root
         this.root.actions = this
     }
@@ -12,11 +15,15 @@ export default class Actions
     undo()
     {
         this.root.history.undo()
+
+        this.trigger('action', [ 'undo' ])
     }
 
     redo()
     {
         this.root.history.redo()
+
+        this.trigger('action', [ 'redo' ])
     }
 
     cursorRight(_extendSelection = false)
@@ -28,6 +35,8 @@ export default class Actions
         const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
+
+        this.trigger('action', [ 'cursorRight' ])
     }
 
     cursorDown(_extendSelection = false)
@@ -39,6 +48,8 @@ export default class Actions
         const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
+
+        this.trigger('action', [ 'cursorDown' ])
     }
 
     cursorLeft(_extendSelection = false)
@@ -50,6 +61,8 @@ export default class Actions
         const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
+
+        this.trigger('action', [ 'cursorLeft' ])
     }
 
     cursorUp(_extendSelection = false)
@@ -61,6 +74,8 @@ export default class Actions
         const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
+
+        this.trigger('action', [ 'cursorUp' ])
     }
 
     cursorRightWord(_extendSelection = false)
@@ -125,6 +140,8 @@ export default class Actions
         const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
+
+        this.trigger('action', [ 'cursorRightWord' ])
     }
 
     cursorLeftWord(_extendSelection = false)
@@ -191,6 +208,8 @@ export default class Actions
         const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
+
+        this.trigger('action', [ 'cursorLeftWord' ])
     }
 
     cursorStartOfLine(_extendSelection = false)
@@ -204,6 +223,8 @@ export default class Actions
         const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
+
+        this.trigger('action', [ 'cursorStartOfLine' ])
     }
 
     cursorEndOfLine(_extendSelection = false)
@@ -220,6 +241,8 @@ export default class Actions
         const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
+
+        this.trigger('action', [ 'cursorEndOfLine' ])
     }
 
     pointerDown(_x, _y, _extendSelection = false)
@@ -234,6 +257,8 @@ export default class Actions
         const start = _extendSelection ? this.root.lines.selectionRange.start : position
         const end = position
         this.root.lines.updateSelection(start, end)
+
+        this.trigger('action', [ 'pointerDown' ])
     }
 
     pointerMove(_x, _y)
@@ -249,6 +274,8 @@ export default class Actions
         selectionRange.end.copy(position)
 
         this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
+
+        this.trigger('action', [ 'pointerMove' ])
     }
 
     pointerDoubleDown(_x, _y, _extendSelection = false)
@@ -317,6 +344,8 @@ export default class Actions
 
         // Update cursor
         this.root.cursor.setPosition(end)
+
+        this.trigger('action', [ 'pointerDoubleDown' ])
     }
 
     pointerTripleDown(_x, _y, _extendSelection = false)
@@ -331,6 +360,8 @@ export default class Actions
 
         // Update cursor
         this.root.cursor.setPosition(end)
+
+        this.trigger('action', [ 'pointerTripleDown' ])
     }
 
     selectAll()
@@ -341,6 +372,8 @@ export default class Actions
 
         this.root.lines.updateSelection(startPosition, endPosition)
         this.root.cursor.setPosition(endPosition)
+
+        this.trigger('action', [ 'selectAll' ])
     }
 
     deleteLeft()
@@ -387,8 +420,21 @@ export default class Actions
         // Range selected
         else
         {
-            this.deleteSelection()
+            // History
+            this.root.history.saveState()
+
+            // Delete range
+            this.root.lines.removeRange(this.root.lines.selectionRange)
+
+            // Update cursor
+            const selectionRange = this.root.lines.selectionRange.clone().normalize()
+            this.root.cursor.setPosition(selectionRange.start)
+
+            // Update selection
+            this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
         }
+
+        this.trigger('action', [ 'deleteLeft' ])
     }
 
     superDeleteLeft()
@@ -436,8 +482,21 @@ export default class Actions
         // Range selected
         else
         {
-            this.deleteSelection()
+            // History
+            this.root.history.saveState()
+
+            // Delete range
+            this.root.lines.removeRange(this.root.lines.selectionRange)
+
+            // Update cursor
+            const selectionRange = this.root.lines.selectionRange.clone().normalize()
+            this.root.cursor.setPosition(selectionRange.start)
+
+            // Update selection
+            this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
         }
+
+        this.trigger('action', [ 'superDeleteLeft' ])
     }
 
     deleteRight()
@@ -480,8 +539,21 @@ export default class Actions
         // Range selected
         else
         {
-            this.deleteSelection()
+            // History
+            this.root.history.saveState()
+
+            // Delete range
+            this.root.lines.removeRange(this.root.lines.selectionRange)
+
+            // Update cursor
+            const selectionRange = this.root.lines.selectionRange.clone().normalize()
+            this.root.cursor.setPosition(selectionRange.start)
+
+            // Update selection
+            this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
         }
+
+        this.trigger('action', [ 'deleteRight' ])
     }
 
     superDeleteRight()
@@ -528,8 +600,21 @@ export default class Actions
         // Range selected
         else
         {
-            this.deleteSelection()
+            // History
+            this.root.history.saveState()
+
+            // Delete range
+            this.root.lines.removeRange(this.root.lines.selectionRange)
+
+            // Update cursor
+            const selectionRange = this.root.lines.selectionRange.clone().normalize()
+            this.root.cursor.setPosition(selectionRange.start)
+
+            // Update selection
+            this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
         }
+
+        this.trigger('action', [ 'superDeleteRight' ])
     }
 
     deleteSelection()
@@ -546,6 +631,8 @@ export default class Actions
 
         // Update selection
         this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
+
+        this.trigger('action', [ 'deleteSelection' ])
     }
 
     copy()
@@ -563,6 +650,8 @@ export default class Actions
 
         // Focus back
         this.root.inputs.focus()
+
+        this.trigger('action', [ 'copy' ])
     }
 
     input(_value)
@@ -604,6 +693,8 @@ export default class Actions
 
         // Update selection
         this.root.lines.updateSelection(cursorPosition, cursorPosition)
+
+        this.trigger('action', [ 'input' ])
     }
 
     tabulate()
@@ -653,5 +744,7 @@ export default class Actions
             // Update selection
             this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
         }
+
+        this.trigger('action', [ 'tabulate' ])
     }
 }

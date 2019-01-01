@@ -86,7 +86,6 @@ export default class History
         // State didn't change
         if(typeof latestState  !== 'undefined' && !this.isStateDifferent(state, latestState))
         {
-            console.log('same')
             return
         }
 
@@ -96,6 +95,7 @@ export default class History
         // Trim states
         this.states.splice(this.limitSize, this.states.length)
 
+        // Prevent multiple save on same frame
         this.saving = true
 
         window.requestAnimationFrame(() =>

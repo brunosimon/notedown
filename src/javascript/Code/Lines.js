@@ -211,55 +211,72 @@ export default class Lines
         // Text split by lines
         const textLines = _text.split(/\r?\n/g)
 
-        // One line
-        if(textLines.length === 1)
+        // Has no line
+        if(this.length === 0)
         {
-            const line = this.items[_position.lineIndex]
-            line.addText(textLines.shift(), _position.rowIndex)
-            update.newLines.push(line)
-        }
-
-        // Multi line
-        else
-        {
-            // First line
-            const firstLine = this.items[_position.lineIndex]
-            const before = firstLine.text.slice(0, _position.rowIndex)
-            const after = firstLine.text.slice(_position.rowIndex, firstLine.text.length)
-
-            update.modifiedLines.push(firstLine)
-
-            firstLine.updateText(`${before}${textLines.shift()}`)
-
-            // Other lines
             let i = 0
-            let latestLine = null
             for(const _textLine of textLines)
             {
-                let text = _textLine
-
-                // Only one new line => keep firstLine indent
-                if(textLines.length === 1)
-                {
-                    let indent = ''
-                    if(firstLine.text.match(/^\s+/))
-                    {
-                        indent = firstLine.text.replace(/^(\s+).*/, '$1')
-                    }
-                    text = `${indent}${text}`
-
-                    update.indent = indent
-                }
-
-                const line = this.addLine(text, _position.lineIndex + i)
-                latestLine = line
+                const line = this.addLine(_textLine, _position.lineIndex + i)
                 update.newLines.push(line)
 
                 i++
             }
+        }
 
-            // Add end of first line to latest line
-            latestLine.addText(after, latestLine.length)
+        // Has lines
+        else
+        {
+            // One line
+            if(textLines.length === 1)
+            {
+                const line = this.items[_position.lineIndex]
+                line.addText(textLines.shift(), _position.rowIndex)
+                update.newLines.push(line)
+            }
+
+            // Multi line
+            else
+            {
+                // First line
+                const firstLine = this.items[_position.lineIndex]
+                const before = firstLine.text.slice(0, _position.rowIndex)
+                const after = firstLine.text.slice(_position.rowIndex, firstLine.text.length)
+
+                update.modifiedLines.push(firstLine)
+
+                firstLine.updateText(`${before}${textLines.shift()}`)
+
+                // Other lines
+                let i = 0
+                let latestLine = null
+                for(const _textLine of textLines)
+                {
+                    let text = _textLine
+
+                    // Only one new line => keep firstLine indent
+                    if(textLines.length === 1)
+                    {
+                        let indent = ''
+                        if(firstLine.text.match(/^\s+/))
+                        {
+                            indent = firstLine.text.replace(/^(\s+).*/, '$1')
+                        }
+                        text = `${indent}${text}`
+
+                        update.indent = indent
+                    }
+
+                    const line = this.addLine(text, _position.lineIndex + i)
+                    latestLine = line
+                    update.newLines.push(line)
+
+                    i++
+                }
+
+                // Add end of first line to latest line
+                latestLine.addText(after, latestLine.length)
+            }
         }
 
         return update
@@ -280,8 +297,13 @@ export default class Lines
         const start = new Position(0, 0)
 
         // End
-        const lastLine = this.items[this.items.length - 1]
-        const end = new Position(this.length - 1, lastLine.length)
+        const end = new Position(0, 0)
+        if(this.length)
+        {
+            const lastLine = this.items[this.items.length - 1]
+            end.lineIndex = this.length - 1
+            end.rowIndex = lastLine.length
+        }
 
         // Range
         const range = new Range(start, end)

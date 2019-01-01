@@ -122,16 +122,14 @@ export default class Sync extends EventEmitter
             // No data found
             if(value === null)
             {
-                console.log('create initial data')
-
                 // Create initial data
                 this.ref.set({
-                    time: Date.now()
+                    time: Date.now(),
+                    text: ''
                 })
             }
             else
             {
-                console.log('has data')
                 this.trigger('update', [ value ])
             }
         })
