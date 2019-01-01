@@ -1,5 +1,6 @@
 /build
 .env
+.env.development
 .cache
 /dist
 

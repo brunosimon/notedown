@@ -25,7 +25,8 @@ Notedown works on any modern browser with Internet and will simply add some synt
 
 - Go to [Firebase](https://firebase.google.com) and create a Realtime Database
 - Activate Google Auth
-- Create an `.env` file at the root folder following the `.env.demo` example and add the firebase informations.
+- Create an `.env` file at the root folder following the `.env.demo` example and add the firebase informations
+- Create an `.env.development` file if you want a different configuration in development
 
 ### Compile
 
