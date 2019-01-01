@@ -9,9 +9,11 @@ import EventEmitter from '../EventEmitter.js'
 
 export default class Code extends EventEmitter
 {
-    constructor()
+    constructor(_options)
     {
         super()
+
+        this.options = _options
 
         this.setContainer()
         this.setScroll()
@@ -31,7 +33,7 @@ export default class Code extends EventEmitter
         // Element
         this.container.$element = document.createElement('div')
         this.container.$element.classList.add('code')
-        document.body.appendChild(this.container.$element)
+        this.options.$target.appendChild(this.container.$element)
     }
 
     setScroll()

@@ -1,6 +1,6 @@
 import firebase from 'firebase/app'
 import firebaseDatabase from 'firebase/database'
-import * as firebaseUI from 'firebaseui'
+import firebaseAuth from 'firebase/auth'
 import EventEmitter from './EventEmitter'
 
 export default class Sync extends EventEmitter
@@ -50,21 +50,26 @@ export default class Sync extends EventEmitter
                     providerData: _user.providerData
                 }
 
-                console.log('user.isAnonymous', this.user.isAnonymous)
-                console.log('user.uid', this.user.uid)
-
                 // Set database
                 this.setDatabase()
+
+                // If anonymous show sign in button
+                if(this.user.isAnonymous)
+                {
+                    this.ui.$signIn.classList.remove('is-hidden')
+                }
+                // Hide sign in button
+                else
+                {
+                    this.ui.$signIn.classList.add('is-hidden')
+                }
             }
 
             // Not signed in
             else
             {
                 // Sign in as anonymous
-                this.auth.signInAnonymously().catch((_error) =>
-                {
-                    console.log('signInAnonymously', '_error', _error)
-                })
+                this.auth.signInAnonymously()
             }
         })
     }
@@ -74,36 +79,36 @@ export default class Sync extends EventEmitter
      */
     setUI()
     {
-        // Add style
-        const $link = document.createElement('link')
-        $link.setAttribute('type', 'text/css')
-        $link.setAttribute('rel', 'stylesheet')
-        $link.setAttribute('href', 'https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css')
-        document.querySelector('head').appendChild($link)
+        this.ui = {}
+        this.ui.$signIn = document.querySelector('.js-sign-in')
 
-        this.ui = new firebaseUI.auth.AuthUI(this.auth)
+        this.ui.$signIn.addEventListener('click', (_event) =>
+        {
+            _event.preventDefault()
 
-        this.ui.start(
-            '.auth',
-            {
-                signInOptions:
-                [
-                    firebase.auth.GoogleAuthProvider.PROVIDER_ID
-                ],
-                signInFlow: 'popup',
-                callbacks:
-                {
-                    signInSuccessWithAuthResult: (_test) =>
+            const provider = new firebase.auth.GoogleAuthProvider()
+
+            this.auth
+                .signInWithPopup(provider)
+                .then(
+                    () =>
                     {
-                        console.log('signInSuccessWithAuthResult', _test)
-                    },
-                    uiShown: () =>
-                    {
-                        console.log('uiShown')
+                        window.setTimeout(() =>
+                        {
+                            alert('You are now connected and your notes will be saved.')
+                        }, 500)
                     }
-                }
-            }
-        )
+                )
+                .catch(
+                    (_error) =>
+                    {
+                        window.setTimeout(() =>
+                        {
+                            alert('An error occured.\nCheck the console for more info.')
+                        }, 500)
+                    }
+                )
+        })
     }
 
     /**

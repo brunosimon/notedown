@@ -1,8 +1,38 @@
+@import 'reset.styl'
 @import 'fonts.styl'
 @import 'code.styl'
 
-.auth
+.sign-in
     position absolute
+    display block
     top 20px
     right 20px
-    z-index 1
+    height auto
+    color #fff
+    font-size 12px
+    font-family Helvetica, Arial
+    padding 10px
+    text-decoration none
+    border-radius 2px
+    cursor pointer
+    background #27282d
+    z-index 2
+
+    &.is-hidden
+        display none
+
+    &:hover
+        .background
+            opacity 0.3
+
+    .background
+        display block
+        position absolute
+        top 0
+        left 0
+        width 100%
+        height 100%
+        background #fff
+        opacity 0.2
+        transition opacity 0.15s
+        will-change opacity

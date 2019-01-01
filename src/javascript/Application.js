@@ -9,6 +9,7 @@ export default class Application
     {
         // Set up
         this.latestPushedState = null
+        this.$element = document.querySelector('.notedown')
 
         this.setCode()
         this.setSync()
@@ -16,7 +17,9 @@ export default class Application
 
     setCode()
     {
-        this.code = new Code()
+        this.code = new Code({
+            $target: this.$element
+        })
 
         // On code action
         this.code.actions.on('action', () =>
