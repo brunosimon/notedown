@@ -149,7 +149,7 @@ export default class Lines
             const line = lines[0]
             line.removeText(start.rowIndex, end.rowIndex)
         }
-        else
+        else if(lines.length > 1)
         {
             // Update first line using first and last line
             const firstLine = lines[0]
@@ -173,6 +173,12 @@ export default class Lines
     empty()
     {
         this.removeRange(this.getFullRange())
+    }
+
+    setText(_text)
+    {
+        this.empty()
+        this.addText(_text)
     }
 
     addText(_text, _destination = null)

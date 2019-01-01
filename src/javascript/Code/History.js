@@ -12,22 +12,6 @@ export default class History
         this.limitSize = 1024
     }
 
-    getState()
-    {
-        const state = {}
-
-        // Text
-        state.text = this.root.lines.getText()
-
-        // Cursor
-        state.cursorPosition = this.root.cursor.position.clone()
-
-        // Selection
-        state.selectionRange = this.root.lines.selectionRange.clone().normalize()
-
-        return state
-    }
-
     setState(_index = null)
     {
         const index = _index === null ? this.index : _index
@@ -80,7 +64,7 @@ export default class History
         this.index = 0
 
         // Compare current state and latest state
-        const state = this.getState()
+        const state = this.root.getState()
         const latestState = this.states[0]
 
         // State didn't change
@@ -115,7 +99,7 @@ export default class History
         // Save current state in order to redo to it
         if(this.index === 0)
         {
-            const state = this.getState()
+            const state = this.root.getState()
             this.states.unshift(state)
 
             this.index = 0

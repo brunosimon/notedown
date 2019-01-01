@@ -3,6 +3,8 @@ import firebaseDatabase from 'firebase/database'
 import * as firebaseUI from 'firebaseui'
 import EventEmitter from './EventEmitter'
 
+import initialText from './config/initialText.js'
+
 export default class Sync extends EventEmitter
 {
     constructor()
@@ -125,7 +127,7 @@ export default class Sync extends EventEmitter
                 // Create initial data
                 this.ref.set({
                     time: Date.now(),
-                    text: ''
+                    text: initialText
                 })
             }
             else

@@ -8,30 +8,29 @@ export default class Application
         this.code = new Code()
         this.sync = new Sync()
 
-        let latestData = null
+        // State change trigger updated event
+        let latestPushedState = null
 
-        this.code.on('updated', (_data) =>
+        // On code action
+        this.code.actions.on('action', () =>
         {
-            if(this.sync.ref)
-            {
-                const data = {
-                    time: Date.now(),
-                    text: _data.text
-                }
-                console.log('data', data)
-                latestData = data
+            // Get state
+            const state = this.code.getState()
+            state.time = Date.now()
+            latestPushedState = state
 
-                this.sync.ref.set(data)
-            }
+            // Update sync
+            this.sync.ref.set(state)
         })
 
+        // On sync update
         this.sync.on('update', (_data) =>
         {
-            if(latestData === null || _data.text !== latestData.text)
+            // Not the latest pushed state
+            if(latestPushedState === null || _data.text !== latestPushedState.text)
             {
-                // Text
-                this.code.lines.empty()
-                this.code.lines.addText(_data.text)
+                // Update code
+                this.code.lines.setText(_data.text)
             }
         })
     }
