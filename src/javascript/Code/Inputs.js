@@ -77,7 +77,7 @@ export default class Inputs
         {
             this.root.actions.duplicateDown()
 
-            return
+            return false
         })
         this.addShortcut([ 'command', 'a' ], () =>
         {
