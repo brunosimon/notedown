@@ -105,9 +105,9 @@ export default class Actions extends EventEmitter
         // Same character condition
         let condition = null
 
-        if(character.match(/[a-zA-Z0-9_\s]/i))
+        if(character.match(/[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF0-9_\s]/i))
         {
-            condition = (_character) => _character.match(/[a-zA-Z0-9_]/i)
+            condition = (_character) => _character.match(/[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF0-9_]/i)
         }
         else
         {
@@ -171,9 +171,9 @@ export default class Actions extends EventEmitter
         // Same character condition
         let condition = null
 
-        if(character.match(/[a-zA-Z0-9_\s]/i))
+        if(character.match(/[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF0-9_\s]/i))
         {
-            condition = (_character) => _character.match(/[a-zA-Z0-9_]/i)
+            condition = (_character) => _character.match(/[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF0-9_]/i)
         }
         else
         {
@@ -306,9 +306,9 @@ export default class Actions extends EventEmitter
         // Same character condition
         let condition = null
 
-        if(character.match(/[a-zA-Z0-9_]/i))
+        if(character.match(/[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF0-9_]/i))
         {
-            condition = (_character) => _character.match(/[a-zA-Z0-9_]/i)
+            condition = (_character) => _character.match(/[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF0-9_]/i)
         }
         else
         {
