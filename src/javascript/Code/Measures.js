@@ -16,7 +16,6 @@ export default class Measures
         // Create invisible dummy line
         this.line = new Line('0'.repeat(this.count))
         this.line.$element.classList.add('dummy')
-        this.root.lines.$element.appendChild(this.line.$element)
 
         // Update
         this.update()
@@ -24,7 +23,11 @@ export default class Measures
 
     update()
     {
+        this.root.lines.$element.appendChild(this.line.$element)
+
         this.rowWidth = this.line.fragments.$element.offsetWidth / this.count
         this.lineHeight = this.line.$element.offsetHeight
+
+        this.root.lines.$element.removeChild(this.line.$element)
     }
 }
