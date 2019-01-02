@@ -111,11 +111,25 @@ export default class Inputs
         this.textarea.$element.classList.add('textarea')
         this.root.container.$element.appendChild(this.textarea.$element)
 
+        let latestWasAccent = false
+
         this.textarea.$element.addEventListener('input', () =>
         {
             const value = this.textarea.$element.value
+
+            // Handle accents
+            if((value === '^' || value === '¨') && !latestWasAccent)
+            {
+                latestWasAccent = true
+                return
+            }
+
+            latestWasAccent = false
+
+            // Reset textarea
             this.textarea.$element.value = ''
 
+            // Send input
             this.root.actions.input(value)
         })
 
