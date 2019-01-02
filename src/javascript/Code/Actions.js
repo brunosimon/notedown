@@ -16,6 +16,7 @@ export default class Actions extends EventEmitter
     {
         this.root.history.undo()
 
+        // Trigger
         this.trigger('action', [ 'undo' ])
     }
 
@@ -23,6 +24,7 @@ export default class Actions extends EventEmitter
     {
         this.root.history.redo()
 
+        // Trigger
         this.trigger('action', [ 'redo' ])
     }
 
@@ -36,6 +38,7 @@ export default class Actions extends EventEmitter
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
 
+        // Trigger
         this.trigger('action', [ 'cursorRight' ])
     }
 
@@ -49,6 +52,7 @@ export default class Actions extends EventEmitter
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
 
+        // Trigger
         this.trigger('action', [ 'cursorDown' ])
     }
 
@@ -62,6 +66,7 @@ export default class Actions extends EventEmitter
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
 
+        // Trigger
         this.trigger('action', [ 'cursorLeft' ])
     }
 
@@ -75,6 +80,7 @@ export default class Actions extends EventEmitter
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
 
+        // Trigger
         this.trigger('action', [ 'cursorUp' ])
     }
 
@@ -141,6 +147,7 @@ export default class Actions extends EventEmitter
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
 
+        // Trigger
         this.trigger('action', [ 'cursorRightWord' ])
     }
 
@@ -209,6 +216,7 @@ export default class Actions extends EventEmitter
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
 
+        // Trigger
         this.trigger('action', [ 'cursorLeftWord' ])
     }
 
@@ -224,6 +232,7 @@ export default class Actions extends EventEmitter
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
 
+        // Trigger
         this.trigger('action', [ 'cursorStartOfLine' ])
     }
 
@@ -242,6 +251,7 @@ export default class Actions extends EventEmitter
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
 
+        // Trigger
         this.trigger('action', [ 'cursorEndOfLine' ])
     }
 
@@ -258,6 +268,7 @@ export default class Actions extends EventEmitter
         const end = position
         this.root.lines.updateSelection(start, end)
 
+        // Trigger
         this.trigger('action', [ 'pointerDown' ])
     }
 
@@ -275,6 +286,7 @@ export default class Actions extends EventEmitter
 
         this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
 
+        // Trigger
         this.trigger('action', [ 'pointerMove' ])
     }
 
@@ -345,6 +357,7 @@ export default class Actions extends EventEmitter
         // Update cursor
         this.root.cursor.setPosition(end)
 
+        // Trigger
         this.trigger('action', [ 'pointerDoubleDown' ])
     }
 
@@ -361,6 +374,7 @@ export default class Actions extends EventEmitter
         // Update cursor
         this.root.cursor.setPosition(end)
 
+        // Trigger
         this.trigger('action', [ 'pointerTripleDown' ])
     }
 
@@ -373,6 +387,7 @@ export default class Actions extends EventEmitter
         this.root.lines.updateSelection(startPosition, endPosition)
         this.root.cursor.setPosition(endPosition)
 
+        // Trigger
         this.trigger('action', [ 'selectAll' ])
     }
 
@@ -434,6 +449,7 @@ export default class Actions extends EventEmitter
             this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
         }
 
+        // Trigger
         this.trigger('action', [ 'deleteLeft' ])
     }
 
@@ -496,6 +512,7 @@ export default class Actions extends EventEmitter
             this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
         }
 
+        // Trigger
         this.trigger('action', [ 'superDeleteLeft' ])
     }
 
@@ -553,6 +570,7 @@ export default class Actions extends EventEmitter
             this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
         }
 
+        // Trigger
         this.trigger('action', [ 'deleteRight' ])
     }
 
@@ -614,6 +632,7 @@ export default class Actions extends EventEmitter
             this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
         }
 
+        // Trigger
         this.trigger('action', [ 'superDeleteRight' ])
     }
 
@@ -632,6 +651,7 @@ export default class Actions extends EventEmitter
         // Update selection
         this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
 
+        // Trigger
         this.trigger('action', [ 'deleteSelection' ])
     }
 
@@ -640,17 +660,35 @@ export default class Actions extends EventEmitter
         // Get text for range
         const text = this.root.lines.getText(this.root.lines.selectionRange)
 
-        // Create textarea and copy value
-        const textarea = document.createElement('textarea')
-        textarea.value = text
-        document.body.appendChild(textarea)
-        textarea.select()
-        document.execCommand('copy')
-        document.body.removeChild(textarea)
+        // Copy
+        this.root.inputs.copy(text)
 
-        // Focus back
-        this.root.inputs.focus()
+        // Trigger
+        this.trigger('action', [ 'copy' ])
+    }
 
+    cut()
+    {
+        // History
+        this.root.history.saveState()
+
+        // Get text for range
+        const selectionRange = this.root.lines.selectionRange.clone().normalize()
+        const text = this.root.lines.getText(selectionRange)
+
+        // Copy
+        this.root.inputs.copy(text)
+
+        // Remove range
+        this.root.lines.removeRange(selectionRange)
+
+        // Update cursor
+        this.root.cursor.setPosition(selectionRange.start)
+
+        // Update selection
+        this.root.lines.updateSelection(selectionRange.start, selectionRange.start)
+
+        // Trigger
         this.trigger('action', [ 'copy' ])
     }
 
@@ -694,6 +732,7 @@ export default class Actions extends EventEmitter
         // Update selection
         this.root.lines.updateSelection(cursorPosition, cursorPosition)
 
+        // Trigger
         this.trigger('action', [ 'input' ])
     }
 
@@ -748,6 +787,7 @@ export default class Actions extends EventEmitter
             this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
         }
 
+        // Trigger
         this.trigger('action', [ 'tabulate' ])
     }
 }

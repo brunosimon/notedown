@@ -69,6 +69,10 @@ export default class Inputs
         {
             this.root.actions.copy()
         })
+        this.addShortcut([ 'command', 'x' ], () =>
+        {
+            this.root.actions.cut()
+        })
         this.addShortcut([ 'command', 'a' ], () =>
         {
             this.root.actions.selectAll()
@@ -222,5 +226,21 @@ export default class Inputs
     focus()
     {
         this.textarea.$element.focus()
+    }
+
+    copy(_text)
+    {
+        // Create textarea and copy value
+        const textarea = document.createElement('textarea')
+        textarea.value = _text
+        document.body.appendChild(textarea)
+        textarea.select()
+        document.execCommand('copy')
+
+        // Remove textarea
+        document.body.removeChild(textarea)
+
+        // Focus back
+        this.root.inputs.focus()
     }
 }
