@@ -707,7 +707,8 @@ export default class Actions extends EventEmitter
         const tabSize = 4
         const tabText = ' '.repeat(tabSize)
 
-        if(lines.length > 1 || selectionRange.end.rowIndex - selectionRange.start.rowIndex === lines[0].length)
+        // Should indent
+        if(lines.length > 1 || (selectionRange.end.rowIndex - selectionRange.start.rowIndex === lines[0].length && lines[0].length > 0))
         {
             for(const _line of lines)
             {
@@ -728,6 +729,8 @@ export default class Actions extends EventEmitter
                 this.root.cursor.setPosition(selectionRange.end)
             }
         }
+
+        // Should add tabulation in text
         else
         {
             // Get normalized selection range
