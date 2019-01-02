@@ -244,14 +244,14 @@ export default class Lines
             // Multi line
             else
             {
-                // First line
-                const firstLine = this.items[_position.lineIndex]
-                const before = firstLine.text.slice(0, _position.rowIndex)
-                const after = firstLine.text.slice(_position.rowIndex, firstLine.text.length)
+                // Destination line
+                const destinationLine = this.items[_position.lineIndex]
+                const before = destinationLine.text.slice(0, _position.rowIndex)
+                const after = destinationLine.text.slice(_position.rowIndex, destinationLine.text.length)
 
-                update.modifiedLines.push(firstLine)
+                update.modifiedLines.push(destinationLine)
 
-                firstLine.updateText(`${before}${textLines.shift()}`)
+                destinationLine.updateText(`${before}${textLines.shift()}`)
 
                 // Other lines
                 let i = 0
@@ -260,13 +260,14 @@ export default class Lines
                 {
                     let text = _textLine
 
-                    // Only one new line => keep firstLine indent
-                    if(textLines.length === 1)
+                    // Only one new line and input is empty (meaning only line break)
+                    if(textLines.length === 1 && textLines[0] === '')
                     {
+                        // Keek first line indent
                         let indent = ''
-                        if(firstLine.text.match(/^\s+/))
+                        if(destinationLine.text.match(/^\s+/))
                         {
-                            indent = firstLine.text.replace(/^(\s+).*/, '$1')
+                            indent = destinationLine.text.replace(/^(\s+).*/, '$1')
                         }
                         text = `${indent}${text}`
 
