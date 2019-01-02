@@ -672,7 +672,7 @@ export default class Actions extends EventEmitter
         const update = this.root.lines.addTextAtRange(_value, selectionRange)
 
         // Text
-        const textLines = _value.split(/\r?\n/g)
+        const textLines = _value.replace(/\t/g, '    ').split(/\r?\n/g)
 
         // Move cursor
         const cursorPosition = this.root.cursor.position.clone()

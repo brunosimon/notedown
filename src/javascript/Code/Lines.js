@@ -214,8 +214,11 @@ export default class Lines
         update.newLines = []
         update.indent = ''
 
+        // Remove tabulations
+        const text = _text.replace(/\t/g, '    ')
+
         // Text split by lines
-        const textLines = _text.split(/\r?\n/g)
+        const textLines = text.split(/\r?\n/g)
 
         // Has no line
         if(this.length === 0)
