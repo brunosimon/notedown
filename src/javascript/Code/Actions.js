@@ -1,5 +1,6 @@
 import Position from './Position'
 import Range from './Range'
+import Line from './Line'
 import EventEmitter from '../EventEmitter'
 
 export default class Actions extends EventEmitter
@@ -690,6 +691,38 @@ export default class Actions extends EventEmitter
 
         // Trigger
         this.trigger('action', [ 'copy' ])
+    }
+
+    duplicateDown()
+    {
+        // History
+        this.root.history.saveState()
+
+        // Get lines in selection
+        const selectionRange = this.root.lines.selectionRange.clone().normalize()
+        const lines = this.root.lines.items.slice(selectionRange.start.lineIndex, selectionRange.end.lineIndex + 1)
+
+        // Create new lines
+        let i = 0
+        for(const _line of lines)
+        {
+            this.root.lines.addLine(_line.text, selectionRange.end.lineIndex + i)
+
+            i++
+        }
+
+        // Update selection
+        selectionRange.end.lineIndex += lines.length
+        selectionRange.start.lineIndex += lines.length
+        this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
+
+        // Update cursor
+        this.root.cursor.setPosition(selectionRange.end)
+    }
+
+    duplicateUp()
+    {
+
     }
 
     input(_value)

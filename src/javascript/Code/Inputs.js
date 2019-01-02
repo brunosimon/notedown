@@ -73,6 +73,12 @@ export default class Inputs
         {
             this.root.actions.cut()
         })
+        this.addShortcut([ 'command', 'shift', 'd' ], () =>
+        {
+            this.root.actions.duplicateDown()
+
+            return
+        })
         this.addShortcut([ 'command', 'a' ], () =>
         {
             this.root.actions.selectAll()
