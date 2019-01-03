@@ -725,6 +725,53 @@ export default class Actions extends EventEmitter
 
     }
 
+    moveLinesDown()
+    {
+    }
+
+    moveLinesUp()
+    {
+        // Get lines in selection
+        const selectionRange = this.root.lines.selectionRange.clone().normalize()
+
+        // No line before
+        if(selectionRange.start.lineIndex === 0)
+        {
+            return
+        }
+
+        // History
+        this.root.history.saveState()
+
+        // Get line before
+        const lineBefore = this.root.lines.items.slice(selectionRange.start.lineIndex - 1, selectionRange.start.lineIndex)[0]
+        const lineAfter = this.root.lines.items[selectionRange.end.lineIndex + 1]
+
+        // Move element in DOM
+        if(lineAfter)
+        {
+            this.root.lines.$element.insertBefore(lineBefore.$element, lineAfter.$element)
+        }
+        else
+        {
+            this.root.lines.$element.appendChild(lineBefore.$element)
+        }
+
+        // Move item in array
+        this.root.lines.items.splice(selectionRange.start.lineIndex - 1, 1)
+        this.root.lines.items.splice(selectionRange.end.lineIndex, 0, lineBefore)
+
+        // Update cursor
+        const cursorPosition = this.root.cursor.position.clone()
+        cursorPosition.lineIndex -= 1
+        this.root.cursor.setPosition(cursorPosition)
+
+        // Update selection
+        selectionRange.start.lineIndex -= 1
+        selectionRange.end.lineIndex -= 1
+        this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
+    }
+
     input(_value)
     {
         // No input

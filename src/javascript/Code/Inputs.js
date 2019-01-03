@@ -49,6 +49,14 @@ export default class Inputs
         {
             this.root.actions.cursorLeftWord(this.keyboard.isDown('shift'))
         })
+        this.addShortcut([ 'alt', 'down' ], () =>
+        {
+            this.root.actions.moveLinesDown()
+        })
+        this.addShortcut([ 'alt', 'up' ], () =>
+        {
+            this.root.actions.moveLinesUp()
+        })
         this.addShortcut([ 'right' ], () =>
         {
             this.root.actions.cursorRight(this.keyboard.isDown('shift'))
@@ -78,6 +86,10 @@ export default class Inputs
             this.root.actions.duplicateDown()
 
             return false
+        })
+        this.addShortcut([ 'alt', 'up' ], () =>
+        {
+            this.root.actions.moveLinesUp()
         })
         this.addShortcut([ 'command', 'a' ], () =>
         {
