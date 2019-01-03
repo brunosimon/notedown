@@ -727,6 +727,37 @@ export default class Actions extends EventEmitter
 
     moveLinesDown()
     {
+        // Get lines in selection
+        const selectionRange = this.root.lines.selectionRange.clone().normalize()
+
+        // No line before
+        if(selectionRange.end.lineIndex > this.root.lines.length - 2)
+        {
+            return
+        }
+
+        // History
+        this.root.history.saveState()
+
+        // Get lines
+        const firstLine = this.root.lines.items[selectionRange.start.lineIndex]
+        const lineAfter = this.root.lines.items[selectionRange.end.lineIndex + 1]
+
+        this.root.lines.$element.insertBefore(lineAfter.$element, firstLine.$element)
+
+        // Move item in array
+        this.root.lines.items.splice(selectionRange.end.lineIndex + 1, 1)
+        this.root.lines.items.splice(selectionRange.start.lineIndex, 0, lineAfter)
+
+        // Update cursor
+        const cursorPosition = this.root.cursor.position.clone()
+        cursorPosition.lineIndex += 1
+        this.root.cursor.setPosition(cursorPosition)
+
+        // Update selection
+        selectionRange.start.lineIndex += 1
+        selectionRange.end.lineIndex += 1
+        this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
     }
 
     moveLinesUp()
@@ -743,7 +774,7 @@ export default class Actions extends EventEmitter
         // History
         this.root.history.saveState()
 
-        // Get line before
+        // Get lines
         const lineBefore = this.root.lines.items.slice(selectionRange.start.lineIndex - 1, selectionRange.start.lineIndex)[0]
         const lineAfter = this.root.lines.items[selectionRange.end.lineIndex + 1]
 
