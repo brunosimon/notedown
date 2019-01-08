@@ -21,7 +21,8 @@ export default class Keyboard extends EventEmitter
             39: 'right',
             40: 'down',
             46: 'delete',
-            91: 'command'
+            91: 'command',
+            224: 'command'
         }
 
         this.downItems = []
