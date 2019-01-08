@@ -24,12 +24,18 @@ export default class Cursor
         // Handle window focus
         window.addEventListener('blur', () =>
         {
-            this.$element.removeChild(this.$bar)
+            if(this.$element.contains(this.$bar))
+            {
+                this.$element.removeChild(this.$bar)
+            }
         })
 
         window.addEventListener('focus', () =>
         {
-            this.$element.appendChild(this.$bar)
+            if(!this.$element.contains(this.$bar))
+            {
+                this.$element.appendChild(this.$bar)
+            }
         })
     }
 
@@ -144,7 +150,10 @@ export default class Cursor
 
     resetAnimation()
     {
-        this.$element.removeChild(this.$bar)
-        this.$element.appendChild(this.$bar)
+        if(this.$element.contains(this.$bar))
+        {
+            this.$element.removeChild(this.$bar)
+            this.$element.appendChild(this.$bar)
+        }
     }
 }
