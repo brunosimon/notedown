@@ -31,24 +31,35 @@ export default class Actions extends EventEmitter
 
     cursorRight(_extendSelection = false)
     {
-        // Cursor
-        this.root.cursor.goRight()
+        if(!this.root.lines.selectionRange.isEmpty() && !_extendSelection)
+        {
+            // Update cursor
+            const selectionRange = this.root.lines.selectionRange.clone().normalize()
+            this.root.cursor.setPosition(selectionRange.end)
 
-        // Selection
-        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
-        const end = this.root.cursor.position
-        this.root.lines.updateSelection(start, end)
+            // Update selection
+            this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        }
+        else
+        {
+            // Update cursor
+            this.root.cursor.goRight()
 
+            // Update selection
+            const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+            const end = this.root.cursor.position
+            this.root.lines.updateSelection(start, end)
+        }
         // Trigger
         this.trigger('action', [ 'cursorRight' ])
     }
 
     cursorDown(_extendSelection = false)
     {
-        // Cursor
+        // Update cursor
         this.root.cursor.goDown()
 
-        // Selection
+        // Update selection
         const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
@@ -59,13 +70,25 @@ export default class Actions extends EventEmitter
 
     cursorLeft(_extendSelection = false)
     {
-        // Cursor
-        this.root.cursor.goLeft()
+        if(!this.root.lines.selectionRange.isEmpty() && !_extendSelection)
+        {
+            // Update cursor
+            const selectionRange = this.root.lines.selectionRange.clone().normalize()
+            this.root.cursor.setPosition(selectionRange.start)
 
-        // Selection
-        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
-        const end = this.root.cursor.position
-        this.root.lines.updateSelection(start, end)
+            // Update selection
+            this.root.lines.updateSelection(this.root.cursor.position, this.root.cursor.position)
+        }
+        else
+        {
+            // Update cursor
+            this.root.cursor.goLeft()
+
+            // Update selection
+            const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+            const end = this.root.cursor.position
+            this.root.lines.updateSelection(start, end)
+        }
 
         // Trigger
         this.trigger('action', [ 'cursorLeft' ])
@@ -73,10 +96,10 @@ export default class Actions extends EventEmitter
 
     cursorUp(_extendSelection = false)
     {
-        // Cursor
+        // Update cursor
         this.root.cursor.goUp()
 
-        // Selection
+        // Update selection
         const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
         const end = this.root.cursor.position
         this.root.lines.updateSelection(start, end)
