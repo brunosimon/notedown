@@ -17,6 +17,16 @@ export default class Measures
         this.line = new Line('0'.repeat(this.count))
         this.line.$element.classList.add('dummy')
 
+        // Font ready callback
+        if(document.fonts && document.fonts.ready)
+        {
+            document.fonts.ready.then(() =>
+            {
+                // Update
+                this.update()
+            })
+        }
+
         // Update
         this.update()
     }
