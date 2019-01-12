@@ -1,6 +1,5 @@
 import Position from './Position'
 import Range from './Range'
-import Line from './Line'
 import EventEmitter from '../EventEmitter'
 
 export default class Actions extends EventEmitter
@@ -890,8 +889,9 @@ export default class Actions extends EventEmitter
                 const spacesCount = spacesMatch ? spacesMatch[1].length : 0
                 const tabsCount = Math.floor(spacesCount / 4) + 1
                 const spacesToAddCount = tabsCount * tabSize - spacesCount
-                const text = `${' '.repeat(spacesToAddCount)}${_line.text}`
 
+                // Update text
+                const text = `${' '.repeat(spacesToAddCount)}${_line.text}`
                 _line.updateText(text)
             }
 
@@ -929,5 +929,63 @@ export default class Actions extends EventEmitter
 
         // Trigger
         this.trigger('action', [ 'tabulate' ])
+    }
+
+    untabulate()
+    {
+        // History
+        this.root.history.saveState()
+
+        const selectionRange = this.root.lines.selectionRange.clone().normalize()
+        const cursorPosition = this.root.cursor.position.clone()
+        const lines = this.root.lines.items.slice(selectionRange.start.lineIndex, selectionRange.end.lineIndex + 1)
+        const tabSize = 4
+
+        let i = 0
+        for(const _line of lines)
+        {
+            // Find the right number of spaces to untabulate the line
+            const spacesMatch = _line.text.match(/^(\s+)/)
+            const spacesCount = spacesMatch ? spacesMatch[1].length : 0
+
+            let tabsCount = Math.ceil(spacesCount / 4) - 1
+            if(tabsCount < 0)
+            {
+                tabsCount = 0
+            }
+
+            const spacesToRemoveCount = spacesCount - tabsCount * tabSize
+
+            // Update text
+            const text = _line.text.slice(spacesToRemoveCount, _line.text.length)
+            _line.updateText(text)
+
+            // Update selection range
+            if(i === 0)
+            {
+                selectionRange.start.rowIndex -= spacesToRemoveCount
+            }
+            if(i === lines.length - 1)
+            {
+                selectionRange.end.rowIndex -= spacesToRemoveCount
+            }
+
+            // Update cursor position
+            if(i + selectionRange.start.lineIndex === cursorPosition.lineIndex)
+            {
+                cursorPosition.rowIndex -= spacesToRemoveCount
+            }
+
+            i++
+        }
+
+        // Update selection
+        this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
+
+        // Update cursor
+        this.root.cursor.setPosition(cursorPosition)
+
+        // Trigger
+        this.trigger('action', [ 'untabulate' ])
     }
 }

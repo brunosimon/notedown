@@ -111,6 +111,12 @@ export default class Inputs
         {
             this.root.actions.deleteRight()
         })
+        this.addShortcut([ 'shift', 'tab' ], () =>
+        {
+            this.root.actions.untabulate()
+
+            return false
+        })
         this.addShortcut([ 'tab' ], () =>
         {
             this.root.actions.tabulate()
