@@ -880,12 +880,18 @@ export default class Actions extends EventEmitter
         const tabSize = 4
         const tabText = ' '.repeat(tabSize)
 
-        // Should indent
+        // Multiple lines or all line selected
         if(lines.length > 1 || (selectionRange.end.rowIndex - selectionRange.start.rowIndex === lines[0].length && lines[0].length > 0))
         {
             for(const _line of lines)
             {
-                const text = `${tabText}${_line.text}`
+                // Find the right number of spaces to tabulate the line
+                const spacesMatch = _line.text.match(/^(\s+)/)
+                const spacesCount = spacesMatch ? spacesMatch[1].length : 0
+                const tabsCount = Math.floor(spacesCount / 4) + 1
+                const spacesToAddCount = tabsCount * tabSize - spacesCount
+                const text = `${' '.repeat(spacesToAddCount)}${_line.text}`
+
                 _line.updateText(text)
             }
 
@@ -903,7 +909,7 @@ export default class Actions extends EventEmitter
             }
         }
 
-        // Should add tabulation in text
+        // Only one line
         else
         {
             // Get normalized selection range
