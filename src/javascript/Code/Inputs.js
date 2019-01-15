@@ -36,50 +36,74 @@ export default class Inputs
         this.addShortcut([ 'command', 'right' ], () =>
         {
             this.root.actions.cursorEndOfLine(this.keyboard.isDown('shift'))
+
+            return false
         })
         this.addShortcut([ 'command', 'left' ], () =>
         {
             this.root.actions.cursorStartOfLine(this.keyboard.isDown('shift'))
+
+            return false
         })
         this.addShortcut([ 'alt', 'right' ], () =>
         {
             this.root.actions.cursorRightWord(this.keyboard.isDown('shift'))
+
+            return false
         })
         this.addShortcut([ 'alt', 'left' ], () =>
         {
             this.root.actions.cursorLeftWord(this.keyboard.isDown('shift'))
+
+            return false
         })
         this.addShortcut([ 'alt', 'down' ], () =>
         {
             this.root.actions.moveLinesDown()
+
+            return false
         })
         this.addShortcut([ 'alt', 'up' ], () =>
         {
             this.root.actions.moveLinesUp()
+
+            return false
         })
         this.addShortcut([ 'right' ], () =>
         {
             this.root.actions.cursorRight(this.keyboard.isDown('shift'))
+
+            return false
         })
         this.addShortcut([ 'up' ], () =>
         {
             this.root.actions.cursorUp(this.keyboard.isDown('shift'))
+
+            return false
         })
         this.addShortcut([ 'down' ], () =>
         {
             this.root.actions.cursorDown(this.keyboard.isDown('shift'))
+
+            return false
         })
         this.addShortcut([ 'left' ], () =>
         {
             this.root.actions.cursorLeft(this.keyboard.isDown('shift'))
+
+            return false
         })
         this.addShortcut([ 'command', 'c' ], () =>
         {
             this.root.actions.copy()
+
+            return false
         })
         this.addShortcut([ 'command', 'x' ], () =>
         {
             this.root.actions.cut()
+
+            return false
         })
         this.addShortcut([ 'command', 'shift', 'd' ], () =>
         {
@@ -90,26 +114,38 @@ export default class Inputs
         this.addShortcut([ 'alt', 'up' ], () =>
         {
             this.root.actions.moveLinesUp()
+
+            return false
         })
         this.addShortcut([ 'command', 'a' ], () =>
         {
             this.root.actions.selectAll()
+
+            return false
         })
         this.addShortcut([ 'command', 'backspace' ], () =>
         {
             this.root.actions.superDeleteLeft()
+
+            return false
         })
         this.addShortcut([ 'backspace' ], () =>
         {
             this.root.actions.deleteLeft()
+
+            return false
         })
         this.addShortcut([ 'command', 'delete' ], () =>
         {
             this.root.actions.superDeleteRight()
+
+            return false
         })
         this.addShortcut([ 'delete' ], () =>
         {
             this.root.actions.deleteRight()
+
+            return false
         })
         this.addShortcut([ 'shift', 'tab' ], () =>
         {
