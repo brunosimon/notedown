@@ -41,7 +41,7 @@ export default class History
     undo()
     {
         // Limit
-        if(this.index > this.states.length - 2)
+        if(this.index > this.states.length - 2 && this.index > 0)
         {
             return
         }
@@ -81,8 +81,11 @@ export default class History
 
     log(_info = '')
     {
-        console.log('---------------')
-        console.log(_info)
+        if(_info !== '')
+        {
+            console.log('---------------')
+            console.log(_info)
+        }
         console.log('---------------')
         console.log(`index: ${this.index} / length: ${this.states.length}`)
         let i = 0
