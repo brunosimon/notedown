@@ -243,30 +243,30 @@ export default class Actions extends EventEmitter
         this.trigger('action', [ 'cursorLeftWord' ])
     }
 
-    cursorStartOfLine(_extendSelection = false)
-    {
-        // Update cursor position
-        const cursorPosition = this.root.cursor.position.clone()
-        cursorPosition.rowIndex = 0
-        this.root.cursor.setPosition(cursorPosition)
-
-        // Update selection
-        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
-        const end = this.root.cursor.position
-        this.root.lines.updateSelection(start, end)
-
-        // Trigger
-        this.trigger('action', [ 'cursorStartOfLine' ])
-    }
-
-    cursorEndOfLine(_extendSelection = false)
+    cursorSuperLeft(_extendSelection = false)
     {
         // Get line
         const line = this.root.lines.items[this.root.cursor.position.lineIndex]
 
-        // Update cursor position
+        // Get spaces
+        const spacesMatch = line.text.match(/^(\s+)/)
+        const spacesCount = spacesMatch ? spacesMatch[1].length : 0
+
+        // Get cursor position
         const cursorPosition = this.root.cursor.position.clone()
-        cursorPosition.rowIndex = line.length
+
+        // Go start of line
+        if(this.root.cursor.position.rowIndex < spacesCount + 1)
+        {
+            cursorPosition.rowIndex = 0
+        }
+        // Go start of text
+        else
+        {
+            cursorPosition.rowIndex = spacesCount
+        }
+
+        // Update cursor position
         this.root.cursor.setPosition(cursorPosition)
 
         // Update selection
@@ -275,7 +275,42 @@ export default class Actions extends EventEmitter
         this.root.lines.updateSelection(start, end)
 
         // Trigger
-        this.trigger('action', [ 'cursorEndOfLine' ])
+        this.trigger('action', [ 'cursorSuperLeft' ])
+    }
+
+    cursorSuperRight(_extendSelection = false)
+    {
+        // Get line
+        const line = this.root.lines.items[this.root.cursor.position.lineIndex]
+
+        // Get spaces
+        const spacesMatch = line.text.match(/(\s+)$/)
+        const spacesCount = spacesMatch ? spacesMatch[1].length : 0
+
+        // Get cursor position
+        const cursorPosition = this.root.cursor.position.clone()
+
+        // Go end of line
+        if(this.root.cursor.position.rowIndex > line.length - spacesCount - 1)
+        {
+            cursorPosition.rowIndex = line.length
+        }
+        // Go end of text
+        else
+        {
+            cursorPosition.rowIndex = line.length - spacesCount
+        }
+
+        // Update cursor position
+        this.root.cursor.setPosition(cursorPosition)
+
+        // Update selection
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
+
+        // Trigger
+        this.trigger('action', [ 'cursorSuperRight' ])
     }
 
     pointerDown(_x, _y, _extendSelection = false)
@@ -681,7 +716,7 @@ export default class Actions extends EventEmitter
     copy()
     {
         // Get text for range
-        let text = this.root.lines.getText(this.root.lines.selectionRange)
+        const text = this.root.lines.getText(this.root.lines.selectionRange)
 
         // Copy
         this.root.inputs.copy(text)

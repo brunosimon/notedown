@@ -35,13 +35,13 @@ export default class Inputs
         })
         this.addShortcut([ 'command', 'right' ], () =>
         {
-            this.root.actions.cursorEndOfLine(this.keyboard.isDown('shift'))
+            this.root.actions.cursorSuperRight(this.keyboard.isDown('shift'))
 
             return false
         })
         this.addShortcut([ 'command', 'left' ], () =>
         {
-            this.root.actions.cursorStartOfLine(this.keyboard.isDown('shift'))
+            this.root.actions.cursorSuperLeft(this.keyboard.isDown('shift'))
 
             return false
         })
