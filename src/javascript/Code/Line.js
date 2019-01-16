@@ -6,6 +6,7 @@ export default class Line
     {
         // Element
         this.$element = document.createElement('pre')
+        this.$element.setAttribute('role', 'presentation')
         this.$element.classList.add('line')
 
         // Set up
@@ -42,6 +43,12 @@ export default class Line
             return
         }
 
+        // HTML entities for < and > (other character are handled by <pre> tag)
+        let encodedText = _text
+
+        encodedText = encodedText.replace(/</g, '&lt;')
+        encodedText = encodedText.replace(/>/g, '&gt;')
+
         // Clear
         while(this.fragments.$element.children.length)
         {
@@ -49,7 +56,7 @@ export default class Line
         }
 
         // Update DOM
-        if(_text === '')
+        if(encodedText === '')
         {
             this.fragments.$element.innerHTML = '&#8203'
         }
@@ -57,7 +64,7 @@ export default class Line
         {
             // Create new fragments
             const fragments = [ ...fragmentsConfig ]
-            const fragmentsHTML = this.applyFragments(_text, fragments)
+            const fragmentsHTML = this.applyFragments(encodedText, fragments)
 
             this.fragments.$element.innerHTML = fragmentsHTML
         }

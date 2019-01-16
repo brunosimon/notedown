@@ -681,7 +681,7 @@ export default class Actions extends EventEmitter
     copy()
     {
         // Get text for range
-        const text = this.root.lines.getText(this.root.lines.selectionRange)
+        let text = this.root.lines.getText(this.root.lines.selectionRange)
 
         // Copy
         this.root.inputs.copy(text)
@@ -836,14 +836,20 @@ export default class Actions extends EventEmitter
         // History
         this.root.history.saveState()
 
+        // Base value
+        let value = _value
+
+        // Replace tabulations by spaces
+        value = value.replace(/\t/g, '    ')
+
         // Get normalized selection range
         const selectionRange = this.root.lines.selectionRange.clone().normalize()
 
         // Add text at range
-        const update = this.root.lines.addTextAtRange(_value, selectionRange)
+        const update = this.root.lines.addTextAtRange(value, selectionRange)
 
         // Text
-        const textLines = _value.replace(/\t/g, '    ').split(/\r?\n/g)
+        const textLines = value.split(/\r?\n/g)
 
         // Move cursor
         const cursorPosition = this.root.cursor.position.clone()
