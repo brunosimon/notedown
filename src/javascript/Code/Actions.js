@@ -243,6 +243,43 @@ export default class Actions extends EventEmitter
         this.trigger('action', [ 'cursorLeftWord' ])
     }
 
+    cursorSuperUp(_extendSelection = false)
+    {
+        // Update cursor position
+        const cursorPosition = this.root.cursor.position.clone()
+        cursorPosition.lineIndex = 0
+        cursorPosition.rowIndex = 0
+        this.root.cursor.setPosition(cursorPosition)
+
+        // Update selection
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
+
+        // Trigger
+        this.trigger('action', [ 'cursorSuperUp' ])
+    }
+
+    cursorSuperDown(_extendSelection = false)
+    {
+        // Get last line
+        const lastLine = this.root.lines.items[this.root.lines.items.length - 1]
+
+        // Update cursor position
+        const cursorPosition = this.root.cursor.position.clone()
+        cursorPosition.lineIndex = this.root.lines.items.length - 1
+        cursorPosition.rowIndex = lastLine.length
+        this.root.cursor.setPosition(cursorPosition)
+
+        // Update selection
+        const start = _extendSelection ? this.root.lines.selectionRange.start : this.root.cursor.position
+        const end = this.root.cursor.position
+        this.root.lines.updateSelection(start, end)
+
+        // Trigger
+        this.trigger('action', [ 'cursorSuperDown' ])
+    }
+
     cursorSuperLeft(_extendSelection = false)
     {
         // Get line

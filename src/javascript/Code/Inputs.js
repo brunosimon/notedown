@@ -33,6 +33,18 @@ export default class Inputs
 
             return false
         })
+        this.addShortcut([ 'command', 'up' ], () =>
+        {
+            this.root.actions.cursorSuperUp(this.keyboard.isDown('shift'))
+
+            return false
+        })
+        this.addShortcut([ 'command', 'down' ], () =>
+        {
+            this.root.actions.cursorSuperDown(this.keyboard.isDown('shift'))
+
+            return false
+        })
         this.addShortcut([ 'command', 'right' ], () =>
         {
             this.root.actions.cursorSuperRight(this.keyboard.isDown('shift'))
