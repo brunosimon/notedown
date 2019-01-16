@@ -917,31 +917,69 @@ export default class Actions extends EventEmitter
         // Get normalized selection range
         const selectionRange = this.root.lines.selectionRange.clone().normalize()
 
-        // Add text at range
-        const update = this.root.lines.addTextAtRange(value, selectionRange)
-
-        // Text
-        const textLines = value.split(/\r?\n/g)
-
-        // Move cursor
+        // Get cursor position
         const cursorPosition = this.root.cursor.position.clone()
-        cursorPosition.lineIndex = selectionRange.start.lineIndex + textLines.length - 1
 
-        if(textLines.length === 1)
+        // Encapsulating characters
+        const encapsulatingCharacters = [
+            { start: '\'', end: '\'' },
+            { start: '"', end: '"' },
+            { start: '`', end: '`' },
+            { start: '{', end: '}' },
+            { start: '[', end: ']' },
+            { start: '(', end: ')' }
+        ]
+
+        const encapsulatingCharacter = encapsulatingCharacters.find((_item) => _item.start === value)
+
+        // Encaspulating character found and selection range is not empty
+        if(typeof encapsulatingCharacter !== 'undefined' && !selectionRange.isEmpty())
         {
-            cursorPosition.rowIndex = selectionRange.start.rowIndex + textLines[textLines.length - 1].length
+            // Update text
+            this.root.lines.addTextAtPosition(encapsulatingCharacter.end, selectionRange.end)
+            this.root.lines.addTextAtPosition(encapsulatingCharacter.start, selectionRange.start)
+
+            cursorPosition.rowIndex += 1
+            selectionRange.start.rowIndex += 1
+
+            if(selectionRange.start.lineIndex === selectionRange.end.lineIndex)
+            {
+                selectionRange.end.rowIndex += 1
+            }
         }
+
+        // No encapsulating
         else
         {
-            cursorPosition.rowIndex = textLines[textLines.length - 1].length
+            // Add text at range
+            const update = this.root.lines.addTextAtRange(value, selectionRange)
+
+            // Text
+            const textLines = value.split(/\r?\n/g)
+
+            // Update cursor position
+            cursorPosition.lineIndex = selectionRange.start.lineIndex + textLines.length - 1
+
+            if(textLines.length === 1)
+            {
+                cursorPosition.rowIndex = selectionRange.start.rowIndex + textLines[textLines.length - 1].length
+            }
+            else
+            {
+                cursorPosition.rowIndex = textLines[textLines.length - 1].length
+            }
+            cursorPosition.rowIndex += update.indent.length
+
+            // Update selection range
+            selectionRange.start = cursorPosition
+            selectionRange.end = cursorPosition
         }
-        cursorPosition.rowIndex += update.indent.length
 
         // Update cursor
         this.root.cursor.setPosition(cursorPosition)
 
         // Update selection
-        this.root.lines.updateSelection(cursorPosition, cursorPosition)
+        this.root.lines.updateSelection(selectionRange.start, selectionRange.end)
 
         // Trigger
         this.trigger('action', [ 'input' ])
