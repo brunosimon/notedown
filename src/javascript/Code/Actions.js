@@ -1107,6 +1107,9 @@ export default class Actions extends EventEmitter
 
     toggleTask()
     {
+        // History
+        this.root.history.saveState()
+
         const selectionRange = this.root.lines.selectionRange.clone().normalize()
         const mainLine = this.root.lines.items[this.root.cursor.position.lineIndex]
         const lines = this.root.lines.items.slice(selectionRange.start.lineIndex, selectionRange.end.lineIndex + 1)
