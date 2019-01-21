@@ -82,27 +82,27 @@ export default class
     forceInView()
     {
         // Left
-        if(this.root.cursor.x < this.offset.x + this.root.measures.character.width * 3)
+        if(this.root.cursor.x < this.offset.x + this.root.measures.character.width * 3 - this.root.measures.padding.left)
         {
-            this.updateOffset(this.root.cursor.x - this.root.measures.character.width * 3, this.offset.y)
+            this.updateOffset(this.root.cursor.x - this.root.measures.character.width * 3 + this.root.measures.padding.left, this.offset.y)
         }
 
         // Right
-        if(this.root.cursor.x > this.offset.x + this.root.measures.viewport.width - this.root.measures.character.width * 3)
+        if(this.root.cursor.x > this.offset.x + this.root.measures.viewport.width - this.root.measures.character.width * 3 - this.root.measures.padding.right)
         {
-            this.updateOffset(this.root.cursor.x - this.root.measures.viewport.width + this.root.measures.character.width * 3, this.offset.y)
+            this.updateOffset(this.root.cursor.x - this.root.measures.viewport.width + this.root.measures.character.width * 3 + this.root.measures.padding.right, this.offset.y)
         }
 
         // Up
-        if(this.root.cursor.y < this.offset.y)
+        if(this.root.cursor.y < this.offset.y - this.root.measures.padding.top)
         {
-            this.updateOffset(this.offset.x, Math.floor(this.root.cursor.y / this.root.measures.character.height) * this.root.measures.character.height)
+            this.updateOffset(this.offset.x, Math.floor(this.root.cursor.y / this.root.measures.character.height) * this.root.measures.character.height + this.root.measures.padding.top)
         }
 
         // Down
-        if(this.root.cursor.y > this.offset.y + this.root.measures.viewport.height - this.root.measures.character.height)
+        if(this.root.cursor.y > this.offset.y + this.root.measures.viewport.height - this.root.measures.character.height - this.root.measures.padding.bottom)
         {
-            this.updateOffset(this.offset.x, Math.floor((this.root.cursor.y - this.root.measures.viewport.height + this.root.measures.character.height) / this.root.measures.character.height) * this.root.measures.character.height)
+            this.updateOffset(this.offset.x, Math.floor((this.root.cursor.y - this.root.measures.viewport.height + this.root.measures.character.height) / this.root.measures.character.height) * this.root.measures.character.height + this.root.measures.padding.bottom)
         }
     }
 }

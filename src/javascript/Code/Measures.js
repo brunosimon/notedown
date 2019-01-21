@@ -8,8 +8,29 @@ export default class Measures
         this.root = _options.root
         this.root.measures = this
 
+        this.setPadding()
         this.setCharacter()
         this.setViewport()
+    }
+
+    setPadding()
+    {
+        this.padding = {}
+        this.padding.top = null
+        this.padding.right = null
+        this.padding.bottom = null
+        this.padding.left = null
+        this.padding.update = () =>
+        {
+            const computedStyle = window.getComputedStyle(this.root.scroll.$inner)
+            this.padding.top = parseFloat(computedStyle.paddingTop)
+            this.padding.right = parseFloat(computedStyle.paddingRight)
+            this.padding.bottom = parseFloat(computedStyle.paddingBottom)
+            this.padding.left = parseFloat(computedStyle.paddingLeft)
+        }
+
+        window.addEventListener('resize', this.padding.update)
+        this.padding.update()
     }
 
     setCharacter()
@@ -52,8 +73,8 @@ export default class Measures
     {
         this.viewport = {}
 
-        this.viewport.width = window.innerWidth
-        this.viewport.height = window.innerHeight
+        this.viewport.width = null
+        this.viewport.height = null
 
         this.viewport.update = () =>
         {
@@ -62,5 +83,6 @@ export default class Measures
         }
 
         window.addEventListener('resize', this.viewport.update)
+        this.viewport.update()
     }
 }

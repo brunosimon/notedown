@@ -352,8 +352,12 @@ export default class Actions extends EventEmitter
 
     pointerDown(_x, _y, _extendSelection = false)
     {
+        // Get coordinates with padding
+        const x = _x - this.root.measures.padding.left
+        const y = _y - this.root.measures.padding.top
+
         // Position
-        const position = this.root.lines.getPosition(_x, _y)
+        const position = this.root.lines.getPosition(x, y)
 
         // Cursor
         this.root.cursor.setPosition(position)
@@ -369,8 +373,12 @@ export default class Actions extends EventEmitter
 
     pointerMove(_x, _y)
     {
+        // Get coordinates with padding
+        const x = _x - this.root.measures.padding.left
+        const y = _y - this.root.measures.padding.top
+
         // Position
-        const position = this.root.lines.getPosition(_x, _y)
+        const position = this.root.lines.getPosition(x, y)
 
         // Cursor
         this.root.cursor.setPosition(position)
