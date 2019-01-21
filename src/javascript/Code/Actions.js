@@ -1104,4 +1104,45 @@ export default class Actions extends EventEmitter
         // Trigger
         this.trigger('action', [ 'untabulate' ])
     }
+
+    toggleTask()
+    {
+        const selectionRange = this.root.lines.selectionRange.clone().normalize()
+        const mainLine = this.root.lines.items[this.root.cursor.position.lineIndex]
+        const lines = this.root.lines.items.slice(selectionRange.start.lineIndex, selectionRange.end.lineIndex + 1)
+        const taskRegex = /(\s*-\s\[)([√xX!?\s-])(]\s*.*)/
+        const taskMatch = mainLine.text.match(taskRegex)
+
+        if(!taskMatch)
+        {
+            return
+        }
+
+        // Find the current and next state of current line
+        const currentState = taskMatch[2]
+        const states = [
+            { regex: /[√xX]/, main: 'x' },
+            { regex: /!/, main: '!' },
+            { regex: /\?/, main: '?' },
+            { regex: /-/, main: '-' },
+            { regex: /\s/, main: ' ' }
+        ]
+        const index = states.findIndex((_item) => currentState.match(_item.regex))
+        const nextIndex = index + 1 > states.length - 1 ? 0 : index + 1
+        const nextState = states[nextIndex]
+
+        // Handle each line
+        for(const _line of lines)
+        {
+            // Test if line is a task
+            const taskMatch = _line.text.match(taskRegex)
+
+            if(taskMatch)
+            {
+                // Update task
+                const text = _line.text.replace(taskRegex, `$1${nextState.main}$3`)
+                _line.updateText(text)
+            }
+        }
+    }
 }

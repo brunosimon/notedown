@@ -22,7 +22,7 @@ export default
     },
     // Task empty
     {
-        regex: /(\s*-\s)(\[)([ ])(])(\s*)(.*)/,
+        regex: /(\s*-\s)(\[)([\s])(])(\s*)(.*)/,
         replacement: '<span class="empty">$1<span class="task-delimiter">$2</span><span class="task-value">$3</span><span class="task-delimiter">$4</span>$5<span class="task-description">$6</span></span>'
     },
     // Task canceled

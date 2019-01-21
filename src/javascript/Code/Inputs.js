@@ -27,6 +27,18 @@ export default class Inputs
 
             return false
         })
+        this.addShortcut([ 'alt', 'enter' ], () =>
+        {
+            this.root.actions.toggleTask()
+
+            return false
+        })
+        this.addShortcut([ 'alt', 'shift' ], () =>
+        {
+            this.root.actions.toggleTask()
+
+            return false
+        })
         this.addShortcut([ 'command', 'z' ], () =>
         {
             this.root.actions.undo()
