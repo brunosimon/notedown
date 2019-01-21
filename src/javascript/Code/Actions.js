@@ -397,7 +397,7 @@ export default class Actions extends EventEmitter
         }
 
         // Find character at position
-        let x = Math.round((_x - this.root.measures.rowWidth * 0.5) / this.root.measures.rowWidth)
+        let x = Math.round((_x - this.root.measures.character.width * 0.5) / this.root.measures.character.width)
 
         if(x < 0)
         {

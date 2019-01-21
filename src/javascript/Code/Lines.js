@@ -66,7 +66,7 @@ export default class Lines
         /**
          * Line
          */
-        position.lineIndex = Math.floor(_y / this.root.measures.lineHeight)
+        position.lineIndex = Math.floor(_y / this.root.measures.character.height)
 
         // Before first line
         if(position.lineIndex < 0)
@@ -108,7 +108,7 @@ export default class Lines
         // Between first and last line
         else
         {
-            position.rowIndex = Math.round(_x / this.root.measures.rowWidth)
+            position.rowIndex = Math.round(_x / this.root.measures.character.width)
 
             const line = this.items[position.lineIndex]
 
@@ -380,7 +380,7 @@ export default class Lines
         {
             const line = lines[0]
 
-            line.updateSelection(range.start.rowIndex * this.root.measures.rowWidth, range.end.rowIndex * this.root.measures.rowWidth)
+            line.updateSelection(range.start.rowIndex * this.root.measures.character.width, range.end.rowIndex * this.root.measures.character.width)
         }
         else
         {
@@ -391,17 +391,17 @@ export default class Lines
                 // First
                 if(i === 0)
                 {
-                    line.updateSelection(range.start.rowIndex * this.root.measures.rowWidth, line.text.length * this.root.measures.rowWidth)
+                    line.updateSelection(range.start.rowIndex * this.root.measures.character.width, line.text.length * this.root.measures.character.width)
                 }
                 // Last
                 else if(i === lines.length - 1)
                 {
-                    line.updateSelection(0, range.end.rowIndex * this.root.measures.rowWidth)
+                    line.updateSelection(0, range.end.rowIndex * this.root.measures.character.width)
                 }
                 // Between
                 else
                 {
-                    line.updateSelection(0, line.text.length * this.root.measures.rowWidth)
+                    line.updateSelection(0, line.text.length * this.root.measures.character.width)
                 }
             }
         }

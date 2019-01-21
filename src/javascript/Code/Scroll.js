@@ -82,27 +82,27 @@ export default class
     forceInView()
     {
         // Left
-        if(this.root.cursor.x < this.offset.x + this.root.measures.rowWidth * 3)
+        if(this.root.cursor.x < this.offset.x + this.root.measures.character.width * 3)
         {
-            this.updateOffset(this.root.cursor.x - this.root.measures.rowWidth * 3, this.offset.y)
+            this.updateOffset(this.root.cursor.x - this.root.measures.character.width * 3, this.offset.y)
         }
 
         // Right
-        if(this.root.cursor.x > this.offset.x + this.root.measures.viewport.width - this.root.measures.rowWidth * 3)
+        if(this.root.cursor.x > this.offset.x + this.root.measures.viewport.width - this.root.measures.character.width * 3)
         {
-            this.updateOffset(this.root.cursor.x - this.root.measures.viewport.width + this.root.measures.rowWidth * 3, this.offset.y)
+            this.updateOffset(this.root.cursor.x - this.root.measures.viewport.width + this.root.measures.character.width * 3, this.offset.y)
         }
 
         // Up
         if(this.root.cursor.y < this.offset.y)
         {
-            this.updateOffset(this.offset.x, Math.floor(this.root.cursor.y / this.root.measures.lineHeight) * this.root.measures.lineHeight)
+            this.updateOffset(this.offset.x, Math.floor(this.root.cursor.y / this.root.measures.character.height) * this.root.measures.character.height)
         }
 
         // Down
-        if(this.root.cursor.y > this.offset.y + this.root.measures.viewport.height - this.root.measures.lineHeight)
+        if(this.root.cursor.y > this.offset.y + this.root.measures.viewport.height - this.root.measures.character.height)
         {
-            this.updateOffset(this.offset.x, Math.floor((this.root.cursor.y - this.root.measures.viewport.height + this.root.measures.lineHeight) / this.root.measures.lineHeight) * this.root.measures.lineHeight)
+            this.updateOffset(this.offset.x, Math.floor((this.root.cursor.y - this.root.measures.viewport.height + this.root.measures.character.height) / this.root.measures.character.height) * this.root.measures.character.height)
         }
     }
 }

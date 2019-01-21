@@ -8,16 +8,31 @@ export default class Measures
         this.root = _options.root
         this.root.measures = this
 
-        // Set up
-        this.rowWidth = null
-        this.lineHeight = null
-        this.count = 1000
+        this.setCharacter()
+        this.setViewport()
+    }
+
+    setCharacter()
+    {
+        this.character = {}
+        this.character.width = null
+        this.character.height = null
 
         // Create invisible dummy line
-        this.line = new Line('0'.repeat(this.count))
-        this.line.$element.classList.add('dummy')
+        this.character.dummy = {}
+        this.character.dummy.count = 1000
+        this.character.dummy.line = new Line('0'.repeat(this.character.dummy.count))
+        this.character.dummy.line.$element.classList.add('dummy')
 
-        this.setViewport()
+        this.character.update = () =>
+        {
+            this.root.lines.$element.appendChild(this.character.dummy.line.$element)
+
+            this.character.width = this.character.dummy.line.fragments.$element.offsetWidth / this.character.dummy.count
+            this.character.height = this.character.dummy.line.$element.offsetHeight
+
+            this.root.lines.$element.removeChild(this.character.dummy.line.$element)
+        }
 
         // Font ready callback
         if(document.fonts && document.fonts.ready)
@@ -25,12 +40,12 @@ export default class Measures
             document.fonts.ready.then(() =>
             {
                 // Update
-                this.update()
+                this.character.update()
             })
         }
 
         // Update
-        this.update()
+        this.character.update()
     }
 
     setViewport()
@@ -47,15 +62,5 @@ export default class Measures
         }
 
         window.addEventListener('resize', this.viewport.update)
-    }
-
-    update()
-    {
-        this.root.lines.$element.appendChild(this.line.$element)
-
-        this.rowWidth = this.line.fragments.$element.offsetWidth / this.count
-        this.lineHeight = this.line.$element.offsetHeight
-
-        this.root.lines.$element.removeChild(this.line.$element)
     }
 }
