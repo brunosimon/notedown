@@ -265,6 +265,8 @@ export default class Inputs
         this.pointer = {}
         this.pointer.mousedown = (_event) =>
         {
+            _event.preventDefault()
+
             // Pointer down action
             this.root.actions.pointerDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, this.keyboard.isDown('shift'))
 
