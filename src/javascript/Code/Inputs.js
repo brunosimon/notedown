@@ -27,15 +27,9 @@ export default class Inputs
 
             return false
         })
-        this.addShortcut([ 'alt', 'enter' ], () =>
+        this.addShortcut([ 'alt', 'x' ], () =>
         {
-            this.root.actions.toggleTask()
-
-            return false
-        })
-        this.addShortcut([ 'alt', 'shift' ], () =>
-        {
-            this.root.actions.toggleTask()
+            this.root.actions.toggleTask(this.keyboard.isDown('shift'))
 
             return false
         })

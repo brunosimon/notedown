@@ -1105,7 +1105,7 @@ export default class Actions extends EventEmitter
         this.trigger('action', [ 'untabulate' ])
     }
 
-    toggleTask()
+    toggleTask(_reverse = false)
     {
         // History
         this.root.history.saveState()
@@ -1130,6 +1130,10 @@ export default class Actions extends EventEmitter
             { regex: /-/, main: '-' },
             { regex: /\s/, main: ' ' }
         ]
+        if(_reverse)
+        {
+            states.reverse()
+        }
         const index = states.findIndex((_item) => currentState.match(_item.regex))
         const nextIndex = index + 1 > states.length - 1 ? 0 : index + 1
         const nextState = states[nextIndex]
