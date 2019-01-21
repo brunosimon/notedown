@@ -20,6 +20,8 @@ export default class Cursor
 
         // Set up
         this.position = new Position()
+        this.x = 0
+        this.y = 0
 
         // Handle window focus
         window.addEventListener('blur', () =>
@@ -138,14 +140,20 @@ export default class Cursor
 
     setPosition(_position)
     {
+        // Update position
         this.position.copy(_position)
 
-        const x = Math.round(this.position.rowIndex * this.root.measures.rowWidth)
-        const y = Math.round(this.position.lineIndex * this.root.measures.lineHeight)
+        // Update DOM
+        this.x = Math.round(this.position.rowIndex * this.root.measures.rowWidth)
+        this.y = Math.round(this.position.lineIndex * this.root.measures.lineHeight)
 
-        this.$element.style.transform = `translateX(${x}px) translateY(${y}px)`
+        this.$element.style.transform = `translateX(${this.x}px) translateY(${this.y}px)`
 
+        // Reset animation
         this.resetAnimation()
+
+        // Update scroll
+        this.root.scroll.forceInView()
     }
 
     resetAnimation()

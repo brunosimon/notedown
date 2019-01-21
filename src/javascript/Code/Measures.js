@@ -17,6 +17,8 @@ export default class Measures
         this.line = new Line('0'.repeat(this.count))
         this.line.$element.classList.add('dummy')
 
+        this.setViewport()
+
         // Font ready callback
         if(document.fonts && document.fonts.ready)
         {
@@ -29,6 +31,22 @@ export default class Measures
 
         // Update
         this.update()
+    }
+
+    setViewport()
+    {
+        this.viewport = {}
+
+        this.viewport.width = window.innerWidth
+        this.viewport.height = window.innerHeight
+
+        this.viewport.update = () =>
+        {
+            this.viewport.width = window.innerWidth
+            this.viewport.height = window.innerHeight
+        }
+
+        window.addEventListener('resize', this.viewport.update)
     }
 
     update()
