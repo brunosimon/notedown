@@ -193,7 +193,7 @@ export default class Code extends EventEmitter
         // Scroll
         if(_state.scroll)
         {
-            this.scroll.setOffset(_state.scroll.x, _state.scroll.y)
+            this.scroll.updateOffset(_state.scroll.x, _state.scroll.y)
         }
     }
 

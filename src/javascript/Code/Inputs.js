@@ -298,7 +298,7 @@ export default class Inputs
         }
 
         // Mousedown
-        this.root.lines.$element.addEventListener('mousedown', this.pointer.mousedown)
+        this.root.container.$element.addEventListener('mousedown', this.pointer.mousedown)
     }
 
     focus()

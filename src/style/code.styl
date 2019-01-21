@@ -12,6 +12,7 @@
     font-size 13px
     line-height 1.7em
     letter-spacing 0.04em
+    cursor text
     -webkit-touch-callout none
     -webkit-user-select none
     -khtml-user-select none
@@ -43,15 +44,19 @@
             top 0
             left 0
             min-width 100%
+            min-height 100%
 
     /**
      * Lines
      */
+    .lines
+        position relative
+        // min-height 100%
+
     .line
         position relative
         font-family Consolas
         color #dadada
-        cursor text
 
         &.dummy
             position absolute

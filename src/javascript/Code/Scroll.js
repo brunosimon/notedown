@@ -8,19 +8,30 @@ export default class
         // Scrollbar width
         this.scrollbarWidth = this.getScrollbarWidth()
 
-        // Element
+        // Set up
+        this.setElement()
+        this.setInner()
+        this.setOffset()
+    }
+
+    setElement()
+    {
         this.$element = document.createElement('div')
         this.$element.style.right = `-${this.scrollbarWidth}px`
         this.$element.style.bottom = `-${this.scrollbarWidth}px`
         this.$element.classList.add('scroll')
         this.root.container.$element.appendChild(this.$element)
+    }
 
-        // Inner
+    setInner()
+    {
         this.$inner = document.createElement('div')
         this.$inner.classList.add('scroll-inner')
         this.$element.appendChild(this.$inner)
+    }
 
-        // Offset
+    setOffset()
+    {
         this.offset = {}
         this.offset.x = 0
         this.offset.y = 0
@@ -32,7 +43,7 @@ export default class
         })
     }
 
-    setOffset(_x, _y)
+    updateOffset(_x, _y)
     {
         this.$element.scrollLeft = _x
         this.$element.scrollTop = _y
@@ -73,25 +84,25 @@ export default class
         // Left
         if(this.root.cursor.x < this.offset.x + this.root.measures.rowWidth * 3)
         {
-            this.setOffset(this.root.cursor.x - this.root.measures.rowWidth * 3, this.offset.y)
+            this.updateOffset(this.root.cursor.x - this.root.measures.rowWidth * 3, this.offset.y)
         }
 
         // Right
         if(this.root.cursor.x > this.offset.x + this.root.measures.viewport.width - this.root.measures.rowWidth * 3)
         {
-            this.setOffset(this.root.cursor.x - this.root.measures.viewport.width + this.root.measures.rowWidth * 3, this.offset.y)
+            this.updateOffset(this.root.cursor.x - this.root.measures.viewport.width + this.root.measures.rowWidth * 3, this.offset.y)
         }
 
         // Up
         if(this.root.cursor.y < this.offset.y)
         {
-            this.setOffset(this.offset.x, Math.floor(this.root.cursor.y / this.root.measures.lineHeight) * this.root.measures.lineHeight)
+            this.updateOffset(this.offset.x, Math.floor(this.root.cursor.y / this.root.measures.lineHeight) * this.root.measures.lineHeight)
         }
 
         // Down
         if(this.root.cursor.y > this.offset.y + this.root.measures.viewport.height - this.root.measures.lineHeight)
         {
-            this.setOffset(this.offset.x, Math.floor((this.root.cursor.y - this.root.measures.viewport.height + this.root.measures.lineHeight) / this.root.measures.lineHeight) * this.root.measures.lineHeight)
+            this.updateOffset(this.offset.x, Math.floor((this.root.cursor.y - this.root.measures.viewport.height + this.root.measures.lineHeight) / this.root.measures.lineHeight) * this.root.measures.lineHeight)
         }
     }
 }
