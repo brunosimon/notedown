@@ -395,7 +395,11 @@ export default class Actions extends EventEmitter
 
     pointerDoubleDown(_x, _y, _extendSelection = false)
     {
-        const position = this.root.lines.getPosition(_x, _y)
+        // Get coordinates with padding
+        const x = _x - this.root.measures.padding.left
+        const y = _y - this.root.measures.padding.top
+
+        const position = this.root.lines.getPosition(x, y)
         const line = this.root.lines.items[position.lineIndex]
 
         // Empty line
@@ -405,18 +409,18 @@ export default class Actions extends EventEmitter
         }
 
         // Find character at position
-        let x = Math.round((_x - this.root.measures.character.width * 0.5) / this.root.measures.character.width)
+        let charIndex = Math.round((x - this.root.measures.character.width * 0.5) / this.root.measures.character.width)
 
-        if(x < 0)
+        if(charIndex < 0)
         {
-            x = 0
+            charIndex = 0
         }
-        else if(x > line.length - 1)
+        else if(charIndex > line.length - 1)
         {
-            x = line.length - 1
+            charIndex = line.length - 1
         }
 
-        const character = line.text[x]
+        const character = line.text[charIndex]
 
         // Same character condition
         let condition = null
@@ -431,7 +435,7 @@ export default class Actions extends EventEmitter
         }
 
         // Left index
-        let leftIndex = x - 1
+        let leftIndex = charIndex - 1
         let leftCharacter = line.text[leftIndex]
 
         while(leftIndex >= 0 && condition(leftCharacter))
@@ -443,7 +447,7 @@ export default class Actions extends EventEmitter
         leftIndex++
 
         // Right index
-        let rightIndex = x + 1
+        let rightIndex = charIndex + 1
         let rightCharacter = line.text[rightIndex]
 
         while(rightIndex < line.length && condition(rightCharacter))
@@ -466,7 +470,11 @@ export default class Actions extends EventEmitter
 
     pointerTripleDown(_x, _y, _extendSelection = false)
     {
-        const position = this.root.lines.getPosition(_x, _y)
+        // Get coordinates with padding
+        const x = _x - this.root.measures.padding.left
+        const y = _y - this.root.measures.padding.top
+
+        const position = this.root.lines.getPosition(x, y)
         const line = this.root.lines.items[position.lineIndex]
 
         // Update selection
