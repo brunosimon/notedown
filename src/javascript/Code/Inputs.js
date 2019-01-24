@@ -197,6 +197,12 @@ export default class Inputs
 
         this.textarea.$element.addEventListener('input', () =>
         {
+            // Locked
+            if(this.root.locked)
+            {
+                return
+            }
+
             const value = this.textarea.$element.value
 
             // Handle accents
@@ -227,6 +233,12 @@ export default class Inputs
 
         this.keyboard.on('down', (_keyCode, _character, _downItems) =>
         {
+            // Locked
+            if(this.root.locked)
+            {
+                return
+            }
+
             for(const _item of this.shortcuts.items)
             {
                 if(this.keyboard.isDown(_item.inputs, _downItems))
@@ -266,6 +278,12 @@ export default class Inputs
         this.pointer.mousedown = (_event) =>
         {
             _event.preventDefault()
+
+            // Locked
+            if(this.root.locked)
+            {
+                return
+            }
 
             // Pointer down action
             this.root.actions.pointerDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, this.keyboard.isDown('shift'))

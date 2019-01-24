@@ -21,6 +21,9 @@ export default class Application
             $target: this.$element
         })
 
+        // Lock
+        this.code.lock()
+
         // On code action
         this.code.actions.on('action', () =>
         {
@@ -59,6 +62,8 @@ export default class Application
             {
                 this.code.setState(_value.state)
             }
+
+            this.code.unlock()
         })
 
         // On state update

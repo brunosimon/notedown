@@ -15,6 +15,8 @@ export default class Code extends EventEmitter
 
         this.options = _options
 
+        this.locked = false
+
         this.setContainer()
         this.setScroll()
         this.setLines()
@@ -195,6 +197,18 @@ export default class Code extends EventEmitter
         {
             this.scroll.updateOffset(_state.scroll.x, _state.scroll.y)
         }
+    }
+
+    lock()
+    {
+        this.locked = true
+        this.container.$element.classList.add('locked')
+    }
+
+    unlock()
+    {
+        this.locked = false
+        this.container.$element.classList.remove('locked')
     }
 
     destruct()
