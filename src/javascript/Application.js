@@ -34,6 +34,37 @@ export default class Application
 
             // Update sync
             this.sync.refs.state.set(state)
+
+            // Save to local storage
+            window.localStorage.setItem('lastState', JSON.stringify(state))
+
+            // Save to daily local storage
+            let dailyState = window.localStorage.getItem('dailyState')
+            let shouldSaveDailyState = false
+
+            if(dailyState)
+            {
+                dailyState = JSON.parse(dailyState)
+                const date = new Date(dailyState.time)
+                const day = date.getDay()
+
+                const currentDate = new Date(state.time)
+                const currentDay = currentDate.getDay()
+
+                if(day !== currentDay)
+                {
+                    shouldSaveDailyState = true
+                }
+            }
+            else
+            {
+                shouldSaveDailyState = true
+            }
+
+            if(shouldSaveDailyState)
+            {
+                window.localStorage.setItem('dailyState', JSON.stringify(state))
+            }
         })
     }
 
