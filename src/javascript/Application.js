@@ -27,7 +27,7 @@ export default class Application
         if(lastState)
         {
             lastState = JSON.parse(lastState)
-            this.code.lines.addText(lastState.text)
+            this.code.setState(lastState)
         }
 
         // Lock
@@ -100,7 +100,7 @@ export default class Application
             // Has already data
             else
             {
-                this.code.setState(_value.state)
+                this.code.setState({ text: _value.state.text })
             }
 
             // Unlock
