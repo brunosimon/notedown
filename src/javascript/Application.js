@@ -21,6 +21,15 @@ export default class Application
             $target: this.$element
         })
 
+        // Set code from local storage
+        let lastState = window.localStorage.getItem('lastState')
+
+        if(lastState)
+        {
+            lastState = JSON.parse(lastState)
+            this.code.lines.addText(lastState.text)
+        }
+
         // Lock
         this.code.lock()
 
@@ -94,6 +103,7 @@ export default class Application
                 this.code.setState(_value.state)
             }
 
+            // Unlock
             this.code.unlock()
         })
 

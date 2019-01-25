@@ -44,37 +44,37 @@ export default class Inputs
             this.root.actions.cursorSuperUp(this.keyboard.isDown('shift'))
 
             return false
-        })
+        }, true)
         this.addShortcut([ 'command', 'down' ], () =>
         {
             this.root.actions.cursorSuperDown(this.keyboard.isDown('shift'))
 
             return false
-        })
+        }, true)
         this.addShortcut([ 'command', 'right' ], () =>
         {
             this.root.actions.cursorSuperRight(this.keyboard.isDown('shift'))
 
             return false
-        })
+        }, true)
         this.addShortcut([ 'command', 'left' ], () =>
         {
             this.root.actions.cursorSuperLeft(this.keyboard.isDown('shift'))
 
             return false
-        })
+        }, true)
         this.addShortcut([ 'alt', 'right' ], () =>
         {
             this.root.actions.cursorRightWord(this.keyboard.isDown('shift'))
 
             return false
-        })
+        }, true)
         this.addShortcut([ 'alt', 'left' ], () =>
         {
             this.root.actions.cursorLeftWord(this.keyboard.isDown('shift'))
 
             return false
-        })
+        }, true)
         this.addShortcut([ 'alt', 'down' ], () =>
         {
             this.root.actions.moveLinesDown()
@@ -92,31 +92,31 @@ export default class Inputs
             this.root.actions.cursorRight(this.keyboard.isDown('shift'))
 
             return false
-        })
+        }, true)
         this.addShortcut([ 'up' ], () =>
         {
             this.root.actions.cursorUp(this.keyboard.isDown('shift'))
 
             return false
-        })
+        }, true)
         this.addShortcut([ 'down' ], () =>
         {
             this.root.actions.cursorDown(this.keyboard.isDown('shift'))
 
             return false
-        })
+        }, true)
         this.addShortcut([ 'left' ], () =>
         {
             this.root.actions.cursorLeft(this.keyboard.isDown('shift'))
 
             return false
-        })
+        }, true)
         this.addShortcut([ 'command', 'c' ], () =>
         {
             this.root.actions.copy()
 
             return false
-        })
+        }, true)
         this.addShortcut([ 'command', 'x' ], () =>
         {
             this.root.actions.cut()
@@ -140,7 +140,7 @@ export default class Inputs
             this.root.actions.selectAll()
 
             return false
-        })
+        }, true)
         this.addShortcut([ 'command', 'backspace' ], () =>
         {
             this.root.actions.superDeleteLeft()
@@ -179,9 +179,9 @@ export default class Inputs
         })
     }
 
-    addShortcut(_inputs, _method)
+    addShortcut(_inputs, _method, _lockProof = false)
     {
-        this.shortcuts.items.push({ inputs: _inputs, method: _method })
+        this.shortcuts.items.push({ inputs: _inputs, method: _method, lockProof: _lockProof })
     }
 
     setTextarea()
@@ -233,19 +233,16 @@ export default class Inputs
 
         this.keyboard.on('down', (_keyCode, _character, _downItems) =>
         {
-            // Locked
-            if(this.root.locked)
-            {
-                return
-            }
-
             for(const _item of this.shortcuts.items)
             {
+                // Test shortcut
                 if(this.keyboard.isDown(_item.inputs, _downItems))
                 {
-                    return _item.method()
-
-                    break
+                    // Test not locked or lock proof
+                    if(!this.root.locked || _item.lockProof)
+                    {
+                        return _item.method()
+                    }
                 }
             }
         })
@@ -278,12 +275,6 @@ export default class Inputs
         this.pointer.mousedown = (_event) =>
         {
             _event.preventDefault()
-
-            // Locked
-            if(this.root.locked)
-            {
-                return
-            }
 
             // Pointer down action
             this.root.actions.pointerDown(_event.clientX + this.root.scroll.offset.x, _event.clientY + this.root.scroll.offset.y, this.keyboard.isDown('shift'))
