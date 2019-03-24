@@ -190,10 +190,19 @@ export default class Inputs
 
         // Element
         this.textarea.$element = document.createElement('textarea')
+        this.textarea.$element.setAttribute('autocomplete', 'off')
+        this.textarea.$element.setAttribute('autocorrect', 'off')
+        this.textarea.$element.setAttribute('autocapitalize', 'off')
+        this.textarea.$element.setAttribute('spellcheck', 'false')
         this.textarea.$element.classList.add('textarea')
         this.root.container.$element.appendChild(this.textarea.$element)
 
         let latestWasAccent = false
+
+        this.textarea.$element.addEventListener('blur', () =>
+        {
+            this.textarea.$element.setAttribute('readonly', null)
+        })
 
         this.textarea.$element.addEventListener('input', () =>
         {
