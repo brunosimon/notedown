@@ -29,7 +29,7 @@ It also work with url like this http://test.com
 
 You don't need to. At any time, you can leave this page and come back later. Your notes will be here.
 
-If you're afraid to lose your notes or you want to retrieve them on another computer, use the [sign in] button on the top right corner. You'll be asked to connect your Google account and authorize notedown to modify the files made by the application (notedown won't be able to access your personal files on your Drive account). Your notes will now be saved on a small file created on your Drive account. Don't worry for the security of your data, notedown doesn't save anything on the server side. In fact, there no server side.
+If you're afraid to lose your notes or you want to retrieve them on another computer, use the [sign in] button on the top right corner. You'll be asked to connect your Google account and authorize notedown to modify the files made by the application (notedown won't be able to access your personal files on your Drive account). Your notes will now be saved on a small file created on your Drive account. Don't worry, for the security of your data, notedown doesn't save anything on the server side. In fact, there is no server side!
 
 
 # Shortcuts
