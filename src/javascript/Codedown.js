@@ -5,48 +5,49 @@ import Controller from './Controller.js'
 
 const BASE_CONTENT = `Hi,
 
-Welcome to notedown. Here you can edit this text to put anything you want like todo list, stuff you don't want to loose, ideas, reminders, etc.
-Notedown will simply add a some syntax coloration to your text just like a code editor and it works on mobile.
+Welcome to notedown. Here you can edit this text to put anything you want, like a todo list or stuff you don't want to lose, ideas, reminders, etc.
+Notedown will also add color to your text just like any other code editor. It also works perfectly on a mobile device!
 
 
-# Here're some examples
+# Here are some examples
 
 You can put some text and *add* _fancy_ "styling" ~stuff~.
-It also work with url like this http://test.com
+It also works with urls. For example : http://test.com
 
 - [ ] This is an item on a list
 - [x] This one is done
 - [√] Cool, it also works with √ char
-- [?] Use ? to make it looks like a warning
-- [!] And a ! to make it looks like something urgent
+- [?] Use ? to make it look like a warning
+- [!] And a ! to make it look like something urgent
 	- [ ] Yes you can indent
 		- [x] And keep indenting
-		- [ ] (parenthesize looks blue)
-		- [ ] [brackets looks pink]
+		- [ ] (parentheses look blue)
+		- [ ] [brackets look pink]
 
 
 # How to save your notes?
 
 You don't need to. At any time, you can leave this page and come back later. Your notes will be here.
 
-If you're afraid to lose your notes or you want to retrieve them on another computer, use the [sign in] button on the top right corner. You'll be asked to connect your Google account and authorize notedown to modify the files made by the application (notedown won't be able to access your personal files on your Drive account). Your notes will now be saved on a small file created on your Drive account. Don't worry, for the security of your data, notedown doesn't save anything on the server side. In fact, there is no server side!
+If you're afraid of losing your notes or you want to retrieve them on another computer, use the [sign in] button on the top right corner. You'll be asked to connect your Google account and authorize notedown to modify the files made by the application (notedown won't be able to access your personal files on your Google Drive). Your notes will now be saved on a small file created on your Google Drive account. Don't worry, for the security of your data, notedown doesn't save anything on the server side. In fact, there is no server side!
 
 
 # Shortcuts
 
 Because notedown is inspired by code editors, you can use shortcuts.
+Some shortcuts are given below :
 
 - [CMD + Z] Go back in modifications history (like cancelling)
 - [CMD + SHIFT + Z] Go forward in the modifications history
 - [CMD + SHIFT + D] Duplicate the line
 - [ALT + ↑] Move the line up
 - [ALT + ↓] Move the line down
-- [ALT + LEFT CLICK] Add another text pointer where you're clicking (yes you can edit multiple lines at once!)
+- [ALT + LEFT CLICK] Add another text pointer where you're clicking (yes, you can edit multiple lines at once!)
 
 
 # The project
 
-Notedown is an open source project and it's still in development. If you want to help or you are just curious, you can find the code here https://github.com/brunosimon/notedown
+Notedown is an open source project and it's still in development. If you want to help or are just curious, you can find the code here https://github.com/brunosimon/notedown
 `
 
 export default class Codedown
